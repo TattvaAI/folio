@@ -6,64 +6,107 @@
   <meta name="description" content="Shivansh Bansal — I see what's broken. I build what fixes it." />
   <meta property="og:title" content="Shivansh Bansal" />
   <meta property="og:description" content="I see what's broken. I build what fixes it." />
+  <meta property="og:type" content="website" />
   <title>Shivansh Bansal</title>
 
-  <!-- Syne (display) + Inter (body) + JetBrains Mono -->
+  <!-- Syne (display) + Inter (body) + JetBrains Mono (labels) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── TOKENS ────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       v5: OBSIDIAN — Design Tokens
+       Cool violet on blue-black. The premium palette.
+    ═══════════════════════════════════════════════════════════════ */
     :root {
-      --bg:    #000;
-      --text:  #f0ede8;
-      --muted: #444;
-      --dim:   rgba(240,237,232,0.3);
-      --border: rgba(240,237,232,0.1);
+      --bg:         #08080a;
+      --surface:    #0f0f14;
+      --surface-2:  #13131a;
+      --border:     rgba(255,255,255,0.06);
+      --border-h:   rgba(255,255,255,0.12);
+      --accent:     #a78bfa;
+      --accent-dim: rgba(167,139,250,0.15);
+      --glow:       #7c3aed;
+      --text:       #f0f0f5;
+      --text-sub:   rgba(240,240,245,0.7);
+      --muted:      #4a4a5a;
 
-      --sans:  'Syne', system-ui, sans-serif;
-      --body:  'Inter', system-ui, sans-serif;
-      --mono:  'JetBrains Mono', monospace;
-      --ease:  cubic-bezier(0.16, 1, 0.3, 1);
+      --font-display: 'Syne', system-ui, sans-serif;
+      --font-body:    'Inter', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: var(--bg); }
+    html { background: var(--bg); scroll-behavior: smooth; }
     body {
-      font-family: var(--body);
+      font-family: var(--font-body);
       color: var(--text);
+      background: var(--bg);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Noise texture overlay — organic grain like high-end print */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
     }
 
     a { color: inherit; text-decoration: none; }
 
     .wrap {
-      max-width: 1100px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 0 5%;
+      padding: 0 clamp(1.25rem, 5%, 3rem);
     }
 
-    /* ── NAV ───────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       NAV — Glassmorphism with centered glow border
+    ═══════════════════════════════════════════════════════════════ */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0; z-index: 100;
-      padding: 1.5rem 5%;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      /* Glassmorphism nav */
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(16px);
+      padding: 1.25rem clamp(1.25rem, 5%, 3rem);
+      background: rgba(8,8,10,0.75);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      /* Glow border — central violet light source */
       border-bottom: 1px solid var(--border);
+      background-image: linear-gradient(90deg,
+        transparent 0%,
+        rgba(167,139,250,0.06) 30%,
+        rgba(167,139,250,0.12) 50%,
+        rgba(167,139,250,0.06) 70%,
+        transparent 100%
+      );
+      background-size: 100% 1px;
+      background-position: bottom;
+      background-repeat: no-repeat;
     }
     .nav-id {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--dim);
-      letter-spacing: 0.16em;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
+      color: var(--accent);
     }
     .nav-links {
       list-style: none;
@@ -71,16 +114,30 @@
       gap: 2.5rem;
     }
     .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      transition: color 0.3s;
+      color: var(--muted);
+      transition: color 0.3s var(--ease);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 100%; height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.35s var(--ease);
     }
     .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
 
-    /* ── HERO ──────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       HERO — Floating gradient orb + commanding typography
+    ═══════════════════════════════════════════════════════════════ */
     #hero {
       min-height: 100vh;
       display: flex;
@@ -91,247 +148,519 @@
       overflow: hidden;
     }
 
-    /* The canvas that renders particles — clipped to text via compositing */
-    #particle-canvas {
-      display: block;
-      width: 100%;
-      /* Height set by JS */
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Invisible text layer — used ONLY for accessibility, not display */
-    #hero-text-a11y {
+    /* Floating gradient orb — CSS only, mouse-reactive via JS */
+    .hero-orb {
       position: absolute;
-      left: -9999px;
+      width: clamp(400px, 50vw, 700px);
+      height: clamp(400px, 50vw, 700px);
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(124,58,237,0.15) 0%,
+        rgba(167,139,250,0.06) 40%,
+        transparent 70%
+      );
+      filter: blur(80px);
+      pointer-events: none;
+      /* Default position — JS will override */
+      top: 20%;
+      left: 30%;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+      animation: orb-float 12s ease-in-out infinite;
+    }
+    @keyframes orb-float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%      { transform: translate(30px, -20px) scale(1.05); }
+      66%      { transform: translate(-20px, 15px) scale(0.97); }
     }
 
-    .hero-below {
+    .hero-content {
       position: relative;
       z-index: 2;
-      padding-top: 4rem;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 2rem;
-    }
-    .hero-tagline {
-      font-family: var(--sans);
-      font-size: clamp(1.3rem, 2.8vw, 2.2rem);
-      font-weight: 400;
-      color: var(--text);
-      opacity: 0.8;
-      max-width: 580px;
-      line-height: 1.35;
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    .hero-meta-mono {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-align: right;
-      line-height: 2;
-      opacity: 0;
     }
 
-    /* ── ABOUT ─────────────────────────────────── */
-    #about {
-      padding: 10rem 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(12px);
     }
-    .sec-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
+
+    h1.hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3.8rem, 11vw, 10rem);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 0.88;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    /* Violet underline sweep on the first word */
+    h1.hero-name .name-highlight {
+      position: relative;
+      display: inline-block;
+    }
+    h1.hero-name .name-highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--glow));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1s var(--ease);
+    }
+    h1.hero-name.active .name-highlight::after {
+      transform: scaleX(1);
+    }
+
+    .hero-tagline {
+      margin-top: 3rem;
+      font-family: var(--font-body);
+      font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+      font-weight: 300;
+      color: var(--text-sub);
+      max-width: 540px;
+      line-height: 1.65;
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    .hero-tagline strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* Hero meta strip — compact data points */
+    .hero-meta {
+      margin-top: 5rem;
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      max-width: 680px;
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    .meta-cell {
+      flex: 1;
+      padding: 1.1rem 1.25rem;
+      background: var(--surface);
+      transition: background 0.3s var(--ease);
+    }
+    .meta-cell:hover { background: var(--surface-2); }
+    .meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.45rem;
+    }
+    .meta-value {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      opacity: 0;
+    }
+    .scroll-hint span {
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 4rem;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+      50%      { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ABOUT — Bio + Signal Strip
+    ═══════════════════════════════════════════════════════════════ */
+    #about {
+      padding: 8rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 3.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .section-tag::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-h), transparent);
+      max-width: 240px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 5rem;
+      align-items: start;
     }
     .about-text {
-      font-family: var(--body);
-      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
       font-weight: 300;
-      line-height: 1.85;
-      color: rgba(240,237,232,0.8);
-      max-width: 760px;
+      line-height: 1.9;
+      color: var(--text-sub);
     }
-    .about-text strong { color: var(--text); font-weight: 500; }
-
-    /* ── WORK ──────────────────────────────────── */
-    #work {
-      padding: 10rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .work-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 2rem;
-      margin-bottom: 0;
-    }
-    .work-title {
-      font-family: var(--sans);
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
+    .about-text strong {
       color: var(--text);
-    }
-    .work-sub {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
+      font-weight: 500;
     }
 
-    /* List layout — clean horizontal rows with hover slide */
-    .project-row {
+    /* Signal strip — 4 compact data panels */
+    .signal-strip {
       display: grid;
-      grid-template-columns: 2.5rem 1fr 1fr auto;
-      align-items: center;
-      gap: 2rem;
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--border);
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .signal-cell {
+      background: var(--surface);
+      padding: 1.4rem 1.5rem;
+      transition: background 0.35s var(--ease);
+    }
+    .signal-cell:hover { background: var(--surface-2); }
+    .signal-num {
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .signal-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+    .signal-body {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       WORK — Glassmorphism Bento Cards
+    ═══════════════════════════════════════════════════════════════ */
+    #work {
+      padding: 8rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(0.75rem, 1.5vw, 1.25rem);
+      margin-top: 3rem;
+    }
+    /* Asymmetric: first card spans full width for emphasis */
+    .bento-grid .glass-card:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .glass-card {
+      position: relative;
+      background: rgba(15,15,20,0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: clamp(1.75rem, 3vw, 2.5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 240px;
       text-decoration: none;
       color: var(--text);
-      position: relative;
       overflow: hidden;
-      transition: padding-left 0.35s var(--ease);
+      transition:
+        border-color 0.4s var(--ease),
+        background 0.4s var(--ease),
+        transform 0.4s var(--ease);
     }
-    .project-row::after {
+
+    /* Mouse-tracking inner glow */
+    .glass-card::before {
       content: '';
       position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 2px;
-      background: var(--text);
-      transform: scaleY(0);
-      transition: transform 0.35s var(--ease);
+      inset: 0;
+      border-radius: 12px;
+      background: radial-gradient(
+        600px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(167,139,250,0.06) 0%,
+        transparent 50%
+      );
+      opacity: 0;
+      transition: opacity 0.4s var(--ease);
+      pointer-events: none;
     }
-    .project-row:hover { padding-left: 1.25rem; }
-    .project-row:hover::after { transform: scaleY(1); }
 
-    .row-num {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      color: var(--muted);
+    /* Top-edge gradient accent line */
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+      opacity: 0;
+      transition: opacity 0.4s var(--ease), left 0.4s var(--ease), right 0.4s var(--ease);
     }
-    .row-name {
-      font-family: var(--sans);
-      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+
+    .glass-card:hover {
+      border-color: var(--border-h);
+      background: rgba(15,15,20,0.8);
+      transform: translateY(-2px);
+    }
+    .glass-card:hover::before { opacity: 1; }
+    .glass-card:hover::after {
+      opacity: 1;
+      left: 10%;
+      right: 10%;
+    }
+
+    .card-header {}
+    .card-num {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      transition: color 0.3s var(--ease);
+    }
+    .glass-card:hover .card-num { color: var(--accent); }
+
+    .card-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
       font-weight: 700;
       letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+      transition: color 0.3s var(--ease);
     }
-    .row-desc {
-      font-size: 0.875rem;
+    .glass-card:hover .card-name { color: var(--accent); }
+
+    .card-desc {
+      font-size: 0.85rem;
       font-weight: 300;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.7;
+      max-width: 480px;
+      transition: color 0.3s var(--ease);
     }
-    .project-row:hover .row-desc { color: rgba(240,237,232,0.6); }
-    .row-arrow {
-      font-family: var(--mono);
-      font-size: 0.85rem;
+    .glass-card:hover .card-desc { color: var(--text-sub); }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.75rem;
+    }
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       color: var(--muted);
-      text-align: right;
-      transition: color 0.3s, transform 0.3s;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      transition: border-color 0.3s var(--ease), color 0.3s var(--ease), background 0.3s var(--ease);
     }
-    .project-row:hover .row-arrow {
-      color: var(--text);
+    .glass-card:hover .card-tag {
+      border-color: var(--accent-dim);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+    .card-arrow {
+      font-size: 1rem;
+      color: var(--muted);
+      transition: color 0.3s var(--ease), transform 0.35s var(--ease-spring);
+    }
+    .glass-card:hover .card-arrow {
+      color: var(--accent);
       transform: translate(3px, -3px);
     }
 
-    /* ── CONNECT ───────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       CONNECT — Animated gradient headline + pill buttons
+    ═══════════════════════════════════════════════════════════════ */
     #connect {
-      padding: 10rem 0;
+      padding: 10rem 0 8rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
     }
-    .connect-cta {
-      font-family: var(--sans);
-      font-size: clamp(3rem, 9vw, 9rem);
+
+    .connect-heading {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 7.5rem);
       font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 0.92;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(240,237,232,0.2);
-      cursor: default;
-      transition: color 0.5s var(--ease), -webkit-text-stroke 0.5s;
-      margin-bottom: 5rem;
-      user-select: none;
+      margin-bottom: 2.5rem;
+      /* Animated gradient text */
+      background: linear-gradient(
+        135deg,
+        var(--text) 0%,
+        var(--accent) 25%,
+        var(--glow) 50%,
+        var(--accent) 75%,
+        var(--text) 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient-sweep 6s ease-in-out infinite;
     }
-    .connect-cta:hover {
-      color: var(--text);
-      -webkit-text-stroke: 1px transparent;
+    @keyframes gradient-sweep {
+      0%, 100% { background-position: 0% center; }
+      50%      { background-position: 200% center; }
     }
 
-    .connect-links-row {
+    .connect-sub {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .connect-btns {
       display: flex;
-      gap: 1.5rem;
+      gap: 1rem;
+      justify-content: center;
       flex-wrap: wrap;
     }
-    .clink {
+    .pill-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.75rem;
-      font-family: var(--mono);
-      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text);
-      padding: 1rem 2rem;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
       border: 1px solid var(--border);
-      transition: border-color 0.3s, background 0.3s;
+      color: var(--text);
       text-decoration: none;
+      transition:
+        border-color 0.3s var(--ease),
+        background 0.3s var(--ease),
+        transform 0.3s var(--ease),
+        box-shadow 0.3s var(--ease);
     }
-    .clink:hover {
-      border-color: var(--text);
-      background: rgba(240,237,232,0.04);
+    .pill-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(167,139,250,0.1);
     }
-    .clink-solid {
-      background: var(--text);
-      color: #000;
-      border-color: var(--text);
+    .pill-btn-solid {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #08080a;
+      font-weight: 500;
     }
-    .clink-solid:hover {
-      background: rgba(240,237,232,0.9);
+    .pill-btn-solid:hover {
+      background: #b89dff;
+      border-color: #b89dff;
+      box-shadow: 0 4px 24px rgba(167,139,250,0.25);
     }
 
-    /* ── FOOTER ─────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════════ */
     footer {
+      padding: 2rem clamp(1.25rem, 5%, 3rem);
       border-top: 1px solid var(--border);
-      padding: 2rem 5%;
       display: flex;
+      align-items: center;
       justify-content: space-between;
     }
     .foot {
-      font-family: var(--mono);
-      font-size: 0.58rem;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    .reveal { opacity: 0; transform: translateY(20px); }
+    /* ═══════════════════════════════════════════════════════════════
+       REVEAL BASE STATE
+    ═══════════════════════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+    }
 
+    /* ═══════════════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .signal-strip { grid-template-columns: 1fr 1fr; }
+    }
     @media (max-width: 768px) {
-      .project-row { grid-template-columns: 2rem 1fr auto; }
-      .row-desc { display: none; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-grid .glass-card:first-child { grid-column: 1; }
       .nav-links { display: none; }
-      .hero-meta-mono { display: none; }
+      .hero-meta { flex-direction: column; gap: 0; border-radius: 6px; }
+      .meta-cell { padding: 0.9rem 1rem; }
+      .signal-strip { grid-template-columns: 1fr; }
+      .connect-heading { line-height: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Accessible name for screen readers -->
-  <span id="hero-text-a11y" aria-label="Shivansh Bansal"></span>
-
-  <!-- NAV -->
+  <!-- ═══════════════ NAV ═══════════════ -->
   <nav aria-label="Site navigation">
     <span class="nav-id">SB · Portfolio 2026</span>
     <ul class="nav-links">
@@ -341,316 +670,305 @@
     </ul>
   </nav>
 
-  <!-- HERO — canvas fills this, text is composited inside letterforms -->
+  <!-- ═══════════════ HERO ═══════════════ -->
   <section id="hero">
     <div class="wrap">
-      <!-- The particle canvas — particles rendered only inside text glyphs -->
-      <canvas id="particle-canvas" aria-hidden="true"></canvas>
+      <!-- Floating gradient orb — follows mouse subtly -->
+      <div class="hero-orb" id="hero-orb" aria-hidden="true"></div>
 
-      <div class="hero-below">
+      <div class="hero-content">
+        <p class="hero-label">Shivansh Bansal / Full-Stack AI Engineer</p>
+
+        <h1 class="hero-name" id="hero-name">
+          <span class="name-highlight">Shivansh</span><br>Bansal
+        </h1>
+
         <p class="hero-tagline">
-          I see what's broken.<br>I build what fixes it.
+          <strong>I see what's broken.</strong><br>I build what fixes it.
         </p>
-        <p class="hero-meta-mono">
-          IIT Madras · DS<br>
-          BSc CS · Ambala<br>
-          Chess · 6 Projects
-        </p>
+
+        <!-- Compact meta strip -->
+        <div class="hero-meta">
+          <div class="meta-cell">
+            <p class="meta-label">Degree</p>
+            <p class="meta-value">IIT Madras · BS Data Science</p>
+          </div>
+          <div class="meta-cell">
+            <p class="meta-label">Also</p>
+            <p class="meta-value">BSc CS · Govt. College Ambala</p>
+          </div>
+          <div class="meta-cell">
+            <p class="meta-label">Edge</p>
+            <p class="meta-value">Competitive Chess Player</p>
+          </div>
+          <div class="meta-cell">
+            <p class="meta-label">Ships</p>
+            <p class="meta-value">06 live · 2024–26</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ═══════════════ ABOUT ═══════════════ -->
   <section id="about">
     <div class="wrap">
-      <p class="sec-label reveal">// About</p>
-      <p class="about-text reveal">
-        I'm studying <strong>Data Science at IIT Madras</strong> and CS at
-        Govt. College Ambala Cantt. I play chess competitively — which means
-        I think about failure modes <em>before</em> I start building, not after.
-        <br><br>
-        I've made a mental wellness app, an AI website generator, document processing
-        tools, a QR generator, academic storage infrastructure, and a client enterprise site.
-        The only real reason I built any of them is to find out whether they were possible.
-      </p>
+      <p class="section-tag reveal">// About</p>
+
+      <div class="about-grid">
+        <p class="about-text reveal">
+          I'm studying <strong>Data Science at IIT Madras</strong> and CS at
+          Govt. College Ambala Cantt. I play chess competitively — which means
+          I think about failure modes <em>before</em> I start building, not after.
+          <br><br>
+          I've made a mental wellness app, an AI website generator, document processing
+          tools, a QR generator, academic storage infrastructure, and a client enterprise
+          site. The only real reason I built any of them is to find out whether they
+          were possible.
+        </p>
+
+        <!-- Signal strip — compact data panels -->
+        <div class="signal-strip reveal">
+          <div class="signal-cell">
+            <p class="signal-num">01 · Foundation</p>
+            <p class="signal-title">IIT Madras + BSc CS</p>
+            <p class="signal-body">Data Science meets raw CS theory.</p>
+          </div>
+          <div class="signal-cell">
+            <p class="signal-num">02 · Strategy</p>
+            <p class="signal-title">Competitive Chess</p>
+            <p class="signal-body">12 moves ahead. Sacrifice for position.</p>
+          </div>
+          <div class="signal-cell">
+            <p class="signal-num">03 · Range</p>
+            <p class="signal-title">Cross-Domain</p>
+            <p class="signal-body">Psychology, Finance, AI — synthesized.</p>
+          </div>
+          <div class="signal-cell">
+            <p class="signal-num">04 · Principle</p>
+            <p class="signal-title">Curiosity-First</p>
+            <p class="signal-body">"Is this even possible to make?"</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- WORK -->
+  <!-- ═══════════════ WORK ═══════════════ -->
   <section id="work">
     <div class="wrap">
-      <div class="work-head reveal">
-        <h2 class="work-title">Work</h2>
-        <span class="work-sub">06 live · 2024–26</span>
+      <p class="section-tag reveal">// Work · 06 live deployments</p>
+
+      <div class="bento-grid" id="bento-grid">
+
+        <!-- 1: Genetix — spans full width -->
+        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="glass-card reveal" aria-label="Genetix AI Website Builder">
+          <div class="card-header">
+            <p class="card-num">01 / AI · Website Builder</p>
+            <h3 class="card-name">Genetix AI</h3>
+            <p class="card-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">AI Gen</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- 2: VK Industries -->
+        <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
+           class="glass-card reveal" aria-label="VK Industries KUK">
+          <div class="card-header">
+            <p class="card-num">02 / Client · Enterprise</p>
+            <h3 class="card-name">VK Industries KUK</h3>
+            <p class="card-desc">A client needed an online presence. I built it.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">Client</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- 3: Mind Space -->
+        <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="glass-card reveal" aria-label="Mind Space">
+          <div class="card-header">
+            <p class="card-num">03 / Consumer · Wellness</p>
+            <h3 class="card-name">Mind Space</h3>
+            <p class="card-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">Wellness</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- 4: Campus Vault -->
+        <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="glass-card reveal" aria-label="Campus Vault">
+          <div class="card-header">
+            <p class="card-num">04 / Cloud · Storage</p>
+            <h3 class="card-name">Campus Vault</h3>
+            <p class="card-desc">Academic storage with fast edge fetching. Boring name, useful tool.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">Storage</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- 5: QR Main Ten -->
+        <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="glass-card reveal" aria-label="QR Main Ten">
+          <div class="card-header">
+            <p class="card-num">05 / Utility · Edge</p>
+            <h3 class="card-name">QR Main Ten</h3>
+            <p class="card-desc">A fast, clean QR generator. Does exactly what it says.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">Utility</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
+        <!-- 6: PDF4Me -->
+        <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="glass-card reveal" aria-label="PDF4Me">
+          <div class="card-header">
+            <p class="card-num">06 / Automation · Docs</p>
+            <h3 class="card-name">PDF4Me</h3>
+            <p class="card-desc">Document processing pipeline. Upload, extract, compress, done.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">Automation</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
       </div>
-
-      <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
-         class="project-row reveal" aria-label="Genetix AI Website Builder">
-        <span class="row-num">01</span>
-        <span class="row-name">Genetix AI</span>
-        <span class="row-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</span>
-        <span class="row-arrow">↗</span>
-      </a>
-
-      <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
-         class="project-row reveal" aria-label="VK Industries KUK">
-        <span class="row-num">02</span>
-        <span class="row-name">VK Industries KUK</span>
-        <span class="row-desc">A client needed an online presence. I built it.</span>
-        <span class="row-arrow">↗</span>
-      </a>
-
-      <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
-         class="project-row reveal" aria-label="Mind Space">
-        <span class="row-num">03</span>
-        <span class="row-name">Mind Space</span>
-        <span class="row-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</span>
-        <span class="row-arrow">↗</span>
-      </a>
-
-      <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
-         class="project-row reveal" aria-label="Campus Vault">
-        <span class="row-num">04</span>
-        <span class="row-name">Campus Vault</span>
-        <span class="row-desc">Academic storage with fast edge fetching. Boring name, useful tool.</span>
-        <span class="row-arrow">↗</span>
-      </a>
-
-      <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
-         class="project-row reveal" aria-label="QR Main Ten">
-        <span class="row-num">05</span>
-        <span class="row-name">QR Main Ten</span>
-        <span class="row-desc">A fast, clean QR generator. Does exactly what it says.</span>
-        <span class="row-arrow">↗</span>
-      </a>
-
-      <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
-         class="project-row reveal" aria-label="PDF4Me">
-        <span class="row-num">06</span>
-        <span class="row-name">PDF4Me</span>
-        <span class="row-desc">Document processing pipeline. Upload, extract, compress, done.</span>
-        <span class="row-arrow">↗</span>
-      </a>
-
     </div>
   </section>
 
-  <!-- CONNECT -->
+  <!-- ═══════════════ CONNECT ═══════════════ -->
   <section id="connect">
     <div class="wrap">
-      <h2 class="connect-cta reveal" aria-label="Let's build the impossible.">
-        Let's build<br>the impossible.
-      </h2>
-      <p class="sec-label reveal" style="margin-bottom:2rem;">
-        Not looking for a role — just building. Interesting conversations welcome.
+      <h2 class="connect-heading reveal">Let's build<br>the impossible.</h2>
+      <p class="connect-sub reveal">
+        Not looking for a role right now — just building things.
+        If you want to talk about something interesting, reach out.
       </p>
-      <div class="connect-links-row reveal">
+      <div class="connect-btns reveal">
         <a href="https://github.com/TattvaAI" target="_blank" rel="noopener noreferrer"
-           class="clink clink-solid" aria-label="GitHub">GitHub · TattvaAI ↗</a>
+           class="pill-btn pill-btn-solid" aria-label="GitHub">GitHub · TattvaAI ↗</a>
         <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" rel="noopener noreferrer"
-           class="clink" aria-label="LinkedIn">LinkedIn ↗</a>
+           class="pill-btn" aria-label="LinkedIn">LinkedIn ↗</a>
       </div>
     </div>
   </section>
 
   <footer>
     <span class="foot">© 2026 Shivansh Bansal</span>
-    <span class="foot">v4-C · Canvas</span>
+    <span class="foot">v5 · Obsidian</span>
   </footer>
 
-  <!-- Scripts -->
+  <!-- ═══════════════ SCRIPTS ═══════════════ -->
   <script src="./lib/gsap.min.js"></script>
   <script src="./lib/ScrollTrigger.min.js"></script>
 
   <script>
-    /* ═══════════════════════════════════════════════════════════
-       DIRECTION C: WebGL-free particle text using Canvas 2D API
-       Technique: draw text as mask, sample pixel positions, spawn
-       particles only at lit pixels. 100% Canvas 2D — no Three.js
-       needed. More readable than WebGL for recruiters' machines.
-    ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════════
+       v5: OBSIDIAN — Interactions
+    ═══════════════════════════════════════════════════════════════ */
 
-    const canvas  = document.getElementById('particle-canvas');
-    const ctx     = canvas.getContext('2d');
-    const wrap    = canvas.parentElement;
-    const isMobile = window.innerWidth < 768;
+    /* ── 1. Mouse-reactive gradient orb ─────────────────────────── */
+    const orb = document.getElementById('hero-orb');
+    let orbX = 0, orbY = 0, targetX = 0, targetY = 0;
 
-    // Responsive font size matching CSS hero scale
-    function heroFontSize() {
-      return Math.min(Math.max(window.innerWidth * 0.105, isMobile ? 56 : 72), 160);
-    }
-
-    // ── 1. Measure & size canvas ──────────────────────────────
-    function sizeCanvas() {
-      const fs = heroFontSize();
-      const W  = wrap.clientWidth;
-      // Approximate: "SHIVANSH" and "BANSAL" over 2 lines
-      const H  = fs * 2.1; // two lines with leading
-      canvas.width  = W;
-      canvas.height = H;
-      canvas.style.height = H + 'px';
-      return { W, H, fs };
-    }
-
-    // ── 2. Render text to offscreen canvas as mask ────────────
-    function buildMask({ W, H, fs }) {
-      const off = document.createElement('canvas');
-      off.width = W; off.height = H;
-      const octx = off.getContext('2d');
-
-      octx.clearRect(0, 0, W, H);
-      octx.fillStyle = '#fff'; // particles will be placed at white pixels
-
-      const fontStr = `800 ${fs}px 'Syne', system-ui, sans-serif`;
-      octx.font = fontStr;
-      octx.textBaseline = 'top';
-
-      // Draw two lines
-      octx.fillText('SHIVANSH', 0, 0);
-      octx.fillText('BANSAL',   0, fs * 1.05);
-
-      return octx.getImageData(0, 0, W, H);
-    }
-
-    // ── 3. Sample pixels from mask → particle positions ───────
-    function samplePixels(imageData, W, H, density) {
-      const data = imageData.data;
-      const positions = [];
-      const step = Math.max(3, Math.round(isMobile ? 6 : 4)); // sample every N pixels
-
-      for (let y = 0; y < H; y += step) {
-        for (let x = 0; x < W; x += step) {
-          const idx = (y * W + x) * 4;
-          const alpha = data[idx + 3];
-          if (alpha > 128) {
-            positions.push({ x, y });
-          }
-        }
-      }
-      return positions;
-    }
-
-    // ── 4. Particle class ─────────────────────────────────────
-    class Particle {
-      constructor(tx, ty) {
-        this.tx = tx; // target X (text position)
-        this.ty = ty; // target Y
-        // Start from a random scatter position
-        this.x  = Math.random() * canvas.width;
-        this.y  = Math.random() * canvas.height + canvas.height * 0.5;
-        this.vx = 0;
-        this.vy = 0;
-        this.size = Math.random() * 1.5 + 0.6;
-        this.opacity = Math.random() * 0.6 + 0.4;
-        this.arrived = false;
-        this.delay = Math.random() * 1200; // ms stagger
-      }
-
-      update(t) {
-        if (t < this.delay) return;
-        // Spring toward target
-        const stiffness = 0.06 + Math.random() * 0.02;
-        const damping   = 0.75;
-        const dx = this.tx - this.x;
-        const dy = this.ty - this.y;
-        this.vx = (this.vx + dx * stiffness) * damping;
-        this.vy = (this.vy + dy * stiffness) * damping;
-        this.x += this.vx;
-        this.y += this.vy;
-        // Micro idle float once near target
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 1.5) {
-          this.arrived = true;
-          // Gentle drift
-          this.x += Math.sin(t * 0.0008 + this.tx) * 0.25;
-          this.y += Math.cos(t * 0.0007 + this.ty) * 0.2;
-        }
-      }
-
-      draw(ctx) {
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = '#f0ede8';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // ── 5. Boot ───────────────────────────────────────────────
-    let particles = [];
-    let animId;
-    let startTime = null;
-    let dims;
-
-    function boot() {
-      dims = sizeCanvas();
-      const mask = buildMask(dims);
-      const positions = samplePixels(mask, dims.W, dims.H, 1);
-
-      // Limit particle count for performance
-      const max = isMobile ? 2000 : 5000;
-      const sampled = positions.length > max
-        ? positions.filter((_, i) => i % Math.ceil(positions.length / max) === 0)
-        : positions;
-
-      particles = sampled.map(p => new Particle(p.x, p.y));
-    }
-
-    function tick(ts) {
-      animId = requestAnimationFrame(tick);
-      if (!startTime) startTime = ts;
-      const elapsed = ts - startTime;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.globalAlpha = 1;
-
-      for (const p of particles) {
-        p.update(elapsed);
-        p.draw(ctx);
-      }
-    }
-
-    // ── 6. Resize ─────────────────────────────────────────────
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        cancelAnimationFrame(animId);
-        startTime = null;
-        boot();
-        tick(0);
-      }, 200);
+    document.addEventListener('mousemove', (e) => {
+      // Normalise to viewport center offset
+      targetX = (e.clientX / window.innerWidth - 0.5) * 60;
+      targetY = (e.clientY / window.innerHeight - 0.5) * 40;
     });
 
-    // ── 7. Tab visibility pause ───────────────────────────────
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) cancelAnimationFrame(animId);
-      else { startTime = null; requestAnimationFrame(tick); }
+    function orbTick() {
+      orbX += (targetX - orbX) * 0.04;
+      orbY += (targetY - orbY) * 0.04;
+      orb.style.transform = `translate(${orbX}px, ${orbY}px)`;
+      requestAnimationFrame(orbTick);
+    }
+    requestAnimationFrame(orbTick);
+
+    /* ── 2. Card mouse-tracking glow ────────────────────────────── */
+    document.querySelectorAll('.glass-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+        const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+        card.style.setProperty('--mx', x + '%');
+        card.style.setProperty('--my', y + '%');
+      });
     });
 
-    // Fonts must be loaded before we measure text
-    document.fonts.ready.then(() => {
-      boot();
-      requestAnimationFrame(tick);
+    /* ── 3. GSAP Animations ─────────────────────────────────────── */
+    gsap.registerPlugin(ScrollTrigger);
 
-      // Entrance animations after particles start flowing
-      setTimeout(() => {
-        gsap.registerPlugin(ScrollTrigger);
+    // Hero entrance — precise choreography
+    const heroTl = gsap.timeline({ delay: 0.2 });
+    heroTl
+      .to('.hero-label',   { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' })
+      .to('#hero-name',    { opacity: 1, y: 0, duration: 1,   ease: 'expo.out' }, '-=0.4')
+      .to('.hero-tagline', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5')
+      .to('.hero-meta',    { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.3')
+      .to('.scroll-hint',  { opacity: 1,       duration: 0.6, ease: 'power2.out' }, '-=0.2')
+      .add(() => {
+        document.getElementById('hero-name').classList.add('active');
+      }, '-=0.6');
 
-        gsap.to('.hero-tagline', { opacity: 0.8, y: 0, duration: 1, ease: 'power2.out', delay: 0.8 });
-        gsap.to('.hero-meta-mono', { opacity: 1, duration: 0.8, ease: 'power2.out', delay: 1.3 });
+    // Scroll-driven reveals with wave stagger
+    gsap.utils.toArray('.reveal').forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+        },
+        delay: (i % 4) * 0.08,
+      });
+    });
 
-        gsap.utils.toArray('.reveal').forEach((el, i) => {
-          gsap.to(el, {
-            opacity: 1, y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: el, start: 'top 88%' },
-            delay: (i % 3) * 0.07,
+    // Fade scroll hint on scroll
+    ScrollTrigger.create({
+      start: 'top -80',
+      onUpdate: (self) => {
+        gsap.to('.scroll-hint', { opacity: 1 - self.progress * 5, duration: 0.2 });
+      }
+    });
+
+    /* ── 4. Smooth anchor scrolling ─────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          gsap.to(window, {
+            scrollTo: { y: target, offsetY: 80 },
+            duration: 1,
+            ease: 'power2.inOut'
           });
-        });
-      }, 100);
+        }
+      });
     });
   </script>
+
 </body>
 </html>
