@@ -8,66 +8,61 @@
   <meta property="og:description" content="I see what's broken. I build what fixes it." />
   <title>Shivansh Bansal</title>
 
-  <!-- Space Grotesk (display) + JetBrains Mono (labels/terminal) -->
+  <!-- Syne (display) + Inter (body) + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── TOKENS ──────────────────────────────────────── */
+    /* ── TOKENS ────────────────────────────────── */
     :root {
-      --bg:      #0d0d0d;
-      --surface: #141414;
-      --border:  #1f1f1f;
-      --amber:   #f5a623;
-      --amber-d: #c47e0f;
-      --text:    #e8e0d5;
-      --muted:   #555;
+      --bg:    #000;
+      --text:  #f0ede8;
+      --muted: #444;
+      --dim:   rgba(240,237,232,0.3);
+      --border: rgba(240,237,232,0.1);
 
-      --sans: 'Space Grotesk', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --sans:  'Syne', system-ui, sans-serif;
+      --body:  'Inter', system-ui, sans-serif;
+      --mono:  'JetBrains Mono', monospace;
+      --ease:  cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { background: var(--bg); }
+    html, body { background: var(--bg); }
     body {
-      font-family: var(--sans);
-      background: var(--bg);
+      font-family: var(--body);
       color: var(--text);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      /* Fine dot grid — engineering graph paper */
-      background-image: radial-gradient(circle, rgba(245,166,35,0.08) 1px, transparent 1px);
-      background-size: 28px 28px;
     }
 
     a { color: inherit; text-decoration: none; }
 
-    /* ── LAYOUT ──────────────────────────────────────── */
     .wrap {
-      max-width: 1120px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 0 5%;
     }
 
-    /* ── NAV ─────────────────────────────────────────── */
+    /* ── NAV ───────────────────────────────────── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.5rem 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.5rem 5%;
-      background: rgba(13,13,13,0.85);
-      backdrop-filter: blur(12px);
+      /* Glassmorphism nav */
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo {
+    .nav-id {
       font-family: var(--mono);
       font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      color: var(--amber);
+      color: var(--dim);
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
     .nav-links {
@@ -78,353 +73,267 @@
     .nav-links a {
       font-family: var(--mono);
       font-size: 0.65rem;
+      color: var(--muted);
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted);
       transition: color 0.3s;
     }
-    .nav-links a:hover { color: var(--amber); }
+    .nav-links a:hover { color: var(--text); }
 
-    /* ── HERO ─────────────────────────────────────────── */
+    /* ── HERO ──────────────────────────────────── */
     #hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 10rem 0 6rem;
-      border-bottom: 1px solid var(--border);
       position: relative;
+      overflow: hidden;
     }
 
-    /* Chess board reference — faint 8×8 grid in corner */
-    .chess-grid {
-      position: absolute;
-      bottom: 4rem;
-      right: 5%;
-      display: grid;
-      grid-template-columns: repeat(8, 1rem);
-      grid-template-rows: repeat(8, 1rem);
-      gap: 2px;
-      opacity: 0.06;
-      pointer-events: none;
-    }
-    .chess-grid span {
-      background: var(--amber);
-    }
-    .chess-grid span:nth-child(odd) { background: transparent; border: 1px solid var(--amber); }
-
-    .hero-system {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      color: var(--amber);
-      text-transform: uppercase;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    .hero-system::before {
-      content: '›› ';
-    }
-
-    h1.hero-name {
-      font-size: clamp(4rem, 11vw, 11rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 0.88;
-      color: var(--text);
-      opacity: 0;
-      transform: translateY(24px);
-    }
-
-    /* The amber underline accent on name */
-    h1.hero-name span {
+    /* The canvas that renders particles — clipped to text via compositing */
+    #particle-canvas {
+      display: block;
+      width: 100%;
+      /* Height set by JS */
       position: relative;
-      display: inline-block;
-    }
-    h1.hero-name span::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--amber);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.8s var(--ease) 1.2s;
-    }
-    h1.hero-name.loaded span::after {
-      transform: scaleX(1);
+      z-index: 1;
     }
 
+    /* Invisible text layer — used ONLY for accessibility, not display */
+    #hero-text-a11y {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .hero-below {
+      position: relative;
+      z-index: 2;
+      padding-top: 4rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
     .hero-tagline {
-      margin-top: 3.5rem;
-      font-size: clamp(1.2rem, 2.5vw, 2rem);
-      font-weight: 300;
-      color: rgba(232,224,213,0.7);
-      max-width: 600px;
-      line-height: 1.5;
+      font-family: var(--sans);
+      font-size: clamp(1.3rem, 2.8vw, 2.2rem);
+      font-weight: 400;
+      color: var(--text);
+      opacity: 0.8;
+      max-width: 580px;
+      line-height: 1.35;
       opacity: 0;
       transform: translateY(16px);
     }
-    .hero-tagline strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .hero-meta {
-      margin-top: 4rem;
-      display: flex;
-      gap: 3rem;
-      align-items: center;
+    .hero-meta-mono {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+      line-height: 2;
       opacity: 0;
     }
-    .hero-meta-item {
+
+    /* ── ABOUT ─────────────────────────────────── */
+    #about {
+      padding: 10rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .sec-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4rem;
+    }
+    .about-text {
+      font-family: var(--body);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(240,237,232,0.8);
+      max-width: 760px;
+    }
+    .about-text strong { color: var(--text); font-weight: 500; }
+
+    /* ── WORK ──────────────────────────────────── */
+    #work {
+      padding: 10rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .work-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 0;
+    }
+    .work-title {
+      font-family: var(--sans);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+    .work-sub {
       font-family: var(--mono);
       font-size: 0.6rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
     }
-    .hero-meta-item strong {
-      display: block;
-      font-size: 0.65rem;
-      color: var(--amber);
-      margin-bottom: 0.2rem;
-      font-weight: 500;
-    }
 
-    /* ── ABOUT ─────────────────────────────────────── */
-    #about {
-      padding: 8rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .panel-tag {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 3rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .panel-tag::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-      max-width: 200px;
-    }
-    .about-content {
-      max-width: 780px;
-    }
-    .about-text {
-      font-size: clamp(1.1rem, 2vw, 1.3rem);
-      font-weight: 300;
-      line-height: 1.85;
-      color: rgba(232,224,213,0.8);
-    }
-    .about-text strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* ── WORK ──────────────────────────────────────── */
-    #work {
-      padding: 8rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .project-grid {
+    /* List layout — clean horizontal rows with hover slide */
+    .project-row {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-top: 3rem;
-    }
-    .project-card {
-      background: var(--bg);
-      padding: 2.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 260px;
+      grid-template-columns: 2.5rem 1fr 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
       text-decoration: none;
       color: var(--text);
       position: relative;
       overflow: hidden;
-      transition: background 0.4s var(--ease);
+      transition: padding-left 0.35s var(--ease);
     }
-    /* Amber corner tick — like a data panel */
-    .project-card::before {
+    .project-row::after {
       content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 0;
-      background: var(--amber);
-      transition: height 0.4s var(--ease);
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--text);
+      transform: scaleY(0);
+      transition: transform 0.35s var(--ease);
     }
-    .project-card:hover { background: var(--surface); }
-    .project-card:hover::before { height: 100%; }
+    .project-row:hover { padding-left: 1.25rem; }
+    .project-row:hover::after { transform: scaleY(1); }
 
-    .card-top {}
-    .card-num {
+    .row-num {
       font-family: var(--mono);
       font-size: 0.6rem;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.12em;
       color: var(--muted);
-      margin-bottom: 1.5rem;
-      transition: color 0.3s;
     }
-    .project-card:hover .card-num { color: var(--amber); }
-    .card-name {
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
+    .row-name {
+      font-family: var(--sans);
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
       font-weight: 700;
       letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: var(--text);
-      margin-bottom: 1rem;
     }
-    .card-desc {
+    .row-desc {
       font-size: 0.875rem;
       font-weight: 300;
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.6;
     }
-    .project-card:hover .card-desc { color: rgba(232,224,213,0.6); }
-
-    .card-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    .card-type {
+    .project-row:hover .row-desc { color: rgba(240,237,232,0.6); }
+    .row-arrow {
       font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 0.85rem;
       color: var(--muted);
-      padding: 0.3rem 0.7rem;
-      border: 1px solid var(--border);
-      transition: border-color 0.3s, color 0.3s;
-    }
-    .project-card:hover .card-type {
-      border-color: var(--amber);
-      color: var(--amber);
-    }
-    .card-arrow {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--muted);
+      text-align: right;
       transition: color 0.3s, transform 0.3s;
     }
-    .project-card:hover .card-arrow {
-      color: var(--amber);
+    .project-row:hover .row-arrow {
+      color: var(--text);
       transform: translate(3px, -3px);
     }
 
-    /* ── CONNECT ───────────────────────────────────── */
+    /* ── CONNECT ───────────────────────────────── */
     #connect {
-      padding: 8rem 0;
+      padding: 10rem 0;
     }
-    .connect-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: start;
+    .connect-cta {
+      font-family: var(--sans);
+      font-size: clamp(3rem, 9vw, 9rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(240,237,232,0.2);
+      cursor: default;
+      transition: color 0.5s var(--ease), -webkit-text-stroke 0.5s;
+      margin-bottom: 5rem;
+      user-select: none;
     }
-    .connect-heading {
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1;
+    .connect-cta:hover {
+      color: var(--text);
+      -webkit-text-stroke: 1px transparent;
     }
-    .connect-heading em {
-      color: var(--amber);
-      font-style: normal;
-    }
-    .connect-body {
-      padding-top: 1rem;
-    }
-    .connect-note {
-      font-size: 0.95rem;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-    }
-    .connect-btns {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.1rem 1.5rem;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      transition: border-color 0.3s var(--ease), background 0.3s;
-    }
-    .btn:hover {
-      border-color: var(--amber);
-      background: rgba(245,166,35,0.04);
-    }
-    .btn-primary {
-      background: var(--amber);
-      border-color: var(--amber);
-      color: #0d0d0d;
-      font-weight: 500;
-    }
-    .btn-primary:hover {
-      background: var(--amber-d);
-      border-color: var(--amber-d);
-    }
-    .btn-label { }
-    .btn-arr { font-size: 0.75rem; }
 
-    /* ── FOOTER ────────────────────────────────────── */
-    footer {
-      padding: 2rem 5%;
-      border-top: 1px solid var(--border);
+    .connect-links-row {
       display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .clink {
+      display: inline-flex;
       align-items: center;
+      gap: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      padding: 1rem 2rem;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, background 0.3s;
+      text-decoration: none;
+    }
+    .clink:hover {
+      border-color: var(--text);
+      background: rgba(240,237,232,0.04);
+    }
+    .clink-solid {
+      background: var(--text);
+      color: #000;
+      border-color: var(--text);
+    }
+    .clink-solid:hover {
+      background: rgba(240,237,232,0.9);
+    }
+
+    /* ── FOOTER ─────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 5%;
+      display: flex;
       justify-content: space-between;
     }
     .foot {
       font-family: var(--mono);
       font-size: 0.58rem;
       letter-spacing: 0.12em;
-      color: var(--muted);
       text-transform: uppercase;
+      color: var(--muted);
     }
 
-    /* ── REVEALS ───────────────────────────────────── */
     .reveal { opacity: 0; transform: translateY(20px); }
 
-    /* ── RESPONSIVE ────────────────────────────────── */
     @media (max-width: 768px) {
-      .connect-row { grid-template-columns: 1fr; gap: 3rem; }
+      .project-row { grid-template-columns: 2rem 1fr auto; }
+      .row-desc { display: none; }
       .nav-links { display: none; }
-      .chess-grid { display: none; }
-      .hero-meta { flex-wrap: wrap; gap: 1.5rem; }
+      .hero-meta-mono { display: none; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Accessible name for screen readers -->
+  <span id="hero-text-a11y" aria-label="Shivansh Bansal"></span>
+
   <!-- NAV -->
   <nav aria-label="Site navigation">
-    <div class="nav-logo">>> sys.online / SB</div>
+    <span class="nav-id">SB · Portfolio 2026</span>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#work">Work</a></li>
@@ -432,53 +341,21 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO — canvas fills this, text is composited inside letterforms -->
   <section id="hero">
     <div class="wrap">
-      <!-- Chess board decoration -->
-      <div class="chess-grid" aria-hidden="true">
-        <!-- 64 cells — alternating pattern -->
-        <script>
-          ;(function() {
-            const g = document.currentScript.parentElement;
-            for(let i = 0; i < 64; i++) {
-              const s = document.createElement('span');
-              if((Math.floor(i/8) + i) % 2 === 0) s.style.background = 'var(--amber)';
-              else { s.style.background = 'transparent'; s.style.border = '1px solid var(--amber)'; }
-              g.appendChild(s);
-            }
-            g.removeChild(document.currentScript);
-          })();
-        </script>
-      </div>
+      <!-- The particle canvas — particles rendered only inside text glyphs -->
+      <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
-      <p class="hero-system">Status: online — Shivansh Bansal</p>
-
-      <h1 class="hero-name" id="hero-name">
-        <span>Shivansh</span><br>Bansal
-      </h1>
-
-      <p class="hero-tagline">
-        <strong>I see what's broken.</strong><br>I build what fixes it.
-      </p>
-
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <strong>Degree</strong>
-          IIT Madras · BS Data Science
-        </div>
-        <div class="hero-meta-item">
-          <strong>Also</strong>
-          BSc CS · Govt. College Ambala
-        </div>
-        <div class="hero-meta-item">
-          <strong>Edge</strong>
-          Competitive Chess Player
-        </div>
-        <div class="hero-meta-item">
-          <strong>Projects</strong>
-          06 live · 2024–26
-        </div>
+      <div class="hero-below">
+        <p class="hero-tagline">
+          I see what's broken.<br>I build what fixes it.
+        </p>
+        <p class="hero-meta-mono">
+          IIT Madras · DS<br>
+          BSc CS · Ambala<br>
+          Chess · 6 Projects
+        </p>
       </div>
     </div>
   </section>
@@ -486,168 +363,293 @@
   <!-- ABOUT -->
   <section id="about">
     <div class="wrap">
-      <p class="panel-tag reveal">// About</p>
-      <div class="about-content reveal">
-        <p class="about-text">
-          I'm studying <strong>Data Science at IIT Madras</strong> and CS at
-          Govt. College Ambala Cantt. I play chess competitively — which means
-          I think about failure modes <em>before</em> I start building, not after.
-          <br><br>
-          I've made a mental wellness app, an AI website generator, document processing
-          tools, a QR generator, academic storage infrastructure, and a client enterprise
-          site. The only real reason I built any of them is to find out whether they
-          were possible.
-        </p>
-      </div>
+      <p class="sec-label reveal">// About</p>
+      <p class="about-text reveal">
+        I'm studying <strong>Data Science at IIT Madras</strong> and CS at
+        Govt. College Ambala Cantt. I play chess competitively — which means
+        I think about failure modes <em>before</em> I start building, not after.
+        <br><br>
+        I've made a mental wellness app, an AI website generator, document processing
+        tools, a QR generator, academic storage infrastructure, and a client enterprise site.
+        The only real reason I built any of them is to find out whether they were possible.
+      </p>
     </div>
   </section>
 
   <!-- WORK -->
   <section id="work">
     <div class="wrap">
-      <p class="panel-tag reveal">// Work · 06 live deployments</p>
-
-      <div class="project-grid">
-
-        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-card reveal" aria-label="Genetix AI Website Builder">
-          <div class="card-top">
-            <p class="card-num">01 / AI · Website Builder</p>
-            <h3 class="card-name">Genetix AI</h3>
-            <p class="card-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="card-type">AI Gen</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
-           class="project-card reveal" aria-label="VK Industries KUK">
-          <div class="card-top">
-            <p class="card-num">02 / Client · Enterprise</p>
-            <h3 class="card-name">VK Industries KUK</h3>
-            <p class="card-desc">A client needed an online presence. I built it.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="card-type">Client</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-card reveal" aria-label="Mind Space">
-          <div class="card-top">
-            <p class="card-num">03 / Consumer · Wellness</p>
-            <h3 class="card-name">Mind Space</h3>
-            <p class="card-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="card-type">Wellness</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-card reveal" aria-label="Campus Vault">
-          <div class="card-top">
-            <p class="card-num">04 / Cloud · Storage</p>
-            <h3 class="card-name">Campus Vault</h3>
-            <p class="card-desc">Academic storage with fast edge fetching. Boring name, useful tool.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="card-type">Storage</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-card reveal" aria-label="QR Main Ten">
-          <div class="card-top">
-            <p class="card-num">05 / Utility · Edge</p>
-            <h3 class="card-name">QR Main Ten</h3>
-            <p class="card-desc">A fast, clean QR generator. Does exactly what it says.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="card-type">Utility</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-card reveal" aria-label="PDF4Me">
-          <div class="card-top">
-            <p class="card-num">06 / Automation · Docs</p>
-            <h3 class="card-name">PDF4Me</h3>
-            <p class="card-desc">Document processing pipeline. Upload, extract, compress, done.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="card-type">Automation</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
+      <div class="work-head reveal">
+        <h2 class="work-title">Work</h2>
+        <span class="work-sub">06 live · 2024–26</span>
       </div>
+
+      <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
+         class="project-row reveal" aria-label="Genetix AI Website Builder">
+        <span class="row-num">01</span>
+        <span class="row-name">Genetix AI</span>
+        <span class="row-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</span>
+        <span class="row-arrow">↗</span>
+      </a>
+
+      <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
+         class="project-row reveal" aria-label="VK Industries KUK">
+        <span class="row-num">02</span>
+        <span class="row-name">VK Industries KUK</span>
+        <span class="row-desc">A client needed an online presence. I built it.</span>
+        <span class="row-arrow">↗</span>
+      </a>
+
+      <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
+         class="project-row reveal" aria-label="Mind Space">
+        <span class="row-num">03</span>
+        <span class="row-name">Mind Space</span>
+        <span class="row-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</span>
+        <span class="row-arrow">↗</span>
+      </a>
+
+      <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
+         class="project-row reveal" aria-label="Campus Vault">
+        <span class="row-num">04</span>
+        <span class="row-name">Campus Vault</span>
+        <span class="row-desc">Academic storage with fast edge fetching. Boring name, useful tool.</span>
+        <span class="row-arrow">↗</span>
+      </a>
+
+      <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
+         class="project-row reveal" aria-label="QR Main Ten">
+        <span class="row-num">05</span>
+        <span class="row-name">QR Main Ten</span>
+        <span class="row-desc">A fast, clean QR generator. Does exactly what it says.</span>
+        <span class="row-arrow">↗</span>
+      </a>
+
+      <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
+         class="project-row reveal" aria-label="PDF4Me">
+        <span class="row-num">06</span>
+        <span class="row-name">PDF4Me</span>
+        <span class="row-desc">Document processing pipeline. Upload, extract, compress, done.</span>
+        <span class="row-arrow">↗</span>
+      </a>
+
     </div>
   </section>
 
   <!-- CONNECT -->
   <section id="connect">
     <div class="wrap">
-      <div class="connect-row">
-        <div class="reveal">
-          <h2 class="connect-heading">Get in<br><em>touch.</em></h2>
-        </div>
-        <div class="connect-body reveal">
-          <p class="connect-note">
-            Not looking for a role right now — just building things.
-            If you want to talk about something interesting, reach out.
-          </p>
-          <div class="connect-btns">
-            <a href="https://github.com/TattvaAI" target="_blank" rel="noopener noreferrer"
-               class="btn btn-primary" aria-label="GitHub">
-              <span class="btn-label">GitHub · TattvaAI</span>
-              <span class="btn-arr">↗</span>
-            </a>
-            <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" rel="noopener noreferrer"
-               class="btn" aria-label="LinkedIn">
-              <span class="btn-label">LinkedIn · Shivansh Bansal</span>
-              <span class="btn-arr">↗</span>
-            </a>
-          </div>
-        </div>
+      <h2 class="connect-cta reveal" aria-label="Let's build the impossible.">
+        Let's build<br>the impossible.
+      </h2>
+      <p class="sec-label reveal" style="margin-bottom:2rem;">
+        Not looking for a role — just building. Interesting conversations welcome.
+      </p>
+      <div class="connect-links-row reveal">
+        <a href="https://github.com/TattvaAI" target="_blank" rel="noopener noreferrer"
+           class="clink clink-solid" aria-label="GitHub">GitHub · TattvaAI ↗</a>
+        <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" rel="noopener noreferrer"
+           class="clink" aria-label="LinkedIn">LinkedIn ↗</a>
       </div>
     </div>
   </section>
 
   <footer>
     <span class="foot">© 2026 Shivansh Bansal</span>
-    <span class="foot">v4-B · Dashboard</span>
+    <span class="foot">v4-C · Canvas</span>
   </footer>
 
+  <!-- Scripts -->
   <script src="./lib/gsap.min.js"></script>
   <script src="./lib/ScrollTrigger.min.js"></script>
+
   <script>
-    gsap.registerPlugin(ScrollTrigger);
+    /* ═══════════════════════════════════════════════════════════
+       DIRECTION C: WebGL-free particle text using Canvas 2D API
+       Technique: draw text as mask, sample pixel positions, spawn
+       particles only at lit pixels. 100% Canvas 2D — no Three.js
+       needed. More readable than WebGL for recruiters' machines.
+    ═══════════════════════════════════════════════════════════ */
 
-    /* Hero entrance */
-    const tl = gsap.timeline({ delay: 0.1 });
-    tl
-      .to('.hero-system',  { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' })
-      .to('#hero-name',    { opacity: 1, y: 0, duration: 1,   ease: 'expo.out' }, '-=0.4')
-      .to('.hero-tagline', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5')
-      .to('.hero-meta',    { opacity: 1,       duration: 0.7, ease: 'power2.out' }, '-=0.3')
-      .add(() => { document.getElementById('hero-name').classList.add('loaded'); }, '-=0.5');
+    const canvas  = document.getElementById('particle-canvas');
+    const ctx     = canvas.getContext('2d');
+    const wrap    = canvas.parentElement;
+    const isMobile = window.innerWidth < 768;
 
-    /* Scroll reveals */
-    gsap.utils.toArray('.reveal').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1, y: 0,
-        duration: 0.75,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' },
-        delay: (i % 3) * 0.07,
-      });
+    // Responsive font size matching CSS hero scale
+    function heroFontSize() {
+      return Math.min(Math.max(window.innerWidth * 0.105, isMobile ? 56 : 72), 160);
+    }
+
+    // ── 1. Measure & size canvas ──────────────────────────────
+    function sizeCanvas() {
+      const fs = heroFontSize();
+      const W  = wrap.clientWidth;
+      // Approximate: "SHIVANSH" and "BANSAL" over 2 lines
+      const H  = fs * 2.1; // two lines with leading
+      canvas.width  = W;
+      canvas.height = H;
+      canvas.style.height = H + 'px';
+      return { W, H, fs };
+    }
+
+    // ── 2. Render text to offscreen canvas as mask ────────────
+    function buildMask({ W, H, fs }) {
+      const off = document.createElement('canvas');
+      off.width = W; off.height = H;
+      const octx = off.getContext('2d');
+
+      octx.clearRect(0, 0, W, H);
+      octx.fillStyle = '#fff'; // particles will be placed at white pixels
+
+      const fontStr = `800 ${fs}px 'Syne', system-ui, sans-serif`;
+      octx.font = fontStr;
+      octx.textBaseline = 'top';
+
+      // Draw two lines
+      octx.fillText('SHIVANSH', 0, 0);
+      octx.fillText('BANSAL',   0, fs * 1.05);
+
+      return octx.getImageData(0, 0, W, H);
+    }
+
+    // ── 3. Sample pixels from mask → particle positions ───────
+    function samplePixels(imageData, W, H, density) {
+      const data = imageData.data;
+      const positions = [];
+      const step = Math.max(3, Math.round(isMobile ? 6 : 4)); // sample every N pixels
+
+      for (let y = 0; y < H; y += step) {
+        for (let x = 0; x < W; x += step) {
+          const idx = (y * W + x) * 4;
+          const alpha = data[idx + 3];
+          if (alpha > 128) {
+            positions.push({ x, y });
+          }
+        }
+      }
+      return positions;
+    }
+
+    // ── 4. Particle class ─────────────────────────────────────
+    class Particle {
+      constructor(tx, ty) {
+        this.tx = tx; // target X (text position)
+        this.ty = ty; // target Y
+        // Start from a random scatter position
+        this.x  = Math.random() * canvas.width;
+        this.y  = Math.random() * canvas.height + canvas.height * 0.5;
+        this.vx = 0;
+        this.vy = 0;
+        this.size = Math.random() * 1.5 + 0.6;
+        this.opacity = Math.random() * 0.6 + 0.4;
+        this.arrived = false;
+        this.delay = Math.random() * 1200; // ms stagger
+      }
+
+      update(t) {
+        if (t < this.delay) return;
+        // Spring toward target
+        const stiffness = 0.06 + Math.random() * 0.02;
+        const damping   = 0.75;
+        const dx = this.tx - this.x;
+        const dy = this.ty - this.y;
+        this.vx = (this.vx + dx * stiffness) * damping;
+        this.vy = (this.vy + dy * stiffness) * damping;
+        this.x += this.vx;
+        this.y += this.vy;
+        // Micro idle float once near target
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 1.5) {
+          this.arrived = true;
+          // Gentle drift
+          this.x += Math.sin(t * 0.0008 + this.tx) * 0.25;
+          this.y += Math.cos(t * 0.0007 + this.ty) * 0.2;
+        }
+      }
+
+      draw(ctx) {
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = '#f0ede8';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // ── 5. Boot ───────────────────────────────────────────────
+    let particles = [];
+    let animId;
+    let startTime = null;
+    let dims;
+
+    function boot() {
+      dims = sizeCanvas();
+      const mask = buildMask(dims);
+      const positions = samplePixels(mask, dims.W, dims.H, 1);
+
+      // Limit particle count for performance
+      const max = isMobile ? 2000 : 5000;
+      const sampled = positions.length > max
+        ? positions.filter((_, i) => i % Math.ceil(positions.length / max) === 0)
+        : positions;
+
+      particles = sampled.map(p => new Particle(p.x, p.y));
+    }
+
+    function tick(ts) {
+      animId = requestAnimationFrame(tick);
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+
+      for (const p of particles) {
+        p.update(elapsed);
+        p.draw(ctx);
+      }
+    }
+
+    // ── 6. Resize ─────────────────────────────────────────────
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        cancelAnimationFrame(animId);
+        startTime = null;
+        boot();
+        tick(0);
+      }, 200);
+    });
+
+    // ── 7. Tab visibility pause ───────────────────────────────
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(animId);
+      else { startTime = null; requestAnimationFrame(tick); }
+    });
+
+    // Fonts must be loaded before we measure text
+    document.fonts.ready.then(() => {
+      boot();
+      requestAnimationFrame(tick);
+
+      // Entrance animations after particles start flowing
+      setTimeout(() => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.to('.hero-tagline', { opacity: 0.8, y: 0, duration: 1, ease: 'power2.out', delay: 0.8 });
+        gsap.to('.hero-meta-mono', { opacity: 1, duration: 0.8, ease: 'power2.out', delay: 1.3 });
+
+        gsap.utils.toArray('.reveal').forEach((el, i) => {
+          gsap.to(el, {
+            opacity: 1, y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: el, start: 'top 88%' },
+            delay: (i % 3) * 0.07,
+          });
+        });
+      }, 100);
     });
   </script>
 </body>
