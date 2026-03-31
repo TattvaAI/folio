@@ -8,416 +8,423 @@
   <meta property="og:description" content="I see what's broken. I build what fixes it." />
   <title>Shivansh Bansal</title>
 
-  <!-- Editorial: Cormorant Garamond (display serif) + DM Sans (body) + DM Mono (labels) -->
+  <!-- Space Grotesk (display) + JetBrains Mono (labels/terminal) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── TOKENS ────────────────────────────────── */
+    /* ── TOKENS ──────────────────────────────────────── */
     :root {
-      --bg:    #0c0c0c;
-      --paper: #f5f0eb;
-      --ink:   #0c0c0c;
-      --dim:   rgba(245,240,235,0.35);
-      --rule:  rgba(245,240,235,0.12);
+      --bg:      #0d0d0d;
+      --surface: #141414;
+      --border:  #1f1f1f;
+      --amber:   #f5a623;
+      --amber-d: #c47e0f;
+      --text:    #e8e0d5;
+      --muted:   #555;
 
-      --serif: 'Cormorant Garamond', Georgia, serif;
-      --sans:  'DM Sans', system-ui, sans-serif;
-      --mono:  'DM Mono', 'Courier New', monospace;
-
+      --sans: 'Space Grotesk', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* ── RESET ─────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { background: var(--bg); }
     body {
       font-family: var(--sans);
       background: var(--bg);
-      color: var(--paper);
+      color: var(--text);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      /* Fine dot grid — engineering graph paper */
+      background-image: radial-gradient(circle, rgba(245,166,35,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
     }
 
     a { color: inherit; text-decoration: none; }
 
-    /* ── LAYOUT ────────────────────────────────── */
+    /* ── LAYOUT ──────────────────────────────────────── */
     .wrap {
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 0 5%;
     }
 
-    hr.rule {
-      border: none;
-      border-top: 1px solid var(--rule);
-      margin: 0;
-    }
-
-    /* ── NAV ───────────────────────────────────── */
+    /* ── NAV ─────────────────────────────────────────── */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 1.75rem 5%;
+      top: 0; left: 0; right: 0; z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      mix-blend-mode: difference; /* nav text inverts over light/dark areas */
+      padding: 1.5rem 5%;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    .nav-id {
+    .nav-logo {
       font-family: var(--mono);
       font-size: 0.65rem;
       letter-spacing: 0.18em;
+      color: var(--amber);
       text-transform: uppercase;
-      color: var(--paper);
     }
     .nav-links {
       list-style: none;
       display: flex;
-      gap: 3rem;
+      gap: 2.5rem;
     }
     .nav-links a {
       font-family: var(--mono);
       font-size: 0.65rem;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--paper);
-      opacity: 0.45;
-      transition: opacity 0.3s;
+      color: var(--muted);
+      transition: color 0.3s;
     }
-    .nav-links a:hover { opacity: 1; }
+    .nav-links a:hover { color: var(--amber); }
 
-    /* ── HERO ──────────────────────────────────── */
+    /* ── HERO ─────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      padding-bottom: 8rem;
-      padding-top: 10rem;
-      border-bottom: 1px solid var(--rule);
+      justify-content: center;
+      padding: 10rem 0 6rem;
+      border-bottom: 1px solid var(--border);
       position: relative;
-      overflow: hidden;
     }
 
-    /* Huge background number — pure typographic decoration */
-    .hero-bg-number {
+    /* Chess board reference — faint 8×8 grid in corner */
+    .chess-grid {
       position: absolute;
-      top: 50%;
-      right: -2%;
-      transform: translateY(-50%);
-      font-family: var(--serif);
-      font-size: clamp(20rem, 40vw, 50rem);
-      font-weight: 300;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(245,240,235,0.06);
-      line-height: 1;
+      bottom: 4rem;
+      right: 5%;
+      display: grid;
+      grid-template-columns: repeat(8, 1rem);
+      grid-template-rows: repeat(8, 1rem);
+      gap: 2px;
+      opacity: 0.06;
       pointer-events: none;
-      user-select: none;
     }
+    .chess-grid span {
+      background: var(--amber);
+    }
+    .chess-grid span:nth-child(odd) { background: transparent; border: 1px solid var(--amber); }
 
-    .hero-label {
+    .hero-system {
       font-family: var(--mono);
       font-size: 0.65rem;
       letter-spacing: 0.2em;
+      color: var(--amber);
       text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(10px);
+    }
+    .hero-system::before {
+      content: '›› ';
     }
 
     h1.hero-name {
-      font-family: var(--serif);
-      font-size: clamp(4.5rem, 12vw, 13rem);
-      font-weight: 300;
-      letter-spacing: -0.02em;
-      line-height: 0.9;
-      color: var(--paper);
+      font-size: clamp(4rem, 11vw, 11rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 0.88;
+      color: var(--text);
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(24px);
     }
 
-    .hero-tagline-wrap {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-top: 4rem;
-      gap: 2rem;
-      flex-wrap: wrap;
+    /* The amber underline accent on name */
+    h1.hero-name span {
+      position: relative;
+      display: inline-block;
+    }
+    h1.hero-name span::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--amber);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.8s var(--ease) 1.2s;
+    }
+    h1.hero-name.loaded span::after {
+      transform: scaleX(1);
     }
 
     .hero-tagline {
-      font-family: var(--serif);
-      font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+      margin-top: 3.5rem;
+      font-size: clamp(1.2rem, 2.5vw, 2rem);
       font-weight: 300;
-      font-style: italic;
-      color: var(--paper);
-      line-height: 1.2;
-      max-width: 640px;
+      color: rgba(232,224,213,0.7);
+      max-width: 600px;
+      line-height: 1.5;
       opacity: 0;
       transform: translateY(16px);
     }
+    .hero-tagline strong {
+      color: var(--text);
+      font-weight: 500;
+    }
 
-    .hero-scroll {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dim);
-      white-space: nowrap;
+    .hero-meta {
+      margin-top: 4rem;
+      display: flex;
+      gap: 3rem;
+      align-items: center;
       opacity: 0;
     }
-
-    /* ── ABOUT ─────────────────────────────────── */
-    #about {
-      padding: 10rem 0;
-      border-bottom: 1px solid var(--rule);
-    }
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 4rem;
-      align-items: start;
-    }
-    .about-label-col {
-      padding-top: 0.5rem;
-    }
-    .section-tag {
+    .hero-meta-item {
       font-family: var(--mono);
       font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dim);
-    }
-    .section-index {
-      font-family: var(--serif);
-      font-size: clamp(6rem, 12vw, 11rem);
-      font-weight: 300;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(245,240,235,0.15);
-      line-height: 1;
-      margin-top: 1rem;
-    }
-    .about-text {
-      font-family: var(--sans);
-      font-size: clamp(1.1rem, 2vw, 1.35rem);
-      font-weight: 300;
-      line-height: 1.8;
-      color: var(--paper);
-      opacity: 0.85;
-    }
-    .about-text strong {
-      font-weight: 500;
-      color: var(--paper);
-      opacity: 1;
-    }
-
-    /* ── PROJECTS ──────────────────────────────── */
-    #work {
-      padding: 10rem 0;
-      border-bottom: 1px solid var(--rule);
-    }
-    .work-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 6rem;
-      gap: 2rem;
-    }
-    .work-title {
-      font-family: var(--serif);
-      font-size: clamp(3rem, 7vw, 7rem);
-      font-weight: 300;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    .work-count {
-      font-family: var(--mono);
-      font-size: 0.65rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--dim);
-      white-space: nowrap;
+      color: var(--muted);
+    }
+    .hero-meta-item strong {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--amber);
+      margin-bottom: 0.2rem;
+      font-weight: 500;
     }
 
-    .project-list {
+    /* ── ABOUT ─────────────────────────────────────── */
+    #about {
+      padding: 8rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-tag {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .panel-tag::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 200px;
+    }
+    .about-content {
+      max-width: 780px;
+    }
+    .about-text {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(232,224,213,0.8);
+    }
+    .about-text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── WORK ──────────────────────────────────────── */
+    #work {
+      padding: 8rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    .project-card {
+      background: var(--bg);
+      padding: 2.5rem;
       display: flex;
       flex-direction: column;
-    }
-    .project-item {
-      display: grid;
-      grid-template-columns: 3rem 1fr auto;
-      align-items: baseline;
-      gap: 2rem;
-      padding: 2.25rem 0;
-      border-top: 1px solid var(--rule);
+      justify-content: space-between;
+      min-height: 260px;
       text-decoration: none;
-      color: var(--paper);
+      color: var(--text);
       position: relative;
-      transition: background 0.3s var(--ease);
+      overflow: hidden;
+      transition: background 0.4s var(--ease);
     }
-    .project-item:last-child {
-      border-bottom: 1px solid var(--rule);
-    }
-
-    /* Hover: faint paper flash behind the row */
-    .project-item::before {
+    /* Amber corner tick — like a data panel */
+    .project-card::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: rgba(245,240,235,0.03);
-      opacity: 0;
-      transition: opacity 0.3s var(--ease);
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--amber);
+      transition: height 0.4s var(--ease);
     }
-    .project-item:hover::before { opacity: 1; }
+    .project-card:hover { background: var(--surface); }
+    .project-card:hover::before { height: 100%; }
 
-    .project-num {
+    .card-top {}
+    .card-num {
       font-family: var(--mono);
       font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      color: var(--dim);
-      padding-top: 0.3rem;
-    }
-    .project-body {}
-    .project-name {
-      font-family: var(--serif);
-      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-      font-weight: 300;
-      line-height: 1;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
       transition: color 0.3s;
-      letter-spacing: -0.01em;
     }
-    .project-item:hover .project-name {
-      font-style: italic;
+    .project-card:hover .card-num { color: var(--amber); }
+    .card-name {
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1rem;
     }
-    .project-desc {
-      font-family: var(--sans);
-      font-size: 0.9rem;
+    .card-desc {
+      font-size: 0.875rem;
       font-weight: 300;
-      color: rgba(245,240,235,0.55);
-      line-height: 1.6;
-      max-width: 520px;
+      color: var(--muted);
+      line-height: 1.65;
     }
-    .project-tag {
+    .project-card:hover .card-desc { color: rgba(232,224,213,0.6); }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    .card-type {
       font-family: var(--mono);
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--dim);
-      white-space: nowrap;
-      padding-top: 0.3rem;
-      transition: color 0.3s;
+      color: var(--muted);
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, color 0.3s;
     }
-    .project-item:hover .project-tag {
-      color: var(--paper);
+    .project-card:hover .card-type {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+    .card-arrow {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: color 0.3s, transform 0.3s;
+    }
+    .project-card:hover .card-arrow {
+      color: var(--amber);
+      transform: translate(3px, -3px);
     }
 
-    /* ── CONNECT ───────────────────────────────── */
+    /* ── CONNECT ───────────────────────────────────── */
     #connect {
-      padding: 10rem 0;
+      padding: 8rem 0;
     }
-    .connect-inner {
+    .connect-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: end;
+      gap: 6rem;
+      align-items: start;
     }
     .connect-heading {
-      font-family: var(--serif);
-      font-size: clamp(3.5rem, 7vw, 7rem);
-      font-weight: 300;
-      line-height: 0.95;
-      letter-spacing: -0.02em;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
     }
     .connect-heading em {
-      font-style: italic;
+      color: var(--amber);
+      font-style: normal;
     }
-    .connect-right {}
+    .connect-body {
+      padding-top: 1rem;
+    }
     .connect-note {
-      font-family: var(--sans);
       font-size: 0.95rem;
       font-weight: 300;
-      color: rgba(245,240,235,0.55);
+      color: var(--muted);
       line-height: 1.7;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
     }
-    .connect-links {
+    .connect-btns {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
     }
-    .connect-link {
+    .btn {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.25rem 0;
-      border-top: 1px solid var(--rule);
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 400;
-      color: var(--paper);
-      text-decoration: none;
-      transition: padding-left 0.3s var(--ease);
-    }
-    .connect-link:last-child {
-      border-bottom: 1px solid var(--rule);
-    }
-    .connect-link:hover {
-      padding-left: 1rem;
-    }
-    .connect-link-arrow {
+      padding: 1.1rem 1.5rem;
       font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--dim);
-      transition: color 0.3s, transform 0.3s;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s var(--ease), background 0.3s;
     }
-    .connect-link:hover .connect-link-arrow {
-      color: var(--paper);
-      transform: translate(4px, -4px);
+    .btn:hover {
+      border-color: var(--amber);
+      background: rgba(245,166,35,0.04);
     }
+    .btn-primary {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: #0d0d0d;
+      font-weight: 500;
+    }
+    .btn-primary:hover {
+      background: var(--amber-d);
+      border-color: var(--amber-d);
+    }
+    .btn-label { }
+    .btn-arr { font-size: 0.75rem; }
 
-    /* ── FOOTER ────────────────────────────────── */
+    /* ── FOOTER ────────────────────────────────────── */
     footer {
       padding: 2rem 5%;
-      border-top: 1px solid var(--rule);
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .footer-copy {
+    .foot {
       font-family: var(--mono);
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       letter-spacing: 0.12em;
+      color: var(--muted);
       text-transform: uppercase;
-      color: var(--dim);
     }
 
-    /* ── REVEAL ────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-    }
+    /* ── REVEALS ───────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(20px); }
 
-    /* ── RESPONSIVE ────────────────────────────── */
+    /* ── RESPONSIVE ────────────────────────────────── */
     @media (max-width: 768px) {
-      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .connect-inner { grid-template-columns: 1fr; }
-      .project-item { grid-template-columns: 2.5rem 1fr; }
-      .project-tag { display: none; }
+      .connect-row { grid-template-columns: 1fr; gap: 3rem; }
       .nav-links { display: none; }
-      .hero-bg-number { display: none; }
+      .chess-grid { display: none; }
+      .hero-meta { flex-wrap: wrap; gap: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
   <!-- NAV -->
-  <nav aria-label="Primary navigation">
-    <div class="nav-id">Shivansh Bansal</div>
+  <nav aria-label="Site navigation">
+    <div class="nav-logo">>> sys.online / SB</div>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#work">Work</a></li>
@@ -428,113 +435,156 @@
   <!-- HERO -->
   <section id="hero">
     <div class="wrap">
-      <div class="hero-bg-number" aria-hidden="true">01</div>
-      <p class="hero-label">Portfolio — 2026</p>
-      <h1 class="hero-name">Shivansh<br>Bansal</h1>
-      <div class="hero-tagline-wrap">
-        <p class="hero-tagline">
-          I see what's broken.<br>I build what fixes it.
-        </p>
-        <span class="hero-scroll">↓ Scroll</span>
+      <!-- Chess board decoration -->
+      <div class="chess-grid" aria-hidden="true">
+        <!-- 64 cells — alternating pattern -->
+        <script>
+          ;(function() {
+            const g = document.currentScript.parentElement;
+            for(let i = 0; i < 64; i++) {
+              const s = document.createElement('span');
+              if((Math.floor(i/8) + i) % 2 === 0) s.style.background = 'var(--amber)';
+              else { s.style.background = 'transparent'; s.style.border = '1px solid var(--amber)'; }
+              g.appendChild(s);
+            }
+            g.removeChild(document.currentScript);
+          })();
+        </script>
+      </div>
+
+      <p class="hero-system">Status: online — Shivansh Bansal</p>
+
+      <h1 class="hero-name" id="hero-name">
+        <span>Shivansh</span><br>Bansal
+      </h1>
+
+      <p class="hero-tagline">
+        <strong>I see what's broken.</strong><br>I build what fixes it.
+      </p>
+
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <strong>Degree</strong>
+          IIT Madras · BS Data Science
+        </div>
+        <div class="hero-meta-item">
+          <strong>Also</strong>
+          BSc CS · Govt. College Ambala
+        </div>
+        <div class="hero-meta-item">
+          <strong>Edge</strong>
+          Competitive Chess Player
+        </div>
+        <div class="hero-meta-item">
+          <strong>Projects</strong>
+          06 live · 2024–26
+        </div>
       </div>
     </div>
   </section>
-
-  <hr class="rule" />
 
   <!-- ABOUT -->
   <section id="about">
     <div class="wrap">
-      <div class="about-grid">
-        <div class="about-label-col reveal">
-          <p class="section-tag">About</p>
-          <p class="section-index" aria-hidden="true">01</p>
-        </div>
-        <div class="reveal">
-          <p class="about-text">
-            I'm studying <strong>Data Science at IIT Madras</strong> and CS at Govt. College Ambala Cantt.
-            I play chess competitively — which means I think about failure modes
-            <em>before</em> I start building, not after.
-            <br><br>
-            I've made a mental wellness app, an AI website generator, document processing tools,
-            a QR generator, academic storage infrastructure, and a client enterprise site.
-            The only real reason I built any of them is to find out whether they were possible.
-          </p>
-        </div>
+      <p class="panel-tag reveal">// About</p>
+      <div class="about-content reveal">
+        <p class="about-text">
+          I'm studying <strong>Data Science at IIT Madras</strong> and CS at
+          Govt. College Ambala Cantt. I play chess competitively — which means
+          I think about failure modes <em>before</em> I start building, not after.
+          <br><br>
+          I've made a mental wellness app, an AI website generator, document processing
+          tools, a QR generator, academic storage infrastructure, and a client enterprise
+          site. The only real reason I built any of them is to find out whether they
+          were possible.
+        </p>
       </div>
     </div>
   </section>
 
-  <hr class="rule" />
-
   <!-- WORK -->
   <section id="work">
     <div class="wrap">
-      <div class="work-header reveal">
-        <h2 class="work-title">Work</h2>
-        <span class="work-count">06 projects / live</span>
-      </div>
+      <p class="panel-tag reveal">// Work · 06 live deployments</p>
 
-      <div class="project-list">
+      <div class="project-grid">
 
         <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-item reveal" aria-label="Genetix AI Website Builder">
-          <span class="project-num">01</span>
-          <div class="project-body">
-            <h3 class="project-name">Genetix AI</h3>
-            <p class="project-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</p>
+           class="project-card reveal" aria-label="Genetix AI Website Builder">
+          <div class="card-top">
+            <p class="card-num">01 / AI · Website Builder</p>
+            <h3 class="card-name">Genetix AI</h3>
+            <p class="card-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</p>
           </div>
-          <span class="project-tag">AI / Website Builder ↗</span>
+          <div class="card-bottom">
+            <span class="card-type">AI Gen</span>
+            <span class="card-arrow">↗</span>
+          </div>
         </a>
 
         <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
-           class="project-item reveal" aria-label="VK Industries KUK">
-          <span class="project-num">02</span>
-          <div class="project-body">
-            <h3 class="project-name">VK Industries KUK</h3>
-            <p class="project-desc">A client needed an online presence. I built it.</p>
+           class="project-card reveal" aria-label="VK Industries KUK">
+          <div class="card-top">
+            <p class="card-num">02 / Client · Enterprise</p>
+            <h3 class="card-name">VK Industries KUK</h3>
+            <p class="card-desc">A client needed an online presence. I built it.</p>
           </div>
-          <span class="project-tag">Client / Enterprise ↗</span>
+          <div class="card-bottom">
+            <span class="card-type">Client</span>
+            <span class="card-arrow">↗</span>
+          </div>
         </a>
 
         <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-item reveal" aria-label="Mind Space">
-          <span class="project-num">03</span>
-          <div class="project-body">
-            <h3 class="project-name">Mind Space</h3>
-            <p class="project-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</p>
+           class="project-card reveal" aria-label="Mind Space">
+          <div class="card-top">
+            <p class="card-num">03 / Consumer · Wellness</p>
+            <h3 class="card-name">Mind Space</h3>
+            <p class="card-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</p>
           </div>
-          <span class="project-tag">Consumer / Wellness ↗</span>
+          <div class="card-bottom">
+            <span class="card-type">Wellness</span>
+            <span class="card-arrow">↗</span>
+          </div>
         </a>
 
         <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-item reveal" aria-label="Campus Vault">
-          <span class="project-num">04</span>
-          <div class="project-body">
-            <h3 class="project-name">Campus Vault</h3>
-            <p class="project-desc">Academic storage with fast edge fetching. Boring name, useful tool.</p>
+           class="project-card reveal" aria-label="Campus Vault">
+          <div class="card-top">
+            <p class="card-num">04 / Cloud · Storage</p>
+            <h3 class="card-name">Campus Vault</h3>
+            <p class="card-desc">Academic storage with fast edge fetching. Boring name, useful tool.</p>
           </div>
-          <span class="project-tag">Cloud / Storage ↗</span>
+          <div class="card-bottom">
+            <span class="card-type">Storage</span>
+            <span class="card-arrow">↗</span>
+          </div>
         </a>
 
         <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-item reveal" aria-label="QR Main Ten">
-          <span class="project-num">05</span>
-          <div class="project-body">
-            <h3 class="project-name">QR Main Ten</h3>
-            <p class="project-desc">A fast, clean QR generator. Does exactly what it says.</p>
+           class="project-card reveal" aria-label="QR Main Ten">
+          <div class="card-top">
+            <p class="card-num">05 / Utility · Edge</p>
+            <h3 class="card-name">QR Main Ten</h3>
+            <p class="card-desc">A fast, clean QR generator. Does exactly what it says.</p>
           </div>
-          <span class="project-tag">Utility / Edge ↗</span>
+          <div class="card-bottom">
+            <span class="card-type">Utility</span>
+            <span class="card-arrow">↗</span>
+          </div>
         </a>
 
         <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="project-item reveal" aria-label="PDF4Me">
-          <span class="project-num">06</span>
-          <div class="project-body">
-            <h3 class="project-name">PDF4Me</h3>
-            <p class="project-desc">Document processing pipeline. Upload, extract, compress, done.</p>
+           class="project-card reveal" aria-label="PDF4Me">
+          <div class="card-top">
+            <p class="card-num">06 / Automation · Docs</p>
+            <h3 class="card-name">PDF4Me</h3>
+            <p class="card-desc">Document processing pipeline. Upload, extract, compress, done.</p>
           </div>
-          <span class="project-tag">Automation / Docs ↗</span>
+          <div class="card-bottom">
+            <span class="card-type">Automation</span>
+            <span class="card-arrow">↗</span>
+          </div>
         </a>
 
       </div>
@@ -544,25 +594,25 @@
   <!-- CONNECT -->
   <section id="connect">
     <div class="wrap">
-      <div class="connect-inner">
+      <div class="connect-row">
         <div class="reveal">
           <h2 class="connect-heading">Get in<br><em>touch.</em></h2>
         </div>
-        <div class="reveal">
+        <div class="connect-body reveal">
           <p class="connect-note">
             Not looking for a role right now — just building things.
             If you want to talk about something interesting, reach out.
           </p>
-          <div class="connect-links">
+          <div class="connect-btns">
             <a href="https://github.com/TattvaAI" target="_blank" rel="noopener noreferrer"
-               class="connect-link" aria-label="GitHub Profile">
-              <span>GitHub · TattvaAI</span>
-              <span class="connect-link-arrow">↗</span>
+               class="btn btn-primary" aria-label="GitHub">
+              <span class="btn-label">GitHub · TattvaAI</span>
+              <span class="btn-arr">↗</span>
             </a>
             <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" rel="noopener noreferrer"
-               class="connect-link" aria-label="LinkedIn Profile">
-              <span>LinkedIn · Shivansh Bansal</span>
-              <span class="connect-link-arrow">↗</span>
+               class="btn" aria-label="LinkedIn">
+              <span class="btn-label">LinkedIn · Shivansh Bansal</span>
+              <span class="btn-arr">↗</span>
             </a>
           </div>
         </div>
@@ -571,51 +621,32 @@
   </section>
 
   <footer>
-    <span class="footer-copy">© 2026 Shivansh Bansal</span>
-    <span class="footer-copy">v4-A · Editorial</span>
+    <span class="foot">© 2026 Shivansh Bansal</span>
+    <span class="foot">v4-B · Dashboard</span>
   </footer>
 
   <script src="./lib/gsap.min.js"></script>
   <script src="./lib/ScrollTrigger.min.js"></script>
-
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    /* Hero entrance — stagger from bottom */
-    const heroTl = gsap.timeline({ delay: 0.1 });
-    heroTl
-      .to('.hero-label',        { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' })
-      .to('.hero-name',         { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out' }, '-=0.55')
-      .to('.hero-tagline',      { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, '-=0.6')
-      .to('.hero-scroll',       { opacity: 1, duration: 0.7, ease: 'power2.out' }, '-=0.4');
+    /* Hero entrance */
+    const tl = gsap.timeline({ delay: 0.1 });
+    tl
+      .to('.hero-system',  { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' })
+      .to('#hero-name',    { opacity: 1, y: 0, duration: 1,   ease: 'expo.out' }, '-=0.4')
+      .to('.hero-tagline', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5')
+      .to('.hero-meta',    { opacity: 1,       duration: 0.7, ease: 'power2.out' }, '-=0.3')
+      .add(() => { document.getElementById('hero-name').classList.add('loaded'); }, '-=0.5');
 
-    /* Section reveals */
+    /* Scroll reveals */
     gsap.utils.toArray('.reveal').forEach((el, i) => {
       gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
+        opacity: 1, y: 0,
+        duration: 0.75,
         ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-        },
-        delay: (i % 2) * 0.08,
-      });
-    });
-
-    /* Project rows: stagger on their parent entering view */
-    gsap.utils.toArray('.project-item').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 90%',
-        },
-        delay: i * 0.06,
+        scrollTrigger: { trigger: el, start: 'top 88%' },
+        delay: (i % 3) * 0.07,
       });
     });
   </script>
