@@ -3,297 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIVANSH | ARCHITECTURE</title>
+    <title>Shivansh | The Vedic Architect</title>
+    <!-- Tailwind via CDN is extremely stable, but the core engine relies on local libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        void: '#030303',
-                        neon: '#00ffcc',
-                        blood: '#ff003c',
-                    },
-                    fontFamily: {
-                        mono: ['"Space Mono"', 'monospace'],
-                        sans: ['"Inter"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;800&display=swap" rel="stylesheet">
     
     <style>
-        body { margin: 0; background-color: #030303; color: #fff; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background-color: #050201; color: #ede2d3; overflow-x: hidden; font-family: 'Inter', sans-serif; }
         #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
         
-        .section { min-height: 100vh; padding: 6rem 5%; position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; }
+        .section { min-height: 100vh; padding: 8rem 5%; position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; }
         
-        .bento-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 1.5rem; 
-            width: 100%; 
-            max-width: 1400px; 
-            margin: 0 auto;
-        }
-        
-        .bento-box {
-            background: rgba(10, 10, 10, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 0.25rem;
-            padding: 2.5rem;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Ancient India / Deep Tech Typography */
+        .primary-heading { font-family: 'Cinzel', serif; font-weight: 900; color: #d4af37; text-transform: uppercase; letter-spacing: 0.1em; line-height: 0.9; }
+        .tech-text { font-family: 'Space Mono', monospace; color: #00ffcc; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; }
+        .sanskrit-motif { font-family: 'Cinzel', serif; color: rgba(212, 175, 55, 0.15); font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; position: absolute; z-index: -1; top: -10%; left: -5%; pointer-events: none; }
+
+        /* The Vedic Component System */
+        .vedic-box {
+            background: linear-gradient(145deg, rgba(20, 10, 5, 0.95), rgba(5, 2, 0, 0.98));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-top: 2px solid rgba(212, 175, 55, 0.8);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            padding: 3rem;
             position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 300px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        .bento-box::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, rgba(0, 255, 204, 0.05) 0%, transparent 70%);
-            opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+        /* Intricate Corner Ornamentation */
+        .vedic-box::before, .vedic-box::after {
+            content: ''; position: absolute; width: 25px; height: 25px; border: 1px solid rgba(212, 175, 55, 0.6); transition: transform 0.6s ease, border-color 0.6s ease;
         }
-        .bento-box:hover::after { opacity: 1; }
-        .bento-box:hover { 
-            border-color: rgba(0, 255, 204, 0.3);
+        .vedic-box::before { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+        .vedic-box::after { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+        
+        .vedic-box:hover::before { transform: translate(-4px, -4px); border-color: #00ffcc; }
+        .vedic-box:hover::after { transform: translate(4px, 4px); border-color: #00ffcc; }
+        .vedic-box:hover {
+            box-shadow: 0 15px 50px rgba(212, 175, 55, 0.1), inset 0 0 20px rgba(212, 175, 55, 0.05);
+            border-color: rgba(212, 175, 55, 0.6);
             transform: translateY(-5px);
-            box-shadow: 0 10px 40px -10px rgba(0, 255, 204, 0.1);
         }
 
-        .huge-text { 
-            font-size: clamp(4rem, 12vw, 15rem); 
-            font-weight: 900; 
-            line-height: 0.8; 
-            letter-spacing: -0.05em; 
-            text-transform: uppercase;
-        }
-        .outline-text { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.15); }
-        .mono-tag { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; color: #00ffcc; text-transform: uppercase;}
-        
-        /* Reveal animation defaults */
-        .reveal-text { opacity: 0; transform: translateY(40px); }
-        .grid-reveal { opacity: 0; transform: scale(0.95); }
+        .gold-glow { text-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
+        .nexus-line { width: 1px; height: 100px; background: linear-gradient(to bottom, #d4af37, transparent); margin: 2rem auto; }
+        .horizontal-line { height: 1px; width: 150px; background: linear-gradient(to right, #d4af37, transparent); margin: 2rem 0; }
 
-        .line-accent { width: 100px; height: 2px; background: #00ffcc; margin: 2rem 0; }
+        .reveal-node { opacity: 0; transform: translateY(30px); }
     </style>
 </head>
-<body class="antialiased selection:bg-neon selection:text-black">
+<body>
 
+    <!-- 3D Engine renders here via purely local libraries -->
     <div id="canvas-container"></div>
 
     <main id="scroll-container">
         
-        <!-- INTRO -->
-        <section class="section" id="hero">
-            <div class="max-w-7xl mx-auto w-full">
-                <div class="mono-tag mb-4 reveal-text">> STATUS: ONLINE</div>
-                <h1 class="huge-text reveal-text">SHIVANSH</h1>
-                <h1 class="huge-text outline-text reveal-text">BANSAL</h1>
-                <div class="line-accent reveal-text"></div>
-                <p class="text-2xl md:text-5xl font-bold mt-8 max-w-4xl text-gray-300 reveal-text leading-tight">
-                    I see what's broken.<br>
-                    <span class="text-white">I build what fixes it.</span>
-                </p>
-                <div class="mt-16 mono-tag text-gray-500 animate-bounce reveal-text">[ SCROLL TO INITIALIZE ]</div>
-            </div>
+        <!-- INITIALIZATION -->
+        <section class="section text-center items-center" id="genesis">
+            <div class="tech-text mb-8 reveal-node animate-pulse">[ SYSTEM INIT : BRAHMA ]</div>
+            <h1 class="primary-heading text-6xl md:text-[8rem] gold-glow reveal-node">SHIVANSH</h1>
+            <h2 class="tech-text mt-4 text-xl tracking-[0.5em] text-white/70 reveal-node">THE ARCHITECT</h2>
+            
+            <div class="nexus-line reveal-node"></div>
+            
+            <p class="text-2xl md:text-4xl font-light mt-8 max-w-4xl text-[#ede2d3] leading-relaxed reveal-node italic">
+                "I create things to fulfill my curiosity of knowing... <br>
+                <span class="font-bold text-[#d4af37] not-italic">Is this even possible to make?</span>"
+            </p>
         </section>
 
-        <!-- THE ARCHITECTURE (About / Skills via Data Nodes) -->
-        <section class="section flex items-start" id="architecture">
-            <div class="max-w-7xl mx-auto w-full">
-                <h2 class="text-5xl md:text-8xl font-black mb-16 text-right reveal-text">ALGORITHM</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Base -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">01</div>
-                        <h3 class="text-2xl font-bold mb-2">FOUNDATION</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">IIT Madras BS Data Science + BSc CS. Merging the theoretical computing with ruthless empirical data modeling.</p>
-                    </div>
-                    <!-- Node 2 -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">02</div>
-                        <h3 class="text-2xl font-bold mb-2">STRATEGY</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">Trained as a competitive chess player. Every component shipped is evaluated for end-game architectural viability.</p>
-                    </div>
-                    <!-- Node 3 -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">03</div>
-                        <h3 class="text-2xl font-bold mb-2">SYNTHESIS</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">Radical curiosity spanning Psychology, Finance, Economics, and AI. Extracting interdisciplinary resources to build high-value software.</p>
-                    </div>
-                    <!-- Node 4 -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">04</div>
-                        <h3 class="text-2xl font-bold mb-2">EMPATHY</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">High emotional intelligence dictates product design. Code runs on machines, but software runs on humans.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- THE IMPERIAL EMPIRE (Projects Array) -->
-        <section class="section" id="deployments">
-            <div class="max-w-7xl mx-auto w-full">
-                <div class="flex items-center gap-6 mb-16 reveal-text">
-                    <h2 class="text-5xl md:text-8xl font-black">DEPLOYMENTS</h2>
-                    <div class="h-1 bg-white flex-grow opacity-20 mt-4"></div>
-                </div>
-
-                <div class="bento-grid">
+        <!-- THE FIVE ELEMENTS (PANCHA MAHABHUTA) -->
+        <section class="section" id="philosophy">
+            <div class="max-w-7xl mx-auto w-full relative">
+                <div class="sanskrit-motif">महाभूत</div>
+                <h2 class="primary-heading text-4xl md:text-6xl mb-16 reveal-node border-b-2 border-[#d4af37]/30 pb-4 inline-block">THE FIVE ELEMENTS</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     
-                    <a href="https://talking-bi.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">01 // AI Dashboard</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Talking BI</h3>
-                        <p class="text-gray-400 text-sm mb-8">Revolutionary interactive dashboards driven by simple KPI queries. Bypasses standard analytical complexity.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+                    <div class="vedic-box reveal-node group">
+                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">अग्नि</div>
+                        <div class="tech-text text-[#d4af37]">TEJAS // FIRE</div>
+                        <h3 class="text-3xl font-bold mt-4 mb-3">Relentless Execution</h3>
+                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
+                            The drive to solve the impossible. Forged in competitive chess strategy, my computing logic is designed for the end-game and extreme technical combat.
+                        </p>
+                    </div>
 
-                    <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">02 // Site Generation</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Genetix AI</h3>
-                        <p class="text-gray-400 text-sm mb-8">Your imagination meets AI execution. A fully automated LLM pipeline generating zero-to-one websites.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+                    <div class="vedic-box reveal-node group">
+                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">वायु</div>
+                        <div class="tech-text text-[#d4af37]">VAYU // AIR</div>
+                        <h3 class="text-3xl font-bold mt-4 mb-3">Infinite Curiosity</h3>
+                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
+                            Rapid velocity across diverse domains. Intersecting Psychology, Finance, Economics, and AI to synthesize completely novel software architectures.
+                        </p>
+                    </div>
 
-                    <a href="https://fire-reach-rabbitt-ai.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">03 // Automated Pipeline</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Fire Reach Rabbitt</h3>
-                        <p class="text-gray-400 text-sm mb-8">High-velocity, AI-driven infrastructure handling outbound and engagement reach.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+                    <div class="vedic-box reveal-node group">
+                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">पृथ्वी</div>
+                        <div class="tech-text text-[#d4af37]">PRITHVI // EARTH</div>
+                        <h3 class="text-3xl font-bold mt-4 mb-3">Deep Foundation</h3>
+                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
+                            The bedrock of data. Built upon the rigorous empirical science of IIT Madras (BS Data Science) and extensive native Computer Science grounding.
+                        </p>
+                    </div>
 
-                    <a href="https://evidence-ai.vercel.app" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">04 // Verification</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Evidence AI</h3>
-                        <p class="text-gray-400 text-sm mb-8">Deep intelligence layer parsing facts and data to verify complex claims instantly.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+                    <div class="vedic-box reveal-node group">
+                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">जल</div>
+                        <div class="tech-text text-[#d4af37]">JALA // WATER</div>
+                        <h3 class="text-3xl font-bold mt-4 mb-3">Human Synthesis</h3>
+                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
+                            Adaptability and high emotional intelligence. Merging empathy with system design to build products that resonate at a human, psychological level.
+                        </p>
+                    </div>
 
-                    <a href="https://mind-space-seven.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">05 // Wellness Engine</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Mind Space</h3>
-                        <p class="text-gray-400 text-sm mb-8">Merging my psychology studies with software engineering to deliver a dedicated mental wellness OS.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
-
-                    <a href="https://pdf4me.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">06 // Doc Processing</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">PDF4Me</h3>
-                        <p class="text-gray-400 text-sm mb-8">Ecosystem for rapid document processing, compression, and automated handling.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
-
-                    <a href="https://note-genie-nu.vercel.app" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">07 // Knowledge Vault</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">Note Genie Nu</h3>
-                    </a>
-
-                    <a href="https://vkindustrieskuk.web.app/" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">08 // Digital Frontier</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">VK Industries KUK</h3>
-                    </a>
-
-                    <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">09 // Storage Protocol</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">Campus Vault</h3>
-                    </a>
-                    
-                    <a href="https://qr-main-ten.vercel.app/" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">10 // Edge Service</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">QR Main Ten</h3>
-                    </a>
-
+                    <div class="vedic-box reveal-node group md:col-span-2 lg:col-span-2 border-l-4 border-[#00ffcc]">
+                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#00ffcc] transition-transform group-hover:scale-110">आकाश</div>
+                        <div class="tech-text text-[#00ffcc] tracking-widest">AKASHA // SPACE</div>
+                        <h3 class="text-4xl font-black mt-4 mb-3 text-white">The Omnipresent System</h3>
+                        <p class="text-[#ede2d3] text-lg leading-relaxed font-light max-w-3xl">
+                            The space that connects all elements. I do not just know code—I know how to utilize every resource available to synthesize and architect high-value, impossible infrastructure.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- EXECUTION / OUTRO -->
-        <section class="section items-center text-center py-32" id="contact">
-            <div class="mono-tag mb-8 reveal-text">/// SYSTEM READY ///</div>
-            <h2 class="text-7xl md:text-[8rem] font-black outline-text reveal-text hover:text-white transition-colors cursor-pointer">INITIALIZE.</h2>
-            <div class="flex flex-wrap justify-center gap-6 mt-16 reveal-text">
-                <a href="https://github.com/TattvaAI" target="_blank" class="px-10 py-5 bg-white text-black font-black uppercase tracking-widest hover:bg-neon hover:text-black transition-all">>> Access GitHub</a>
-                <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" class="px-10 py-5 bg-transparent border border-white text-white font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">>> Network Connect</a>
+        <!-- THE CRUCIBLE (The Hardest Problem) -->
+        <section class="section bg-black/50 border-y border-[#d4af37]/20" id="crucible">
+            <div class="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-16 items-center">
+                <div class="w-full md:w-1/2 reveal-node relative">
+                    <div class="sanskrit-motif" style="top: -20%; right:-10%;">तपस्</div>
+                    <div class="tech-text text-blood animate-pulse mb-6">[ CRITICAL FAILURE BYPASSED ]</div>
+                    <h2 class="primary-heading text-5xl md:text-7xl mb-8 leading-tight">THE CRUCIBLE</h2>
+                    <p class="text-xl leading-relaxed text-[#ede2d3]/90 font-light mb-6 border-l-2 border-blood pl-6">
+                        Out of an empire of architectures built, the hardest battle was the <strong class="text-white">Genetix AI Website Builder</strong>.
+                    </p>
+                    <p class="text-lg leading-relaxed text-[#ede2d3]/70 font-mono mb-8">
+                        The challenge of dynamic, autonomous sandboxing pushed the system to the edge. Ensuring absolute isolation while empowering the LLM to execute raw, generative code directly against the client's architecture was an "impossible" technical barrier. 
+                    </p>
+                    <p class="text-2xl font-bold text-[#d4af37] italic">
+                        Eventually... I did it.
+                    </p>
+                </div>
+                <div class="w-full md:w-1/2 reveal-node">
+                    <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="block relative group">
+                        <div class="absolute inset-0 bg-[#d4af37]/20 blur-xl group-hover:bg-neon/30 transition-all duration-500"></div>
+                        <div class="vedic-box border-[#d4af37] relative z-10 text-center py-20 bg-black/80">
+                            <h3 class="text-4xl font-black font-serif text-white group-hover:text-[#00ffcc] transition-colors">INITIATE GENETIX.AI &rarr;</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- THE ARSENAL -->
+        <section class="section" id="arsenal">
+            <div class="max-w-7xl mx-auto w-full relative">
+                <h2 class="primary-heading text-4xl md:text-6xl mb-16 text-center reveal-node">LIVE DEPLOYMENTS</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Client Work -->
+                    <a href="https://vkindustrieskuk.web.app/" target="_blank" class="vedic-box reveal-node group border-[#00ffcc]/30 hover:border-[#00ffcc]">
+                        <div class="tech-text text-[#00ffcc] mb-4">CLIENT ARCHITECTURE</div>
+                        <h3 class="text-3xl font-serif font-black text-white mb-2">VK Industries KUK</h3>
+                        <p class="text-sm font-mono text-gray-400">Production-grade enterprise deployment constructed explicitly for client operational scale.</p>
+                    </a>
+
+                    <!-- The Copilot -->
+                    <a href="https://talking-bi.vercel.app/" target="_blank" class="vedic-box reveal-node group">
+                        <div class="tech-text text-[#d4af37] mb-4">AI ANALYTICS</div>
+                        <h3 class="text-3xl font-serif font-black text-white mb-2">Talking BI</h3>
+                        <p class="text-sm font-mono text-gray-400">Interactive data infrastructure transforming complex KPI metrics simultaneously.</p>
+                    </a>
+
+                    <!-- Mind Space -->
+                    <a href="https://mind-space-seven.vercel.app/" target="_blank" class="vedic-box reveal-node group">
+                        <div class="tech-text text-[#d4af37] mb-4">PSYCHOLOGY UX</div>
+                        <h3 class="text-3xl font-serif font-black text-white mb-2">Mind Space</h3>
+                        <p class="text-sm font-mono text-gray-400">Synthesizing human empathy and mental wellness through pristine interface design.</p>
+                    </a>
+
+                    <!-- Tooling -->
+                    <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="vedic-box reveal-node group">
+                        <div class="tech-text text-[#d4af37] mb-4">STORAGE INFRA</div>
+                        <h3 class="text-3xl font-serif font-black text-white mb-2">Campus Vault</h3>
+                        <p class="text-sm font-mono text-gray-400">High-capacity academic logic architecture and scalable edge repository.</p>
+                    </a>
+
+                    <a href="https://qr-main-ten.vercel.app/" target="_blank" class="vedic-box reveal-node group">
+                        <div class="tech-text text-[#d4af37] mb-4">EDGE UTILITY</div>
+                        <h3 class="text-3xl font-serif font-black text-white mb-2">QR Main Ten</h3>
+                        <p class="text-sm font-mono text-gray-400">Lightning-fast QR infrastructure deployed with strict mathematical precision.</p>
+                    </a>
+
+                    <a href="https://pdf4me.vercel.app/" target="_blank" class="vedic-box reveal-node group">
+                        <div class="tech-text text-[#d4af37] mb-4">DOC PIPELINE</div>
+                        <h3 class="text-3xl font-serif font-black text-white mb-2">PDF4Me</h3>
+                        <p class="text-sm font-mono text-gray-400">A heavy ecosystem for automated document extraction, rendering, and compression.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TERMINAL CONTACT -->
+        <section class="section text-center py-32 border-t border-[#d4af37]/20" id="contact">
+            <h2 class="primary-heading text-5xl md:text-7xl mb-12 gold-glow reveal-node">THE NETWORK AWAITS</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-8 reveal-node">
+                <a href="https://github.com/TattvaAI" target="_blank" class="vedic-box text-center group cursor-pointer" style="padding: 1.5rem 4rem;">
+                    <span class="tech-text text-xl group-hover:text-white transition-colors">ACCESS GITHUB (TattvaAI)</span>
+                </a>
+                <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" class="vedic-box text-center group cursor-pointer border-[#00ffcc]/30" style="padding: 1.5rem 4rem;">
+                    <span class="tech-text text-xl text-[#00ffcc] group-hover:text-white transition-colors">COMMAND LINKEDIN</span>
+                </a>
             </div>
         </section>
 
     </main>
 
-    <!-- Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
-    <script>
-        /* =========================================================
-           1. THREE.JS ENGINE SETUP
-           ========================================================= */
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030303, 0.04);
+    <!-- 
+       CRITICAL SYSTEM FIX:
+       Relying strictly on local copies to bypass all Corporate Proxy / Outbound Network restrictions. 
+       These dependencies were securely downloaded to ./lib/
+    -->
+    <script src="./lib/three.min.js"></script>
+    <script src="./lib/gsap.min.js"></script>
+    <script src="./lib/ScrollTrigger.min.js"></script>
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    <script>
+        /* =========================================================================
+           THE VEDIC MANDALA ENGINE (WebGL Three.js)
+           ========================================================================= */
+        const scene = new THREE.Scene();
+        // Deep copper/black fog for ancient mystery
+        scene.fog = new THREE.FogExp2(0x050201, 0.035);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        /* =========================================================
-           2. THE ARCHITECTURE MESH
-           ========================================================= */
-        const geometry = new THREE.IcosahedronGeometry(2.5, 2);
-        const material = new THREE.MeshStandardMaterial({ 
-            color: 0x3b82f6, 
+        // Core Mandala Group
+        const mandalaGroup = new THREE.Group();
+        scene.add(mandalaGroup);
+
+        // 1. Center Yantra Core (Glowing Octahedron)
+        const coreGeo = new THREE.OctahedronGeometry(1.5, 0);
+        const coreMat = new THREE.MeshStandardMaterial({
+            color: 0xd4af37, // Gold
+            emissive: 0x332200,
+            wireframe: true,
+            wireframeLinewidth: 2,
+            transparent: true,
+            opacity: 0.8
+        });
+        const yantraCore = new THREE.Mesh(coreGeo, coreMat);
+        mandalaGroup.add(yantraCore);
+
+        // 2. Interlocking Outer Rings (Torus)
+        const ringMat = new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
             wireframe: true,
             transparent: true,
-            opacity: 0.15,
-            wireframeLinewidth: 1 // base state
+            opacity: 0.15
         });
-        
-        const core = new THREE.Mesh(geometry, material);
-        
-        const particlesMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.03,
-            transparent: true,
-            opacity: 0.5
-        });
-        const nodes = new THREE.Points(geometry, particlesMaterial);
-        
-        const shapeGroup = new THREE.Group();
-        shapeGroup.add(core);
-        shapeGroup.add(nodes);
-        scene.add(shapeGroup);
 
-        const ambientGeo = new THREE.BufferGeometry();
-        const ambientCount = 800; // Increased density
-        const posArray = new Float32Array(ambientCount * 3);
-        for(let i = 0; i < ambientCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 25;
+        for(let i = 1; i <= 3; i++) {
+            const ringGeo = new THREE.TorusGeometry(2 + (i * 0.8), 0.02, 16, 100);
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            // Angle them to intersect mathematically
+            ring.rotation.x = Math.PI / (i + 1);
+            ring.rotation.y = Math.PI / (i * 2);
+            // We will rotate these in the render cycle
+            ring.userData = { speedX: (Math.random() - 0.5) * 0.01, speedY: (Math.random() - 0.5) * 0.01 };
+            mandalaGroup.add(ring);
         }
-        ambientGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const ambientMat = new THREE.PointsMaterial({ size: 0.015, color: 0x333333 });
-        const ambientParticles = new THREE.Points(ambientGeo, ambientMat);
-        scene.add(ambientParticles);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        // 3. Mathematical Vertex Nodes (Cosmic Dust)
+        const dustGeo = new THREE.BufferGeometry();
+        const dustCount = 1500;
+        const dustArray = new Float32Array(dustCount * 3);
+        const colorArray = new Float32Array(dustCount * 3);
+        
+        for(let i = 0; i < dustCount * 3; i+=3) {
+            // Distribute in a vast cosmic sphere
+            const radius = 10 + Math.random() * 20;
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            
+            dustArray[i] = radius * Math.sin(phi) * Math.cos(theta);     // x
+            dustArray[i+1] = radius * Math.sin(phi) * Math.sin(theta);   // y
+            dustArray[i+2] = radius * Math.cos(phi);                     // z
+
+            // Gold/Red/Cyan particle tinting
+            const type = Math.random();
+            if(type > 0.8) {
+                colorArray[i] = 0.0; colorArray[i+1] = 1.0; colorArray[i+2] = 0.8; // Neon Cyan
+            } else if (type > 0.6) {
+                colorArray[i] = 1.0; colorArray[i+1] = 0.0; colorArray[i+2] = 0.2; // Blood Red
+            } else {
+                colorArray[i] = 0.83; colorArray[i+1] = 0.68; colorArray[i+2] = 0.21; // Gold
+            }
+        }
+        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustArray, 3));
+        dustGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        
+        const dustMat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.4 });
+        const cosmicDust = new THREE.Points(dustGeo, dustMat);
+        scene.add(cosmicDust);
+
+        // Lighting System
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0x00ffcc, 5, 15);
-        pointLight.position.set(2, 3, 4);
-        scene.add(pointLight);
+        const pointLight1 = new THREE.PointLight(0xd4af37, 3, 20); // Gold core light
+        pointLight1.position.set(0, 0, 2);
+        scene.add(pointLight1);
+        const pointLight2 = new THREE.PointLight(0x00ffcc, 1, 30); // Neon edge light
+        pointLight2.position.set(-5, 5, -5);
+        scene.add(pointLight2);
 
-        camera.position.z = 6;
+        camera.position.z = 8;
+        camera.position.y = 1;
 
-        /* =========================================================
-           3. RENDER LOOP & PARALLAX
-           ========================================================= */
+        /* =========================================================================
+           RENDER LOOP (Majestic Continuous Rotation)
+           ========================================================================= */
         let mouseX = 0; let mouseY = 0;
         let targetX = 0; let targetY = 0;
         const windowHalfX = window.innerWidth / 2;
@@ -307,16 +343,28 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Baseline persistent rotation
-            shapeGroup.rotation.x += 0.001;
-            shapeGroup.rotation.y += 0.002;
-            ambientParticles.rotation.y -= 0.0005;
+            // Core Rotation
+            yantraCore.rotation.x += 0.002;
+            yantraCore.rotation.y += 0.005;
 
-            // Fluid mouse parallax
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
-            shapeGroup.rotation.y += 0.05 * (targetX - shapeGroup.rotation.y);
-            shapeGroup.rotation.x += 0.05 * (targetY - shapeGroup.rotation.x);
+            // Intersecting Rings Rotation
+            mandalaGroup.children.forEach((child, index) => {
+                if(index > 0) { // skip core
+                    child.rotation.x += child.userData.speedX;
+                    child.rotation.y += child.userData.speedY;
+                }
+            });
+
+            // Cosmic Dust slow spin
+            cosmicDust.rotation.y -= 0.0002;
+            cosmicDust.rotation.z -= 0.0001;
+
+            // Mouse parallax depth effect
+            targetX = mouseX * 0.0005;
+            targetY = mouseY * 0.0005;
+            camera.position.x += (targetX - camera.position.x) * 0.02;
+            camera.position.y += (-targetY - camera.position.y + 1) * 0.02;
+            camera.lookAt(scene.position);
 
             renderer.render(scene, camera);
         }
@@ -328,67 +376,49 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        /* =========================================================
-           4. GSAP TIMELINES (BUG-FIXED: DETERMINISTIC SCRUB)
-           ========================================================= */
+        /* =========================================================================
+           DETERMINISTIC GSAP SCROLL-TIMELINES
+           ========================================================================= */
         gsap.registerPlugin(ScrollTrigger);
 
-        // Standard Text Reveals
-        gsap.utils.toArray('.reveal-text').forEach(el => {
+        // UI Reveal Nodes
+        gsap.utils.toArray('.reveal-node').forEach((el, i) => {
             gsap.to(el, {
                 scrollTrigger: {
                     trigger: el,
                     start: 'top 85%',
                 },
-                opacity: 1, y: 0, duration: 0.8, ease: "power3.out"
+                opacity: 1, y: 0, duration: 1, ease: "power2.out", delay: (i % 3) * 0.1
             });
         });
 
-        // Grid Box Stagger Reveals
-        gsap.utils.toArray('.grid-reveal').forEach((el, i) => {
-            gsap.to(el, {
-                scrollTrigger: {
-                    trigger: el,
-                    start: 'top 90%',
-                },
-                opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)", delay: (i % 3) * 0.1
-            });
-        });
-
-        /* 
-           THE MASTER 3D TIMELINE 
-           This is deterministic. Scrubbing back strictly reverts ALL properties 
-           perfectly to their initial frame 0 values. (Fixed reverse scroll feature)
-        */
-        const meshTimeline = gsap.timeline({
+        // The Grand Mandala Scroll Timeline (Reversible)
+        const mandalaTimeline = gsap.timeline({
             scrollTrigger: {
                 trigger: "#scroll-container",
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 1 // Ties 1:1 with scroll position
+                scrub: 1
             }
         });
 
-        // Frame 1 -> Section 2 (Algorithm)
-        meshTimeline
-            .to(shapeGroup.position, { x: 3, y: -1, z: -1, ease: 'none' }, 0)
-            .to(shapeGroup.scale, { x: 1.5, y: 1.5, z: 1.5, ease: 'none' }, 0)
-            .to(material.color, { r: 0.0, g: 1.0, b: 0.8, ease: 'none' }, 0) // Turns neon cyan
-            .to(material, { opacity: 0.5, ease: 'none' }, 0)
-            .to(particlesMaterial.color, { r: 0.0, g: 1.0, b: 0.8, ease: 'none' }, 0)
+        mandalaTimeline
+            // Intro -> 5 Elements
+            .to(mandalaGroup.position, { x: 4, y: -2, z: -2, ease: 'none' }, 0)
+            .to(mandalaGroup.scale, { x: 1.5, y: 1.5, z: 1.5, ease: 'none' }, 0)
+            .to(coreMat.color, { r: 0.0, g: 1.0, b: 0.8, ease: 'none' }, 0) // Shift Core to Neon Cyan
+            
+            // 5 Elements -> Crucible (Genetix Sandbox Problem)
+            .to(mandalaGroup.position, { x: -4, y: 2, z: 1, ease: 'none' }, 1)
+            .to(mandalaGroup.scale, { x: 2.5, y: 2.5, z: 2.5, ease: 'none' }, 1)
+            .to(coreMat.color, { r: 1.0, g: 0.0, b: 0.2, ease: 'none' }, 1) // Shift Core to Blood Red
+            .to(coreMat, { wireframeLinewidth: 3, opacity: 1, ease: 'none' }, 1) // Heavy line thickness for "Sandbox Battle"
 
-        // Section 2 -> Section 3 (Deployments Array)
-            .to(shapeGroup.position, { x: -3, y: 1, z: 0, ease: 'none' }, 1)
-            .to(shapeGroup.scale, { x: 2.2, y: 2.2, z: 2.2, ease: 'none' }, 1)
-            .to(material.color, { r: 1.0, g: 0.0, b: 0.2, ease: 'none' }, 1) // Turns red
-            .to(particlesMaterial.color, { r: 1.0, g: 0.0, b: 0.2, ease: 'none' }, 1)
-
-        // Section 3 -> Section 4 (Outro)
-            .to(shapeGroup.position, { x: 0, y: 0, z: -3, ease: 'none' }, 2)
-            .to(shapeGroup.scale, { x: 3, y: 3, z: 3, ease: 'none' }, 2)
-            .to(material, { opacity: 0.05, ease: 'none' }, 2)
-            .to(material.color, { r: 1.0, g: 1.0, b: 1.0, ease: 'none' }, 2)
-            .to(particlesMaterial, { size: 0.08, ease: 'none' }, 2);
+            // Crucible -> Arsenal
+            .to(mandalaGroup.position, { x: 0, y: -1, z: -5, ease: 'none' }, 2)
+            .to(mandalaGroup.scale, { x: 4, y: 4, z: 4, ease: 'none' }, 2)
+            .to(coreMat.color, { r: 0.83, g: 0.68, b: 0.21, ease: 'none' }, 2) // Return to Gold
+            .to(coreMat, { wireframeLinewidth: 1, opacity: 0.2, ease: 'none' }, 2);
 
     </script>
 </body>
