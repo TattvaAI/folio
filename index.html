@@ -3,971 +3,731 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Shivansh Bansal — I see what's broken. I build what fixes it." />
-  <meta property="og:title" content="Shivansh Bansal" />
+  <meta name="description" content="Shivansh Bansal — I build systems, not just websites." />
+  <meta property="og:title" content="Shivansh Bansal | Engine" />
   <meta property="og:description" content="I see what's broken. I build what fixes it." />
-  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#050505" />
   <title>Shivansh Bansal</title>
 
-  <!-- Syne (display) + Inter (body) + JetBrains Mono (labels) -->
+  <!-- 
+    TYPOGRAPHY: 
+    Syne ExtraBold (Massive structure, geometric)
+    Inter (Utility text)
+    JetBrains Mono (Data/Coordinates)
+  -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
     /* ═══════════════════════════════════════════════════════════════
-       v5: OBSIDIAN — Design Tokens
-       Cool violet on blue-black. The premium palette.
+       v6: THE KINETIC ENGINE — Design Tokens
+       True Awwwards-style brutalism. No soft shadows. No safe padding.
     ═══════════════════════════════════════════════════════════════ */
     :root {
-      --bg:         #08080a;
-      --surface:    #0f0f14;
-      --surface-2:  #13131a;
-      --border:     rgba(255,255,255,0.06);
-      --border-h:   rgba(255,255,255,0.12);
-      --accent:     #a78bfa;
-      --accent-dim: rgba(167,139,250,0.15);
-      --glow:       #7c3aed;
-      --text:       #f0f0f5;
-      --text-sub:   rgba(240,240,245,0.7);
-      --muted:      #4a4a5a;
+      /* Palette: Phantom Black, Silver, Ultramarine */
+      --bg: #050505;
+      --surface: #0a0a0a;
+      --text: #ffffff;
+      --muted: #6b6b6b;
+      --silver: #eaeaeb;
+      --blue: #0047ff; /* The core highlight */
+      --border: rgba(255, 255, 255, 0.08);
 
-      --font-display: 'Syne', system-ui, sans-serif;
-      --font-body:    'Inter', system-ui, sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
-      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --ease-brutal: cubic-bezier(0.85, 0, 0.15, 1);
+      --ease-snap: cubic-bezier(1, 0, 0, 1);
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       RESET & BASE
+       GLOBAL RESET & CUSTOM CURSOR
     ═══════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { background: var(--bg); scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body);
-      color: var(--text);
+    
+    html, body {
       background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
       overflow-x: hidden;
+      /* Hide default cursor on desktop */
+      cursor: none; 
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Noise texture overlay — organic grain like high-end print */
-    body::before {
-      content: '';
+    /* Keep native selection styling raw/brutalist */
+    ::selection { background: var(--blue); color: #fff; }
+
+    /* The SVG Grid Texture */
+    .grid-overlay {
       position: fixed;
-      inset: 0;
-      z-index: 9999;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       pointer-events: none;
-      opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 200px 200px;
+      z-index: 1;
+      opacity: 0.15;
+      background-image: 
+        linear-gradient(to right, #fff 1px, transparent 1px),
+        linear-gradient(to bottom, #fff 1px, transparent 1px);
+      background-size: 100px 100px;
     }
 
-    a { color: inherit; text-decoration: none; }
+    /* Custom Instrument Cursor */
+    .cursor-crosshair {
+      position: fixed;
+      top: 0; left: 0;
+      width: 24px; height: 24px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s var(--ease-brutal), height 0.3s var(--ease-brutal);
+    }
+    .cursor-crosshair::before,
+    .cursor-crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--text);
+    }
+    .cursor-crosshair::before { top: 50%; left: 0; width: 100%; height: 1px; }
+    .cursor-crosshair::after { top: 0; left: 50%; width: 1px; height: 100%; }
 
-    .wrap {
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 clamp(1.25rem, 5%, 3rem);
+    .cursor-coords {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--blue);
+      padding: 10px 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    /* Standard links revert cursor */
+    a, button { cursor: none; }
+    a:hover ~ .cursor-crosshair { width: 40px; height: 40px; opacity: 0.5; }
+
+    /* Global Typography Utils */
+    h1, h2, h3 { font-family: var(--font-display); line-height: 0.9; text-transform: uppercase; }
+    .mono-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       NAV — Glassmorphism with centered glow border
+       NAV: Functional Dashboard Style
     ═══════════════════════════════════════════════════════════════ */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 1.25rem clamp(1.25rem, 5%, 3rem);
-      background: rgba(8,8,10,0.75);
-      backdrop-filter: blur(20px) saturate(1.2);
-      -webkit-backdrop-filter: blur(20px) saturate(1.2);
-      /* Glow border — central violet light source */
-      border-bottom: 1px solid var(--border);
-      background-image: linear-gradient(90deg,
-        transparent 0%,
-        rgba(167,139,250,0.06) 30%,
-        rgba(167,139,250,0.12) 50%,
-        rgba(167,139,250,0.06) 70%,
-        transparent 100%
-      );
-      background-size: 100% 1px;
-      background-position: bottom;
-      background-repeat: no-repeat;
+      align-items: center;
+      padding: 2vw;
+      mix-blend-mode: difference; /* Highly legible on any background */
     }
-    .nav-id {
+    .nav-sys {
+      color: #fff;
       font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
+      font-weight: 700;
+      font-size: 12px;
     }
-    .nav-links {
-      list-style: none;
+    .nav-status {
       display: flex;
-      gap: 2.5rem;
+      align-items: center;
+      gap: 8px;
     }
-    .nav-links a {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      transition: color 0.3s var(--ease);
-      position: relative;
+    .nav-status .dot {
+      width: 6px; height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
     }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0;
-      width: 100%; height: 1px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.35s var(--ease);
-    }
-    .nav-links a:hover { color: var(--text); }
-    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
 
     /* ═══════════════════════════════════════════════════════════════
-       HERO — Floating gradient orb + commanding typography
+       HERO: Brutalist Typography
     ═══════════════════════════════════════════════════════════════ */
     #hero {
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 10rem 0 6rem;
+      padding: 0 4vw;
       position: relative;
-      overflow: hidden;
+      z-index: 10;
     }
-
-    /* Floating gradient orb — CSS only, mouse-reactive via JS */
-    .hero-orb {
-      position: absolute;
-      width: clamp(400px, 50vw, 700px);
-      height: clamp(400px, 50vw, 700px);
-      border-radius: 50%;
-      background: radial-gradient(circle,
-        rgba(124,58,237,0.15) 0%,
-        rgba(167,139,250,0.06) 40%,
-        transparent 70%
-      );
-      filter: blur(80px);
-      pointer-events: none;
-      /* Default position — JS will override */
-      top: 20%;
-      left: 30%;
-      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: transform;
-      animation: orb-float 12s ease-in-out infinite;
-    }
-    @keyframes orb-float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33%      { transform: translate(30px, -20px) scale(1.05); }
-      66%      { transform: translate(-20px, 15px) scale(0.97); }
-    }
-
+    
     .hero-content {
-      position: relative;
-      z-index: 2;
+      will-change: transform;
     }
 
-    .hero-label {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      transform: translateY(12px);
+    h1.hero-title {
+      font-size: 14vw;
+      letter-spacing: -0.06em;
+      margin-left: -0.5vw; /* Push past padding */
+      color: var(--silver);
+    }
+    .hero-title span { display: block; }
+    .hero-title .outline {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
     }
 
-    h1.hero-name {
-      font-family: var(--font-display);
-      font-size: clamp(3.8rem, 11vw, 10rem);
-      font-weight: 800;
-      letter-spacing: -0.045em;
-      line-height: 0.88;
-      color: var(--text);
-      opacity: 0;
-      transform: translateY(28px);
+    .hero-sub {
+      margin-top: 4vh;
+      max-width: 450px;
+      font-size: clamp(16px, 1.5vw, 24px);
+      line-height: 1.5;
+      color: var(--silver);
     }
-    /* Violet underline sweep on the first word */
-    h1.hero-name .name-highlight {
-      position: relative;
-      display: inline-block;
-    }
-    h1.hero-name .name-highlight::after {
-      content: '';
+
+    /* Tech Marquee running infinitely behind » pure SVG/CSS */
+    .hero-marquee {
       position: absolute;
-      bottom: 0; left: 0;
-      width: 100%; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--glow));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 1s var(--ease);
-    }
-    h1.hero-name.active .name-highlight::after {
-      transform: scaleX(1);
-    }
-
-    .hero-tagline {
-      margin-top: 3rem;
-      font-family: var(--font-body);
-      font-size: clamp(1.15rem, 2.2vw, 1.6rem);
-      font-weight: 300;
-      color: var(--text-sub);
-      max-width: 540px;
-      line-height: 1.65;
-      opacity: 0;
-      transform: translateY(18px);
-    }
-    .hero-tagline strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* Hero meta strip — compact data points */
-    .hero-meta {
-      margin-top: 5rem;
-      display: flex;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      bottom: 10vh; left: 0;
+      width: 100%;
       overflow: hidden;
-      max-width: 680px;
-      opacity: 0;
-      transform: translateY(14px);
+      white-space: nowrap;
+      mix-blend-mode: exclusion;
+      pointer-events: none;
+      z-index: -1;
     }
-    .meta-cell {
-      flex: 1;
-      padding: 1.1rem 1.25rem;
-      background: var(--surface);
-      transition: background 0.3s var(--ease);
+    .marquee-track {
+      display: inline-block;
+      animation: scroll-left 30s linear infinite;
     }
-    .meta-cell:hover { background: var(--surface-2); }
-    .meta-label {
-      font-family: var(--font-mono);
-      font-size: 0.52rem;
-      letter-spacing: 0.18em;
+    .marquee-text {
+      font-family: var(--font-display);
+      font-size: 12vw;
+      color: var(--bg); /* Invisible on bg, relies on text-stroke */
+      -webkit-text-stroke: 1px var(--border);
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.45rem;
+      margin-right: 5vw;
     }
-    .meta-value {
-      font-size: 0.78rem;
-      font-weight: 400;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    /* Scroll indicator */
-    .scroll-hint {
-      position: absolute;
-      bottom: 3rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      opacity: 0;
-    }
-    .scroll-hint span {
-      font-family: var(--font-mono);
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .scroll-line {
-      width: 1px;
-      height: 28px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      animation: scroll-pulse 2s ease-in-out infinite;
-    }
-    @keyframes scroll-pulse {
-      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
-      50%      { opacity: 1; transform: scaleY(1); }
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       ABOUT — Bio + Signal Strip
+       ABOUT: Split Screen Parallax
     ═══════════════════════════════════════════════════════════════ */
     #about {
-      padding: 8rem 0;
-      border-top: 1px solid var(--border);
-    }
-    .section-tag {
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 3.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-    .section-tag::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--border-h), transparent);
-      max-width: 240px;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 5rem;
-      align-items: start;
-    }
-    .about-text {
-      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-      font-weight: 300;
-      line-height: 1.9;
-      color: var(--text-sub);
-    }
-    .about-text strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* Signal strip — 4 compact data panels */
-    .signal-strip {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .signal-cell {
+      position: relative;
       background: var(--surface);
-      padding: 1.4rem 1.5rem;
-      transition: background 0.35s var(--ease);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex; /* Side by side on desktop */
+      z-index: 10;
     }
-    .signal-cell:hover { background: var(--surface-2); }
+    
+    .about-left {
+      width: 50vw;
+      padding: 10vw 4vw;
+      border-right: 1px solid var(--border);
+      /* Pinned by GSAP later */
+    }
+    .about-right {
+      width: 50vw;
+      padding: 10vw 4vw;
+    }
+
+    .about-statement {
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+    .h-line { height: 1px; background: var(--border); margin: 4vw 0; }
+
+    /* Signal Data points */
+    .signal {
+      margin-bottom: 4vw;
+    }
     .signal-num {
       font-family: var(--font-mono);
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
+      color: var(--blue);
+      font-size: 14px;
+      margin-bottom: 8px;
     }
-    .signal-title {
-      font-family: var(--font-display);
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.35rem;
+    .signal h3 {
+      font-size: clamp(20px, 2vw, 28px);
+      margin-bottom: 12px;
     }
-    .signal-body {
-      font-size: 0.78rem;
+    .signal p {
+      font-size: 16px;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.6;
+      max-width: 80%;
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       WORK — Glassmorphism Bento Cards
+       WORK: Horizontal Scroll Awwwards Layout
     ═══════════════════════════════════════════════════════════════ */
-    #work {
-      padding: 8rem 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: clamp(0.75rem, 1.5vw, 1.25rem);
-      margin-top: 3rem;
-    }
-    /* Asymmetric: first card spans full width for emphasis */
-    .bento-grid .glass-card:first-child {
-      grid-column: 1 / -1;
-    }
-
-    .glass-card {
+    /* Container that GSAP will pin and translate horizontally */
+    .horizontal-wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      background: var(--bg);
       position: relative;
-      background: rgba(15,15,20,0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      z-index: 20;
+    }
+
+    .work-intro {
+      flex: 0 0 50vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4vw;
+      border-right: 1px solid var(--border);
+    }
+
+    /* The individual projects */
+    .work-panel {
+      flex: 0 0 70vw; /* Massive panels */
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 5vw;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    
+    .project-card {
+      width: 100%;
+      height: 70vh;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: clamp(1.75rem, 3vw, 2.5rem);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 240px;
+      padding: 3vw;
+      position: relative;
+      overflow: hidden;
       text-decoration: none;
       color: var(--text);
-      overflow: hidden;
-      transition:
-        border-color 0.4s var(--ease),
-        background 0.4s var(--ease),
-        transform 0.4s var(--ease);
+      transition: border-color 0.4s var(--ease-brutal), transform 0.4s var(--ease-brutal);
     }
-
-    /* Mouse-tracking inner glow */
-    .glass-card::before {
-      content: '';
+    
+    /* Project Hover Effects (Brutalist scaling) */
+    .project-card:hover { border-color: var(--blue); transform: scale(0.98); }
+    
+    /* Giant background numbers */
+    .project-bg-num {
       position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      background: radial-gradient(
-        600px circle at var(--mx, 50%) var(--my, 50%),
-        rgba(167,139,250,0.06) 0%,
-        transparent 50%
-      );
-      opacity: 0;
-      transition: opacity 0.4s var(--ease);
+      top: -5%; right: 2%;
+      font-family: var(--font-display);
+      font-size: 40vh;
+      line-height: 1;
+      color: var(--bg);
+      -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+      z-index: 0;
       pointer-events: none;
     }
 
-    /* Top-edge gradient accent line */
-    .glass-card::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 20%; right: 20%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
-      opacity: 0;
-      transition: opacity 0.4s var(--ease), left 0.4s var(--ease), right 0.4s var(--ease);
-    }
-
-    .glass-card:hover {
-      border-color: var(--border-h);
-      background: rgba(15,15,20,0.8);
-      transform: translateY(-2px);
-    }
-    .glass-card:hover::before { opacity: 1; }
-    .glass-card:hover::after {
-      opacity: 1;
-      left: 10%;
-      right: 10%;
-    }
-
-    .card-header {}
-    .card-num {
-      font-family: var(--font-mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.25rem;
-      transition: color 0.3s var(--ease);
-    }
-    .glass-card:hover .card-num { color: var(--accent); }
-
-    .card-name {
-      font-family: var(--font-display);
-      font-size: clamp(1.4rem, 2.5vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      color: var(--text);
-      margin-bottom: 0.85rem;
-      transition: color 0.3s var(--ease);
-    }
-    .glass-card:hover .card-name { color: var(--accent); }
-
-    .card-desc {
-      font-size: 0.85rem;
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 480px;
-      transition: color 0.3s var(--ease);
-    }
-    .glass-card:hover .card-desc { color: var(--text-sub); }
-
-    .card-footer {
+    .project-content { position: relative; z-index: 2; }
+    
+    .project-title { font-size: clamp(40px, 5vw, 80px); margin-bottom: 20px; }
+    .project-desc { font-size: 18px; color: var(--muted); max-width: 400px; line-height: 1.5; }
+    
+    .project-meta {
+      position: relative;
+      z-index: 2;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-top: 1.75rem;
+      align-items: flex-end;
     }
-    .card-tag {
-      font-family: var(--font-mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.35rem 0.85rem;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      transition: border-color 0.3s var(--ease), color 0.3s var(--ease), background 0.3s var(--ease);
+    .project-link-btn {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--text);
+      color: var(--bg);
+      display: flex; justify-content: center; align-items: center;
+      font-family: var(--font-mono); font-size: 24px;
+      transition: background 0.3s, transform 0.3s;
     }
-    .glass-card:hover .card-tag {
-      border-color: var(--accent-dim);
-      color: var(--accent);
-      background: var(--accent-dim);
-    }
-    .card-arrow {
-      font-size: 1rem;
-      color: var(--muted);
-      transition: color 0.3s var(--ease), transform 0.35s var(--ease-spring);
-    }
-    .glass-card:hover .card-arrow {
-      color: var(--accent);
-      transform: translate(3px, -3px);
-    }
+    .project-card:hover .project-link-btn { background: var(--blue); color: #fff; transform: rotate(45deg); }
 
     /* ═══════════════════════════════════════════════════════════════
-       CONNECT — Animated gradient headline + pill buttons
+       CONNECT: Full Screen Aggressive CTA
     ═══════════════════════════════════════════════════════════════ */
     #connect {
-      padding: 10rem 0 8rem;
-      border-top: 1px solid var(--border);
+      padding: 15vw 4vw;
+      background: var(--blue);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
+      position: relative;
+      z-index: 30;
     }
-
-    .connect-heading {
-      font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 7.5rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 0.92;
-      margin-bottom: 2.5rem;
-      /* Animated gradient text */
-      background: linear-gradient(
-        135deg,
-        var(--text) 0%,
-        var(--accent) 25%,
-        var(--glow) 50%,
-        var(--accent) 75%,
-        var(--text) 100%
-      );
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradient-sweep 6s ease-in-out infinite;
+    
+    .connect-title {
+      font-size: 12vw;
+      color: #fff;
     }
-    @keyframes gradient-sweep {
-      0%, 100% { background-position: 0% center; }
-      50%      { background-position: 200% center; }
-    }
-
-    .connect-sub {
-      font-family: var(--font-body);
-      font-size: 1rem;
-      font-weight: 300;
-      color: var(--muted);
-      max-width: 420px;
-      margin: 0 auto 3rem;
-      line-height: 1.7;
-    }
-
-    .connect-btns {
+    .connect-title:hover { color: var(--bg); }
+    
+    .connect-links {
       display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
+      gap: 2vw;
+      margin-top: 5vw;
     }
-    .pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
+    .connect-link {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
+      font-size: 16px;
+      padding: 20px 40px;
+      border: 1px solid #fff;
       text-transform: uppercase;
-      padding: 0.9rem 2rem;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-      color: var(--text);
       text-decoration: none;
-      transition:
-        border-color 0.3s var(--ease),
-        background 0.3s var(--ease),
-        transform 0.3s var(--ease),
-        box-shadow 0.3s var(--ease);
+      color: #fff;
+      transition: background 0.3s var(--ease-brutal), color 0.3s var(--ease-brutal);
     }
-    .pill-btn:hover {
-      border-color: var(--accent);
-      background: var(--accent-dim);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(167,139,250,0.1);
-    }
-    .pill-btn-solid {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #08080a;
-      font-weight: 500;
-    }
-    .pill-btn-solid:hover {
-      background: #b89dff;
-      border-color: #b89dff;
-      box-shadow: 0 4px 24px rgba(167,139,250,0.25);
+    .connect-link:hover {
+      background: #fff;
+      color: var(--blue);
     }
 
-    /* ═══════════════════════════════════════════════════════════════
-       FOOTER
-    ═══════════════════════════════════════════════════════════════ */
     footer {
-      padding: 2rem clamp(1.25rem, 5%, 3rem);
-      border-top: 1px solid var(--border);
+      background: var(--bg);
+      padding: 4vw;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-    .foot {
       font-family: var(--font-mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 12px;
       color: var(--muted);
+      border-top: 1px solid var(--border);
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       REVEAL BASE STATE
-    ═══════════════════════════════════════════════════════════════ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-    }
-
-    /* ═══════════════════════════════════════════════════════════════
-       RESPONSIVE
+       MOBILE REVERT: Kill custom cursors and horizontal scroll
     ═══════════════════════════════════════════════════════════════ */
     @media (max-width: 900px) {
-      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .signal-strip { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 768px) {
-      .bento-grid { grid-template-columns: 1fr; }
-      .bento-grid .glass-card:first-child { grid-column: 1; }
-      .nav-links { display: none; }
-      .hero-meta { flex-direction: column; gap: 0; border-radius: 6px; }
-      .meta-cell { padding: 0.9rem 1rem; }
-      .signal-strip { grid-template-columns: 1fr; }
-      .connect-heading { line-height: 1; }
+      body { cursor: auto; }
+      .cursor-crosshair, .cursor-coords { display: none; }
+      a, button { cursor: pointer; }
+
+      .about-left, .about-right { width: 100vw; padding: 10vw 5vw; }
+      #about { flex-direction: column; }
+      .about-left { border-right: none; border-bottom: 1px solid var(--border); }
+
+      /* Horizontal reverts to vertical stack */
+      .horizontal-wrapper {
+        height: auto; flex-direction: column; overflow: visible;
+      }
+      .work-intro, .work-panel {
+        flex: none; width: 100vw; height: auto;
+        padding: 10vw 5vw; border-right: none; border-bottom: 1px solid var(--border);
+      }
+      .project-card { height: auto; min-height: 50vh; }
+      .project-title { font-size: 40px; }
+      
+      .connect-title { font-size: 15vw; }
+      .connect-links { flex-direction: column; gap: 4vw; width: 100%; }
+      .connect-link { width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ═══════════════ NAV ═══════════════ -->
-  <nav aria-label="Site navigation">
-    <span class="nav-id">SB · Portfolio 2026</span>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#connect">Connect</a></li>
-    </ul>
+  <!-- BACKGROUND: Technical coordinates grid -->
+  <div class="grid-overlay"></div>
+
+  <!-- CUSTOM CURSOR SYSTEM -->
+  <div class="cursor-crosshair" id="cursor"></div>
+  <div class="cursor-coords" id="coords">X: 000 Y: 000</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="mono-label">> sys.portfolio</div>
+    <div class="nav-status mono-label">
+      <div class="dot"></div> ONLINE
+    </div>
   </nav>
 
-  <!-- ═══════════════ HERO ═══════════════ -->
+  <!-- HERO -->
   <section id="hero">
-    <div class="wrap">
-      <!-- Floating gradient orb — follows mouse subtly -->
-      <div class="hero-orb" id="hero-orb" aria-hidden="true"></div>
-
-      <div class="hero-content">
-        <p class="hero-label">Shivansh Bansal / Full-Stack AI Engineer</p>
-
-        <h1 class="hero-name" id="hero-name">
-          <span class="name-highlight">Shivansh</span><br>Bansal
-        </h1>
-
-        <p class="hero-tagline">
-          <strong>I see what's broken.</strong><br>I build what fixes it.
-        </p>
-
-        <!-- Compact meta strip -->
-        <div class="hero-meta">
-          <div class="meta-cell">
-            <p class="meta-label">Degree</p>
-            <p class="meta-value">IIT Madras · BS Data Science</p>
-          </div>
-          <div class="meta-cell">
-            <p class="meta-label">Also</p>
-            <p class="meta-value">BSc CS · Govt. College Ambala</p>
-          </div>
-          <div class="meta-cell">
-            <p class="meta-label">Edge</p>
-            <p class="meta-value">Competitive Chess Player</p>
-          </div>
-          <div class="meta-cell">
-            <p class="meta-label">Ships</p>
-            <p class="meta-value">06 live · 2024–26</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Scroll indicator -->
-      <div class="scroll-hint">
-        <span>Scroll</span>
-        <div class="scroll-line"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ ABOUT ═══════════════ -->
-  <section id="about">
-    <div class="wrap">
-      <p class="section-tag reveal">// About</p>
-
-      <div class="about-grid">
-        <p class="about-text reveal">
-          I'm studying <strong>Data Science at IIT Madras</strong> and CS at
-          Govt. College Ambala Cantt. I play chess competitively — which means
-          I think about failure modes <em>before</em> I start building, not after.
-          <br><br>
-          I've made a mental wellness app, an AI website generator, document processing
-          tools, a QR generator, academic storage infrastructure, and a client enterprise
-          site. The only real reason I built any of them is to find out whether they
-          were possible.
-        </p>
-
-        <!-- Signal strip — compact data panels -->
-        <div class="signal-strip reveal">
-          <div class="signal-cell">
-            <p class="signal-num">01 · Foundation</p>
-            <p class="signal-title">IIT Madras + BSc CS</p>
-            <p class="signal-body">Data Science meets raw CS theory.</p>
-          </div>
-          <div class="signal-cell">
-            <p class="signal-num">02 · Strategy</p>
-            <p class="signal-title">Competitive Chess</p>
-            <p class="signal-body">12 moves ahead. Sacrifice for position.</p>
-          </div>
-          <div class="signal-cell">
-            <p class="signal-num">03 · Range</p>
-            <p class="signal-title">Cross-Domain</p>
-            <p class="signal-body">Psychology, Finance, AI — synthesized.</p>
-          </div>
-          <div class="signal-cell">
-            <p class="signal-num">04 · Principle</p>
-            <p class="signal-title">Curiosity-First</p>
-            <p class="signal-body">"Is this even possible to make?"</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ WORK ═══════════════ -->
-  <section id="work">
-    <div class="wrap">
-      <p class="section-tag reveal">// Work · 06 live deployments</p>
-
-      <div class="bento-grid" id="bento-grid">
-
-        <!-- 1: Genetix — spans full width -->
-        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="glass-card reveal" aria-label="Genetix AI Website Builder">
-          <div class="card-header">
-            <p class="card-num">01 / AI · Website Builder</p>
-            <h3 class="card-name">Genetix AI</h3>
-            <p class="card-desc">Wanted to know if an LLM could build actual websites. It can. The sandbox isolation was the hard part.</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-tag">AI Gen</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <!-- 2: VK Industries -->
-        <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
-           class="glass-card reveal" aria-label="VK Industries KUK">
-          <div class="card-header">
-            <p class="card-num">02 / Client · Enterprise</p>
-            <h3 class="card-name">VK Industries KUK</h3>
-            <p class="card-desc">A client needed an online presence. I built it.</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-tag">Client</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <!-- 3: Mind Space -->
-        <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="glass-card reveal" aria-label="Mind Space">
-          <div class="card-header">
-            <p class="card-num">03 / Consumer · Wellness</p>
-            <h3 class="card-name">Mind Space</h3>
-            <p class="card-desc">Built a mental wellness app because I wanted to see if software could actually help people think.</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-tag">Wellness</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <!-- 4: Campus Vault -->
-        <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="glass-card reveal" aria-label="Campus Vault">
-          <div class="card-header">
-            <p class="card-num">04 / Cloud · Storage</p>
-            <h3 class="card-name">Campus Vault</h3>
-            <p class="card-desc">Academic storage with fast edge fetching. Boring name, useful tool.</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-tag">Storage</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <!-- 5: QR Main Ten -->
-        <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="glass-card reveal" aria-label="QR Main Ten">
-          <div class="card-header">
-            <p class="card-num">05 / Utility · Edge</p>
-            <h3 class="card-name">QR Main Ten</h3>
-            <p class="card-desc">A fast, clean QR generator. Does exactly what it says.</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-tag">Utility</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <!-- 6: PDF4Me -->
-        <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
-           class="glass-card reveal" aria-label="PDF4Me">
-          <div class="card-header">
-            <p class="card-num">06 / Automation · Docs</p>
-            <h3 class="card-name">PDF4Me</h3>
-            <p class="card-desc">Document processing pipeline. Upload, extract, compress, done.</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-tag">Automation</span>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ CONNECT ═══════════════ -->
-  <section id="connect">
-    <div class="wrap">
-      <h2 class="connect-heading reveal">Let's build<br>the impossible.</h2>
-      <p class="connect-sub reveal">
-        Not looking for a role right now — just building things.
-        If you want to talk about something interesting, reach out.
+    <div class="hero-content">
+      <p class="mono-label" style="margin-bottom: 2vh;">ENGINEER / ARCHITECT</p>
+      <h1 class="hero-title">
+        <span>SHIVANSH</span>
+        <span class="outline">BANSAL</span>
+      </h1>
+      <p class="hero-sub">
+        I see what's broken. I build what fixes it. Full-stack engineering.
       </p>
-      <div class="connect-btns reveal">
-        <a href="https://github.com/TattvaAI" target="_blank" rel="noopener noreferrer"
-           class="pill-btn pill-btn-solid" aria-label="GitHub">GitHub · TattvaAI ↗</a>
-        <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" rel="noopener noreferrer"
-           class="pill-btn" aria-label="LinkedIn">LinkedIn ↗</a>
+    </div>
+
+    <!-- Infinite purely CSS tech marquee -->
+    <div class="hero-marquee">
+      <div class="marquee-track">
+        <span class="marquee-text">Next.js — Tailwind — GSAP — Node — React — Figma — Typescript — Three.js — LLMs — REST — </span>
+        <span class="marquee-text">Next.js — Tailwind — GSAP — Node — React — Figma — Typescript — Three.js — LLMs — REST — </span>
       </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-left" id="about-sticky">
+      <p class="mono-label" style="margin-bottom: 3vw;">// IDENTITY</p>
+      <div class="about-statement">
+        I'm studying Data Science at IIT Madras and CS at Ambala. 
+        I play chess competitively — which means I calculate <strong>failure modes</strong> 
+        before I write a single line of code.
+      </div>
+    </div>
+    
+    <div class="about-right">
+      <div class="signal">
+        <div class="signal-num">01 / Foundation</div>
+        <h3>IIT Madras + BSc CS</h3>
+        <p>Rigorous mathematical theory (DS) merged with raw computer science fundamentals. The unshakeable bedrock.</p>
+      </div>
+      <div class="h-line"></div>
+      
+      <div class="signal">
+        <div class="signal-num">02 / Strategy</div>
+        <h3>Competitive Chess</h3>
+        <p>Every architectural decision is an end-game calculation. The ability to evaluate 12 moves ahead and sacrifice for position.</p>
+      </div>
+      <div class="h-line"></div>
+      
+      <div class="signal">
+        <div class="signal-num">03 / Synthesis</div>
+        <h3>Cross-Domain Range</h3>
+        <p>Psychology, Finance, and AI. The capability to synthesize resources across entirely unrelated domains.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK: Horizontal Scroll Area -->
+  <div id="work-container">
+    <div class="horizontal-wrapper" id="horizontal">
+      
+      <!-- Panel 0: Intro -->
+      <div class="work-intro panel">
+        <p class="mono-label" style="margin-bottom: 2vw;">// DEPLOYMENTS</p>
+        <h2 style="font-size: clamp(40px, 8vw, 100px); color: var(--silver);">THE<br>WORK</h2>
+        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">06 live applications. Scroll horizontally.</p>
+      </div>
+
+      <!-- Panel 1 -->
+      <div class="work-panel panel">
+        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="project-card">
+          <div class="project-bg-num">01</div>
+          <div class="project-content">
+            <p class="mono-label" style="margin-bottom: 2vw;">AI GENERATOR</p>
+            <h3 class="project-title">Genetix AI</h3>
+            <p class="project-desc">Wanted to see if an LLM could build actual live websites. It can. The sandbox isolation was the true engineering challenge.</p>
+          </div>
+          <div class="project-meta">
+            <span class="mono-label">LIVE SITE</span>
+            <div class="project-link-btn">↗</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Panel 2 -->
+      <div class="work-panel panel">
+        <a href="https://vkindustrieskuk.web.app/" target="_blank" class="project-card">
+          <div class="project-bg-num">02</div>
+          <div class="project-content">
+            <p class="mono-label" style="margin-bottom: 2vw;">ENTERPRISE</p>
+            <h3 class="project-title">VK Industries</h3>
+            <p class="project-desc">A client needed an immediate, high-performance online presence. Shipped a clean, indexable corporate site.</p>
+          </div>
+          <div class="project-meta">
+            <span class="mono-label">LIVE SITE</span>
+            <div class="project-link-btn">↗</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Panel 3 -->
+      <div class="work-panel panel">
+        <a href="https://mind-space-seven.vercel.app/" target="_blank" class="project-card">
+          <div class="project-bg-num">03</div>
+          <div class="project-content">
+            <p class="mono-label" style="margin-bottom: 2vw;">CONSUMER UX</p>
+            <h3 class="project-title">MindSpace</h3>
+            <p class="project-desc">Built a mental wellness application because I wanted to see if software UI could tangibly lower user anxiety.</p>
+          </div>
+          <div class="project-meta">
+            <span class="mono-label">LIVE SITE</span>
+            <div class="project-link-btn">↗</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Panel 4 -->
+      <div class="work-panel panel">
+        <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="project-card">
+          <div class="project-bg-num">04</div>
+          <div class="project-content">
+            <p class="mono-label" style="margin-bottom: 2vw;">INFRASTRUCTURE</p>
+            <h3 class="project-title">Campus Vault</h3>
+            <p class="project-desc">Academic storage system with ultra-fast edge delivery. Boring name, but a brutally effective tool.</p>
+          </div>
+          <div class="project-meta">
+            <span class="mono-label">LIVE SITE</span>
+            <div class="project-link-btn">↗</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Panel 5 -->
+      <div class="work-panel panel">
+        <a href="https://qr-main-ten.vercel.app/" target="_blank" class="project-card">
+          <div class="project-bg-num">05</div>
+          <div class="project-content">
+            <p class="mono-label" style="margin-bottom: 2vw;">UTILITY</p>
+            <h3 class="project-title">GatePass</h3>
+            <p class="project-desc">High-speed edge utility for deterministic QR generation. Built for pure speed and zero friction.</p>
+          </div>
+          <div class="project-meta">
+            <span class="mono-label">LIVE SITE</span>
+            <div class="project-link-btn">↗</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Panel 6 -->
+      <div class="work-panel panel" style="padding-right: 15vw;"> <!-- Extra padding at end -->
+        <a href="https://pdf4me.vercel.app/" target="_blank" class="project-card">
+          <div class="project-bg-num">06</div>
+          <div class="project-content">
+            <p class="mono-label" style="margin-bottom: 2vw;">AUTOMATION</p>
+            <h3 class="project-title">PDF4Me</h3>
+            <p class="project-desc">Document processing pipeline. Extract, manipulate, compress. Pure functional backend logic exposed via a clean UI.</p>
+          </div>
+          <div class="project-meta">
+            <span class="mono-label">LIVE SITE</span>
+            <div class="project-link-btn">↗</div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONNECT -->
+  <section id="connect">
+    <h2 class="connect-title">READY TO<br>BUILD.</h2>
+    <p class="mono-label" style="color: #fff; margin-top: 4vw; max-width: 400px; line-height: 1.6;">
+      Not looking for a standard role. Looking to build systems that matter.
+    </p>
+    <div class="connect-links">
+      <a href="https://github.com/TattvaAI" target="_blank" class="connect-link">GitHub Profile ↗</a>
+      <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" class="connect-link">LinkedIn Network ↗</a>
     </div>
   </section>
 
   <footer>
-    <span class="foot">© 2026 Shivansh Bansal</span>
-    <span class="foot">v5 · Obsidian</span>
+    <div>v6 :: KINETIC ENGINE</div>
+    <div>SHIVANSH BANSAL © 2026</div>
   </footer>
 
-  <!-- ═══════════════ SCRIPTS ═══════════════ -->
+  <!-- SCRIPTS -->
   <script src="./lib/gsap.min.js"></script>
   <script src="./lib/ScrollTrigger.min.js"></script>
 
   <script>
     /* ═══════════════════════════════════════════════════════════════
-       v5: OBSIDIAN — Interactions
+       JS CORE: Awwwards Level Interaction
     ═══════════════════════════════════════════════════════════════ */
 
-    /* ── 1. Mouse-reactive gradient orb ─────────────────────────── */
-    const orb = document.getElementById('hero-orb');
-    let orbX = 0, orbY = 0, targetX = 0, targetY = 0;
+    // 1. Custom Cursor Coordinator
+    const cursor = document.getElementById('cursor');
+    const coords = document.getElementById('coords');
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let targetX = mouseX, targetY = mouseY;
 
-    document.addEventListener('mousemove', (e) => {
-      // Normalise to viewport center offset
-      targetX = (e.clientX / window.innerWidth - 0.5) * 60;
-      targetY = (e.clientY / window.innerHeight - 0.5) * 40;
-    });
+    if (window.innerWidth > 900) {
+      window.addEventListener('mousemove', e => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        // Update raw coordinates text immediately
+        coords.innerText = `X: ${e.clientX.toString().padStart(4, '0')} Y: ${e.clientY.toString().padStart(4, '0')}`;
+        // Position coords slightly offset from cursor
+        coords.style.transform = `translate(${e.clientX + 15}px, ${e.clientY + 15}px)`;
+      });
 
-    function orbTick() {
-      orbX += (targetX - orbX) * 0.04;
-      orbY += (targetY - orbY) * 0.04;
-      orb.style.transform = `translate(${orbX}px, ${orbY}px)`;
-      requestAnimationFrame(orbTick);
+      // Smooth interp logic for the crosshair
+      function renderCursor() {
+        mouseX += (targetX - mouseX) * 0.2; // Fast interpolation for snap
+        mouseY += (targetY - mouseY) * 0.2;
+        cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        requestAnimationFrame(renderCursor);
+      }
+      requestAnimationFrame(renderCursor);
     }
-    requestAnimationFrame(orbTick);
 
-    /* ── 2. Card mouse-tracking glow ────────────────────────────── */
-    document.querySelectorAll('.glass-card').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-        const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-        card.style.setProperty('--mx', x + '%');
-        card.style.setProperty('--my', y + '%');
-      });
-    });
-
-    /* ── 3. GSAP Animations ─────────────────────────────────────── */
+    // 2. GSAP Registrations
     gsap.registerPlugin(ScrollTrigger);
+    
+    // Smooth initial load (Brutalist fast-fade)
+    gsap.from('.hero-content', { opacity: 0, scale: 0.95, duration: 1, ease: 'expo.out' });
 
-    // Hero entrance — precise choreography
-    const heroTl = gsap.timeline({ delay: 0.2 });
-    heroTl
-      .to('.hero-label',   { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' })
-      .to('#hero-name',    { opacity: 1, y: 0, duration: 1,   ease: 'expo.out' }, '-=0.4')
-      .to('.hero-tagline', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5')
-      .to('.hero-meta',    { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.3')
-      .to('.scroll-hint',  { opacity: 1,       duration: 0.6, ease: 'power2.out' }, '-=0.2')
-      .add(() => {
-        document.getElementById('hero-name').classList.add('active');
-      }, '-=0.6');
-
-    // Scroll-driven reveals with wave stagger
-    gsap.utils.toArray('.reveal').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-          toggleActions: 'play none none none',
-        },
-        delay: (i % 4) * 0.08,
-      });
-    });
-
-    // Fade scroll hint on scroll
+    // 3. Kinetic Typography on Scroll
+    // Squishes the text slightly based on scroll depth giving an elastic/heavy feel
     ScrollTrigger.create({
-      start: 'top -80',
-      onUpdate: (self) => {
-        gsap.to('.scroll-hint', { opacity: 1 - self.progress * 5, duration: 0.2 });
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate: self => {
+        gsap.set('.hero-content', { 
+          y: self.progress * 150, // Parallax down
+          scale: 1 - (self.progress * 0.05) // Slight shrink
+        });
       }
     });
 
-    /* ── 4. Smooth anchor scrolling ─────────────────────────────── */
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-          gsap.to(window, {
-            scrollTo: { y: target, offsetY: 80 },
-            duration: 1,
-            ease: 'power2.inOut'
-          });
+    // 4. Parallax "About" Section Pinning
+    // Holds the left statement while reading the right data points
+    if (window.innerWidth > 900) {
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: '#about-sticky',
+      });
+    }
+
+    // 5. THE CORE: Horizontal Scroll Hijack
+    if (window.innerWidth > 900) {
+      const horizontalContainer = document.getElementById('horizontal');
+      const panels = gsap.utils.toArray('.panel');
+      
+      // Calculate total width of all panels combined minus the viewport width
+      const totalWidth = horizontalContainer.scrollWidth - window.innerWidth;
+
+      gsap.to(panels, {
+        x: () => -totalWidth, // Move container to the left
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#work-container',
+          pin: true,           // Pin the section
+          scrub: 1,            // Smooth scrubbing taking 1s to catch up
+          snap: 1 / (panels.length - 1), // Snap to closest panel
+          end: () => "+=" + totalWidth // End scroll after scrolling the width
         }
       });
-    });
+    }
+
   </script>
 
 </body>
