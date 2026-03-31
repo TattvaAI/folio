@@ -1,395 +1,1004 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth bg-black">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIVANSH | ARCHITECTURE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        void: '#030303',
-                        neon: '#00ffcc',
-                        blood: '#ff003c',
-                    },
-                    fontFamily: {
-                        mono: ['"Space Mono"', 'monospace'],
-                        sans: ['"Inter"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        body { margin: 0; background-color: #030303; color: #fff; overflow-x: hidden; font-family: 'Inter', sans-serif; }
-        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-        
-        .section { min-height: 100vh; padding: 6rem 5%; position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; }
-        
-        .bento-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 1.5rem; 
-            width: 100%; 
-            max-width: 1400px; 
-            margin: 0 auto;
-        }
-        
-        .bento-box {
-            background: rgba(10, 10, 10, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 0.25rem;
-            padding: 2.5rem;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 300px;
-        }
-        
-        .bento-box::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, rgba(0, 255, 204, 0.05) 0%, transparent 70%);
-            opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
-        }
-        .bento-box:hover::after { opacity: 1; }
-        .bento-box:hover { 
-            border-color: rgba(0, 255, 204, 0.3);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px -10px rgba(0, 255, 204, 0.1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shivansh Bansal — Full-Stack AI Engineer. I create things to fulfill my curiosity of knowing: is this even possible to make?" />
+  <meta property="og:title" content="Shivansh Bansal | Engineering Portfolio" />
+  <meta property="og:description" content="AI systems, full-stack architecture, and impossible ideas — shipped." />
+  <meta property="og:type" content="website" />
+  <title>Shivansh Bansal — Portfolio</title>
 
-        .huge-text { 
-            font-size: clamp(4rem, 12vw, 15rem); 
-            font-weight: 900; 
-            line-height: 0.8; 
-            letter-spacing: -0.05em; 
-            text-transform: uppercase;
-        }
-        .outline-text { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.15); }
-        .mono-tag { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; color: #00ffcc; text-transform: uppercase;}
-        
-        /* Reveal animation defaults */
-        .reveal-text { opacity: 0; transform: translateY(40px); }
-        .grid-reveal { opacity: 0; transform: scale(0.95); }
+  <!-- Fonts: Syne (display) + JetBrains Mono (labels) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-        .line-accent { width: 100px; height: 2px; background: #00ffcc; margin: 2rem 0; }
-    </style>
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────────────── */
+    :root {
+      --bg:        #0a0a0a;
+      --surface:   #111111;
+      --border:    #1e1e1e;
+      --text:      #ededed;
+      --muted:     #555555;
+      --accent:    #00e5ff;
+      --danger:    #ff3366;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; background: var(--bg); }
+    /* Bug #12 fixed: no CSS scroll-smooth — GSAP owns scroll */
+    body {
+      font-family: var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── CANVAS (fixed, behind everything) ─────────────────────── */
+    #webgl {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── NAV ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 5%;
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      transition: color 0.3s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ─── SECTIONS ───────────────────────────────────────────────── */
+    section {
+      position: relative;
+      z-index: 10;
+      padding: 0 5%;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ─── HERO ───────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero-inner {
+      padding: 10rem 0 6rem;
+    }
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0; /* GSAP will animate this in */
+    }
+    .hero-name {
+      /* Bug #10 fixed: single <h1> */
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      opacity: 0;
+    }
+    .hero-name-accent {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(237,237,237,0.2);
+    }
+    .hero-tagline {
+      margin-top: 3rem;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 400;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.6;
+      opacity: 0;
+    }
+    .hero-tagline strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .scroll-cue {
+      margin-top: 6rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    .scroll-cue-line {
+      width: 40px;
+      height: 1px;
+      background: var(--muted);
+      animation: cue-pulse 2s ease-in-out infinite;
+    }
+    @keyframes cue-pulse {
+      0%, 100% { opacity: 0.3; transform: scaleX(1); }
+      50% { opacity: 1; transform: scaleX(1.4); transform-origin: left; }
+    }
+
+    /* ─── SIGNAL (About) ─────────────────────────────────────────── */
+    #signal {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+    }
+    .signal-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .signal-cell {
+      background: var(--bg);
+      padding: 2.5rem;
+      transition: background 0.4s var(--ease-out);
+    }
+    .signal-cell:hover { background: var(--surface); }
+    .signal-number {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+    }
+    .signal-cell-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    .signal-cell-body {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── CRUCIBLE (The Impossible Problem) ─────────────────────── */
+    #crucible {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+    }
+    .crucible-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .crucible-left {}
+    .crucible-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--danger);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .crucible-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 2rem;
+    }
+    .crucible-body {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+    .crucible-body strong { color: var(--text); font-weight: 700; }
+    .crucible-constraints {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+    .crucible-constraints li {
+      display: flex;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .crucible-constraints li::before {
+      content: '—';
+      color: var(--danger);
+      flex-shrink: 0;
+    }
+    .crucible-resolution {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      border-left: 2px solid var(--accent);
+      padding-left: 1.25rem;
+    }
+    .crucible-right {
+      position: relative;
+    }
+    .crucible-link {
+      display: block;
+      position: relative;
+      text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      transition: border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+      overflow: hidden;
+    }
+    .crucible-link::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .crucible-link:hover { border-color: var(--accent); box-shadow: 0 0 40px rgba(0,229,255,0.08); }
+    .crucible-link:hover::before { opacity: 1; }
+    .crucible-link-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .crucible-link-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .crucible-link-arrow {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .crucible-link:hover .crucible-link-arrow {
+      border-color: var(--accent);
+      background: rgba(0,229,255,0.1);
+    }
+    .crucible-link-arrow svg { width: 14px; height: 14px; }
+
+    /* ─── WORK (Projects Bento Grid) ────────────────────────────── */
+    #work {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+    }
+    .work-header {
+      margin-bottom: 4rem;
+    }
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: minmax(280px, auto);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    /* Asymmetric layout — feels editorial */
+    .bento-card:nth-child(1) { grid-column: span 7; }
+    .bento-card:nth-child(2) { grid-column: span 5; }
+    .bento-card:nth-child(3) { grid-column: span 5; }
+    .bento-card:nth-child(4) { grid-column: span 7; }
+    .bento-card:nth-child(5) { grid-column: span 6; }
+    .bento-card:nth-child(6) { grid-column: span 6; }
+
+    .bento-card {
+      background: var(--bg);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s var(--ease-out);
+      /* 3D tilt container */
+      transform-style: preserve-3d;
+    }
+    .bento-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,0.04) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .bento-card:hover { background: var(--surface); }
+    .bento-card:hover::after { opacity: 1; }
+
+    .card-top {}
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text);
+      transition: color 0.3s;
+    }
+    .bento-card:hover .card-title { color: var(--accent); }
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 1rem;
+    }
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    .card-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .bento-card:hover .card-badge { border-color: var(--accent); color: var(--accent); }
+    .card-arrow {
+      font-size: 1rem;
+      color: var(--muted);
+      transition: color 0.3s, transform 0.3s;
+    }
+    .bento-card:hover .card-arrow { color: var(--accent); transform: translate(3px, -3px); }
+
+    /* ─── CONNECT ────────────────────────────────────────────────── */
+    #connect {
+      padding-top: 10rem;
+      padding-bottom: 10rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .connect-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .connect-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      margin-bottom: 3rem;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(237,237,237,0.25);
+      transition: color 0.6s var(--ease-out), -webkit-text-stroke 0.6s;
+    }
+    .connect-title:hover {
+      color: var(--text);
+      -webkit-text-stroke: 1px transparent;
+    }
+    .connect-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border: 1px solid;
+      transition: background 0.3s var(--ease-out), color 0.3s, border-color 0.3s;
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+    .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      padding: 2rem 5%;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .footer-copy span { color: var(--accent); }
+
+    /* ─── REVEAL DEFAULTS ─────────────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(24px); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .crucible-inner { grid-template-columns: 1fr; }
+      .bento-card:nth-child(n) { grid-column: span 12; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 0 4%; }
+      nav { padding: 1.25rem 4%; }
+    }
+  </style>
 </head>
-<body class="antialiased selection:bg-neon selection:text-black">
 
-    <div id="canvas-container"></div>
+<body>
 
-    <main id="scroll-container">
-        
-        <!-- INTRO -->
-        <section class="section" id="hero">
-            <div class="max-w-7xl mx-auto w-full">
-                <div class="mono-tag mb-4 reveal-text">> STATUS: ONLINE</div>
-                <h1 class="huge-text reveal-text">SHIVANSH</h1>
-                <h1 class="huge-text outline-text reveal-text">BANSAL</h1>
-                <div class="line-accent reveal-text"></div>
-                <p class="text-2xl md:text-5xl font-bold mt-8 max-w-4xl text-gray-300 reveal-text leading-tight">
-                    I see what's broken.<br>
-                    <span class="text-white">I build what fixes it.</span>
-                </p>
-                <div class="mt-16 mono-tag text-gray-500 animate-bounce reveal-text">[ SCROLL TO INITIALIZE ]</div>
+  <!-- WebGL Canvas -->
+  <canvas id="webgl"></canvas>
+
+  <!-- NAV -->
+  <nav aria-label="Primary navigation">
+    <div class="nav-logo">> SB :: Online</div>
+    <ul class="nav-links">
+      <li><a href="#signal">Signal</a></li>
+      <li><a href="#crucible">Crucible</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container hero-inner">
+      <p class="hero-label">Shivansh Bansal / Full-Stack AI Engineer</p>
+      <!-- Bug #10 fixed: single <h1> -->
+      <h1 class="hero-name">
+        Engineer<span class="hero-name-accent">Architect.</span>
+      </h1>
+      <p class="hero-tagline">
+        I create things to fulfil my curiosity of knowing that
+        <strong>"is this even possible to make?"</strong>
+      </p>
+      <div class="scroll-cue">
+        <div class="scroll-cue-line"></div>
+        <span>Scroll to initialize</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNAL -->
+  <section id="signal">
+    <div class="container">
+      <div class="signal-header">
+        <div>
+          <p class="section-label reveal">// System Parameters</p>
+          <h2 class="section-title reveal">The Signal</h2>
+        </div>
+      </div>
+      <div class="signal-grid">
+        <div class="signal-cell reveal">
+          <p class="signal-number">01 / FOUNDATION</p>
+          <h3 class="signal-cell-title">IIT Madras + BSc CS</h3>
+          <p class="signal-cell-body">BS in Data Science (IITM) merging rigorous empirical theory with raw computer science from Govt. College Ambala Cantt. The bedrock everything is built on.</p>
+        </div>
+        <div class="signal-cell reveal">
+          <p class="signal-number">02 / STRATEGY</p>
+          <h3 class="signal-cell-title">Competitive Chess</h3>
+          <p class="signal-cell-body">Every architecture decision is an end-game calculation. Chess trained the ability to evaluate 12 moves ahead — and recognize when to sacrifice material for position.</p>
+        </div>
+        <div class="signal-cell reveal">
+          <p class="signal-number">03 / SYNTHESIS</p>
+          <h3 class="signal-cell-title">Cross-Domain Curiosity</h3>
+          <p class="signal-cell-body">Spanning Psychology, Finance, Economics, and AI. The ability to synthesize resources across completely unrelated domains to build high-value software is the core superpower.</p>
+        </div>
+        <div class="signal-cell reveal">
+          <p class="signal-number">04 / EMPATHY</p>
+          <h3 class="signal-cell-title">High Emotional IQ</h3>
+          <p class="signal-cell-body">Code runs on machines. Software runs on humans. High EQ informs interface decisions, user psychology, and the judgment to know when not to build.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRUCIBLE -->
+  <section id="crucible">
+    <div class="container">
+      <div class="crucible-inner">
+        <div class="crucible-left">
+          <p class="crucible-tag reveal">// Critical failure — bypassed</p>
+          <h2 class="crucible-title reveal">The Impossible<br>Constraint.</h2>
+          <p class="crucible-body reveal">
+            Building <strong>Genetix AI</strong> — an autonomous website generator driven by LLM execution — hit a wall that most engineers wouldn't know how to climb around.
+          </p>
+          <ul class="crucible-constraints reveal">
+            <li>Sandboxing dynamically-generated code across thousands of concurrent client sessions without a centralized security model</li>
+            <li>Preventing infinitely-recursive self-executing LLM hallucinations from consuming server-side resources</li>
+            <li>Maintaining performance SLAs while the underlying compute requirements were non-deterministic by design</li>
+          </ul>
+          <p class="crucible-resolution reveal">Eventually… I did it.</p>
+        </div>
+        <div class="crucible-right reveal">
+          <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer" class="crucible-link" aria-label="Open Genetix AI Website Builder">
+            <p class="crucible-link-label">Live Deployment ↗</p>
+            <h3 class="crucible-link-title">Genetix AI<br>Website Builder</h3>
+            <p style="font-family:var(--font-mono); font-size:0.75rem; color:var(--muted);">genetix-ai-website-builder.vercel.app</p>
+            <div class="crucible-link-arrow">
+              <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
-        </section>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- THE ARCHITECTURE (About / Skills via Data Nodes) -->
-        <section class="section flex items-start" id="architecture">
-            <div class="max-w-7xl mx-auto w-full">
-                <h2 class="text-5xl md:text-8xl font-black mb-16 text-right reveal-text">ALGORITHM</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Base -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">01</div>
-                        <h3 class="text-2xl font-bold mb-2">FOUNDATION</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">IIT Madras BS Data Science + BSc CS. Merging the theoretical computing with ruthless empirical data modeling.</p>
-                    </div>
-                    <!-- Node 2 -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">02</div>
-                        <h3 class="text-2xl font-bold mb-2">STRATEGY</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">Trained as a competitive chess player. Every component shipped is evaluated for end-game architectural viability.</p>
-                    </div>
-                    <!-- Node 3 -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">03</div>
-                        <h3 class="text-2xl font-bold mb-2">SYNTHESIS</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">Radical curiosity spanning Psychology, Finance, Economics, and AI. Extracting interdisciplinary resources to build high-value software.</p>
-                    </div>
-                    <!-- Node 4 -->
-                    <div class="reveal-text">
-                        <div class="text-neon text-6xl font-black mb-4">04</div>
-                        <h3 class="text-2xl font-bold mb-2">EMPATHY</h3>
-                        <p class="text-gray-400 font-mono text-sm leading-relaxed">High emotional intelligence dictates product design. Code runs on machines, but software runs on humans.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- WORK -->
+  <section id="work">
+    <div class="container">
+      <div class="work-header">
+        <p class="section-label reveal">// Deployments :: Production</p>
+        <h2 class="section-title reveal">Engineering Work</h2>
+      </div>
+      <div class="bento" id="bento-grid">
 
-        <!-- THE IMPERIAL EMPIRE (Projects Array) -->
-        <section class="section" id="deployments">
-            <div class="max-w-7xl mx-auto w-full">
-                <div class="flex items-center gap-6 mb-16 reveal-text">
-                    <h2 class="text-5xl md:text-8xl font-black">DEPLOYMENTS</h2>
-                    <div class="h-1 bg-white flex-grow opacity-20 mt-4"></div>
-                </div>
+        <!-- 1: Genetix (spans wide) -->
+        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="bento-card reveal" aria-label="Genetix AI Website Builder"
+           onmousemove="handleCardMove(event,this)" onmouseleave="handleCardLeave(this)">
+          <div class="card-top">
+            <p class="card-tag">01 / AI Generation / LLM Pipeline</p>
+            <h3 class="card-title">Genetix AI</h3>
+            <p class="card-desc">Your imagination. AI execution. Autonomous LLM pipeline sandboxed to generate zero-to-one websites with full client-side isolation.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="card-badge">Website Builder</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
 
-                <div class="bento-grid">
-                    
-                    <a href="https://talking-bi.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">01 // AI Dashboard</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Talking BI</h3>
-                        <p class="text-gray-400 text-sm mb-8">Revolutionary interactive dashboards driven by simple KPI queries. Bypasses standard analytical complexity.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+        <!-- 2: VK Industries (client work — spans remaining) -->
+        <a href="https://vkindustrieskuk.web.app/" target="_blank" rel="noopener noreferrer"
+           class="bento-card reveal" aria-label="VK Industries KUK"
+           onmousemove="handleCardMove(event,this)" onmouseleave="handleCardLeave(this)">
+          <div class="card-top">
+            <p class="card-tag">02 / Client Work / Enterprise</p>
+            <h3 class="card-title">VK Industries KUK</h3>
+            <p class="card-desc">Production-grade enterprise deployment architected and shipped for a real client at operational scale.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="card-badge">Client Project</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
 
-                    <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">02 // Site Generation</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Genetix AI</h3>
-                        <p class="text-gray-400 text-sm mb-8">Your imagination meets AI execution. A fully automated LLM pipeline generating zero-to-one websites.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+        <!-- 3: Mind Space -->
+        <a href="https://mind-space-seven.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="bento-card reveal" aria-label="Mind Space"
+           onmousemove="handleCardMove(event,this)" onmouseleave="handleCardLeave(this)">
+          <div class="card-top">
+            <p class="card-tag">03 / Consumer SaaS / Psychology UX</p>
+            <h3 class="card-title">Mind Space</h3>
+            <p class="card-desc">Mental wellness application synthesizing psychology research with high-EQ interface design for zero-friction engagement.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="card-badge">Wellness Platform</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
 
-                    <a href="https://fire-reach-rabbitt-ai.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">03 // Automated Pipeline</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Fire Reach Rabbitt</h3>
-                        <p class="text-gray-400 text-sm mb-8">High-velocity, AI-driven infrastructure handling outbound and engagement reach.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+        <!-- 4: Campus Vault (spans wide) -->
+        <a href="https://campus-vault-rose.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="bento-card reveal" aria-label="Campus Vault"
+           onmousemove="handleCardMove(event,this)" onmouseleave="handleCardLeave(this)">
+          <div class="card-top">
+            <p class="card-tag">04 / Cloud / Data Infrastructure</p>
+            <h3 class="card-title">Campus Vault</h3>
+            <p class="card-desc">Academic cloud repository with high-throughput data retention and fast edge-network document retrieval at scale.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="card-badge">Storage Infrastructure</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
 
-                    <a href="https://evidence-ai.vercel.app" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">04 // Verification</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Evidence AI</h3>
-                        <p class="text-gray-400 text-sm mb-8">Deep intelligence layer parsing facts and data to verify complex claims instantly.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+        <!-- 5: QR Main Ten -->
+        <a href="https://qr-main-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="bento-card reveal" aria-label="QR Main Ten"
+           onmousemove="handleCardMove(event,this)" onmouseleave="handleCardLeave(this)">
+          <div class="card-top">
+            <p class="card-tag">05 / Microservice / Edge Utility</p>
+            <h3 class="card-title">QR Main Ten</h3>
+            <p class="card-desc">High-speed edge utility for deterministic QR string processing and instantaneous distribution.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="card-badge">Edge Service</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
 
-                    <a href="https://mind-space-seven.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">05 // Wellness Engine</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">Mind Space</h3>
-                        <p class="text-gray-400 text-sm mb-8">Merging my psychology studies with software engineering to deliver a dedicated mental wellness OS.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+        <!-- 6: PDF4Me -->
+        <a href="https://pdf4me.vercel.app/" target="_blank" rel="noopener noreferrer"
+           class="bento-card reveal" aria-label="PDF4Me"
+           onmousemove="handleCardMove(event,this)" onmouseleave="handleCardLeave(this)">
+          <div class="card-top">
+            <p class="card-tag">06 / Automation / Document Pipeline</p>
+            <h3 class="card-title">PDF4Me</h3>
+            <p class="card-desc">Heavy-duty ecosystem for automated document extraction, rendering, and lossless compression running on serverless edge functions.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="card-badge">Document Processing</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
 
-                    <a href="https://pdf4me.vercel.app/" target="_blank" class="bento-box grid-reveal group">
-                        <div class="mono-tag">06 // Doc Processing</div>
-                        <h3 class="text-4xl font-black my-6 group-hover:text-neon transition-colors">PDF4Me</h3>
-                        <p class="text-gray-400 text-sm mb-8">Ecosystem for rapid document processing, compression, and automated handling.</p>
-                        <div class="flex justify-between items-center text-sm font-bold"><span>EXPLORE</span><span class="text-neon">→</span></div>
-                    </a>
+      </div>
+    </div>
+  </section>
 
-                    <a href="https://note-genie-nu.vercel.app" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">07 // Knowledge Vault</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">Note Genie Nu</h3>
-                    </a>
+  <!-- CONNECT -->
+  <section id="connect">
+    <div class="container">
+      <p class="connect-label reveal">// Available for high-impact roles</p>
+      <p class="connect-title reveal">Let's build<br>the impossible.</p>
+      <div class="connect-buttons reveal">
+        <!-- Bug #5 fixed: rel="noopener noreferrer" on all external links -->
+        <a href="https://github.com/TattvaAI" target="_blank" rel="noopener noreferrer"
+           class="btn btn-primary" aria-label="GitHub Profile">
+          GitHub · TattvaAI
+        </a>
+        <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" rel="noopener noreferrer"
+           class="btn btn-secondary" aria-label="LinkedIn Profile">
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
 
-                    <a href="https://vkindustrieskuk.web.app/" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">08 // Digital Frontier</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">VK Industries KUK</h3>
-                    </a>
+  <footer>
+    <p class="footer-copy">© 2026 Shivansh Bansal — <span>SB::Portfolio v3</span></p>
+    <p class="footer-copy" style="color:var(--muted);">Built from scratch. No templates.</p>
+  </footer>
 
-                    <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">09 // Storage Protocol</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">Campus Vault</h3>
-                    </a>
-                    
-                    <a href="https://qr-main-ten.vercel.app/" target="_blank" class="bento-box grid-reveal group bg-black/80">
-                        <div class="mono-tag">10 // Edge Service</div>
-                        <h3 class="text-2xl font-black mt-4 mb-2">QR Main Ten</h3>
-                    </a>
+  <!-- ╔══════════════════════════════════════════════════════════════╗
+       ║  LOCAL LIBRARIES — Zero CDN dependency, bulletproof offline  ║
+       ╚══════════════════════════════════════════════════════════════╝ -->
+  <!-- Bug #1 fixed: Using ./lib/* instead of broken cdnjs CDN -->
+  <script src="./lib/three.min.js" defer></script>
+  <script src="./lib/gsap.min.js" defer></script>
+  <script src="./lib/ScrollTrigger.min.js" defer></script>
 
-                </div>
-            </div>
-        </section>
+  <script>
+    /* ═══════════════════════════════════════════════════════════════
+       UTILITY: wait for deferred scripts to load
+    ═══════════════════════════════════════════════════════════════ */
+    function onAllLoaded(cb) {
+      if (typeof THREE !== 'undefined' && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        cb();
+      } else {
+        setTimeout(() => onAllLoaded(cb), 50);
+      }
+    }
 
-        <!-- EXECUTION / OUTRO -->
-        <section class="section items-center text-center py-32" id="contact">
-            <div class="mono-tag mb-8 reveal-text">/// SYSTEM READY ///</div>
-            <h2 class="text-7xl md:text-[8rem] font-black outline-text reveal-text hover:text-white transition-colors cursor-pointer">INITIALIZE.</h2>
-            <div class="flex flex-wrap justify-center gap-6 mt-16 reveal-text">
-                <a href="https://github.com/TattvaAI" target="_blank" class="px-10 py-5 bg-white text-black font-black uppercase tracking-widest hover:bg-neon hover:text-black transition-all">>> Access GitHub</a>
-                <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" class="px-10 py-5 bg-transparent border border-white text-white font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">>> Network Connect</a>
-            </div>
-        </section>
+    /* ═══════════════════════════════════════════════════════════════
+       1. BENTO CARD 3D TILT + AMBIENT GLOW
+       (Pure CSS custom property approach — no GSAP needed)
+    ═══════════════════════════════════════════════════════════════ */
+    function handleCardMove(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rx = ((y - cy) / cy) * -4; // degrees: subtle
+      const ry = ((x - cx) / cx) * 4;
+      card.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.015,1.015,1.015)`;
+      card.style.setProperty('--mx', `${(x / rect.width * 100).toFixed(1)}%`);
+      card.style.setProperty('--my', `${(y / rect.height * 100).toFixed(1)}%`);
+    }
+    function handleCardLeave(card) {
+      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+    }
+    // Mobile: disable tilt on touch devices
+    if ('ontouchstart' in window) {
+      document.querySelectorAll('.bento-card').forEach(c => {
+        c.onmousemove = null;
+        c.onmouseleave = null;
+      });
+    }
 
-    </main>
+    /* ═══════════════════════════════════════════════════════════════
+       2. WEBGL FLOW FIELD (Stripe-style animated background)
+       Perlin noise field, 3000 particles on desktop / 1000 on mobile
+    ═══════════════════════════════════════════════════════════════ */
+    const isMobile = window.innerWidth < 768;
+    const PARTICLE_COUNT = isMobile ? 1000 : 3000;
 
-    <!-- Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
-    <script>
-        /* =========================================================
-           1. THREE.JS ENGINE SETUP
-           ========================================================= */
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030303, 0.04);
+    // Minimal Perlin noise implementation (no external dep needed)
+    const perm = new Uint8Array(512);
+    (function buildPerm() {
+      const p = Array.from({length: 256}, (_, i) => i);
+      for (let i = 255; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [p[i], p[j]] = [p[j], p[i]];
+      }
+      for (let i = 0; i < 512; i++) perm[i] = p[i & 255];
+    })();
+    function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+    function lerp(a, b, t) { return a + t * (b - a); }
+    function grad(hash, x, y) {
+      const h = hash & 3;
+      const u = h < 2 ? x : y;
+      const v = h < 2 ? y : x;
+      return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+    }
+    function noise2D(x, y) {
+      const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+      x -= Math.floor(x); y -= Math.floor(y);
+      const u = fade(x), v = fade(y);
+      const a = perm[X] + Y, b = perm[X + 1] + Y;
+      return lerp(
+        lerp(grad(perm[a], x, y),     grad(perm[b], x - 1, y),     u),
+        lerp(grad(perm[a + 1], x, y - 1), grad(perm[b + 1], x - 1, y - 1), u),
+        v
+      );
+    }
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
+    onAllLoaded(() => {
+      /* ── Three.js scene setup ── */
+      const canvas = document.getElementById('webgl');
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+
+      /* ── Particle buffer geometry ── */
+      const geo = new THREE.BufferGeometry();
+      const positions = new Float32Array(PARTICLE_COUNT * 3);
+      const velocities = new Float32Array(PARTICLE_COUNT * 3); // store initial offsets
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        positions[i * 3]     = (Math.random() - 0.5) * 12;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 3;
+        velocities[i * 3]     = Math.random() * 100; // time offset for noise sampling
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const mat = new THREE.PointsMaterial({
+        size: isMobile ? 0.018 : 0.014,
+        color: 0x00e5ff,
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+      const particles = new THREE.Points(geo, mat);
+      scene.add(particles);
+
+      /* ── Mouse & touch tracking ── */
+      let mouseNX = 0, mouseNY = 0; // normalized -1 to 1
+      let targetNX = 0, targetNY = 0;
+      let scrollProgress = 0;
+
+      function updateMouse(clientX, clientY) {
+        mouseNX = (clientX / window.innerWidth) * 2 - 1;
+        mouseNY = -((clientY / window.innerHeight) * 2 - 1);
+      }
+
+      // Bug #4 fixed: touch events added
+      document.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY));
+      document.addEventListener('touchmove', e => {
+        if (e.touches[0]) updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+
+      // Bug #9 fixed: recalculate on resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+      });
 
-        /* =========================================================
-           2. THE ARCHITECTURE MESH
-           ========================================================= */
-        const geometry = new THREE.IcosahedronGeometry(2.5, 2);
-        const material = new THREE.MeshStandardMaterial({ 
-            color: 0x3b82f6, 
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15,
-            wireframeLinewidth: 1 // base state
-        });
-        
-        const core = new THREE.Mesh(geometry, material);
-        
-        const particlesMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.03,
-            transparent: true,
-            opacity: 0.5
-        });
-        const nodes = new THREE.Points(geometry, particlesMaterial);
-        
-        const shapeGroup = new THREE.Group();
-        shapeGroup.add(core);
-        shapeGroup.add(nodes);
-        scene.add(shapeGroup);
+      /* ── Scroll-driven particle color ── */
+      const totalHeight = () => document.body.scrollHeight - window.innerHeight;
+      window.addEventListener('scroll', () => {
+        scrollProgress = window.scrollY / (totalHeight() || 1);
+      });
 
-        const ambientGeo = new THREE.BufferGeometry();
-        const ambientCount = 800; // Increased density
-        const posArray = new Float32Array(ambientCount * 3);
-        for(let i = 0; i < ambientCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 25;
+      /* ── Render loop ── */
+      let rafId;
+      let t = 0;
+      const posAttr = geo.attributes.position;
+
+      function tick() {
+        rafId = requestAnimationFrame(tick);
+        t += 0.0004;
+
+        // Smooth mouse lerp (Bug #3 pattern fixed: separate from base motion)
+        targetNX += (mouseNX - targetNX) * 0.04;
+        targetNY += (mouseNY - targetNY) * 0.04;
+
+        // Drive camera gently with mouse (2% coefficient — very subtle)
+        camera.position.x += (targetNX * 0.2 - camera.position.x) * 0.05;
+        camera.position.y += (targetNY * 0.15 - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+
+        // Flow field: displace each particle along Perlin noise gradient
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const bi = i * 3;
+          const ox = velocities[bi]; // unique offset per particle
+          const x = posAttr.array[bi];
+          const y = posAttr.array[bi + 1];
+          const angle = noise2D(x * 0.15 + t + ox, y * 0.15 + t) * Math.PI * 2;
+          posAttr.array[bi]     += Math.cos(angle) * 0.003;
+          posAttr.array[bi + 1] += Math.sin(angle) * 0.003;
+          // Wrap particles back when they drift too far
+          if (posAttr.array[bi] > 6)      posAttr.array[bi]     = -6;
+          if (posAttr.array[bi] < -6)     posAttr.array[bi]     =  6;
+          if (posAttr.array[bi + 1] > 6)  posAttr.array[bi + 1] = -6;
+          if (posAttr.array[bi + 1] < -6) posAttr.array[bi + 1] =  6;
         }
-        ambientGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const ambientMat = new THREE.PointsMaterial({ size: 0.015, color: 0x333333 });
-        const ambientParticles = new THREE.Points(ambientGeo, ambientMat);
-        scene.add(ambientParticles);
+        posAttr.needsUpdate = true;
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0x00ffcc, 5, 15);
-        pointLight.position.set(2, 3, 4);
-        scene.add(pointLight);
+        // Scroll-driven color shift: cyan → red as you reach "Crucible"
+        const cyan = new THREE.Color(0x00e5ff);
+        const red  = new THREE.Color(0xff3366);
+        // Crucible is roughly 40%–60% of scroll
+        const colorT = Math.max(0, Math.min(1, (scrollProgress - 0.35) / 0.25));
+        mat.color.lerpColors(cyan, red, colorT);
+        // Then back to cyan in Work/Connect
+        const backT = Math.max(0, Math.min(1, (scrollProgress - 0.65) / 0.2));
+        mat.color.lerpColors(mat.color, cyan, backT);
 
-        camera.position.z = 6;
+        renderer.render(scene, camera);
+      }
 
-        /* =========================================================
-           3. RENDER LOOP & PARALLAX
-           ========================================================= */
-        let mouseX = 0; let mouseY = 0;
-        let targetX = 0; let targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+      tick();
 
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
-        });
+      // Bug #7 fixed: pause render when tab is hidden
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAnimationFrame(rafId);
+        else tick();
+      });
 
-        function animate() {
-            requestAnimationFrame(animate);
+      /* ═══════════════════════════════════════════════════════════
+         3. GSAP SCROLL-DRIVEN ANIMATIONS
+      ═══════════════════════════════════════════════════════════ */
+      gsap.registerPlugin(ScrollTrigger);
 
-            // Baseline persistent rotation
-            shapeGroup.rotation.x += 0.001;
-            shapeGroup.rotation.y += 0.002;
-            ambientParticles.rotation.y -= 0.0005;
+      // Bug #2 fixed: Hero animates in on DOMContentLoaded with GSAP `from()`
+      // (not from an invisible state waiting for scroll)
+      const heroTl = gsap.timeline({ delay: 0.15 });
+      heroTl
+        .from('.hero-label',   { opacity: 0, y: 20, duration: 0.7, ease: 'power2.out' })
+        .from('.hero-name',    { opacity: 0, y: 40, duration: 0.9, ease: 'expo.out' }, '-=0.4')
+        .from('.hero-tagline', { opacity: 0, y: 24, duration: 0.7, ease: 'power2.out' }, '-=0.5')
+        .from('.scroll-cue',   { opacity: 0, y: 10, duration: 0.6, ease: 'power2.out' }, '-=0.3');
 
-            // Fluid mouse parallax
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
-            shapeGroup.rotation.y += 0.05 * (targetX - shapeGroup.rotation.y);
-            shapeGroup.rotation.x += 0.05 * (targetY - shapeGroup.rotation.x);
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        /* =========================================================
-           4. GSAP TIMELINES (BUG-FIXED: DETERMINISTIC SCRUB)
-           ========================================================= */
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Standard Text Reveals
-        gsap.utils.toArray('.reveal-text').forEach(el => {
-            gsap.to(el, {
-                scrollTrigger: {
-                    trigger: el,
-                    start: 'top 85%',
-                },
-                opacity: 1, y: 0, duration: 0.8, ease: "power3.out"
-            });
-        });
-
-        // Grid Box Stagger Reveals
-        gsap.utils.toArray('.grid-reveal').forEach((el, i) => {
-            gsap.to(el, {
-                scrollTrigger: {
-                    trigger: el,
-                    start: 'top 90%',
-                },
-                opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)", delay: (i % 3) * 0.1
-            });
-        });
-
-        /* 
-           THE MASTER 3D TIMELINE 
-           This is deterministic. Scrubbing back strictly reverts ALL properties 
-           perfectly to their initial frame 0 values. (Fixed reverse scroll feature)
-        */
-        const meshTimeline = gsap.timeline({
+      // Staggered section reveals
+      gsap.utils.toArray('.reveal').forEach(el => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.75,
+            ease: 'power2.out',
             scrollTrigger: {
-                trigger: "#scroll-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1 // Ties 1:1 with scroll position
+              trigger: el,
+              start: 'top 88%',
+              toggleActions: 'play none none none', // one-shot, no reverse jank
             }
-        });
+          }
+        );
+      });
 
-        // Frame 1 -> Section 2 (Algorithm)
-        meshTimeline
-            .to(shapeGroup.position, { x: 3, y: -1, z: -1, ease: 'none' }, 0)
-            .to(shapeGroup.scale, { x: 1.5, y: 1.5, z: 1.5, ease: 'none' }, 0)
-            .to(material.color, { r: 0.0, g: 1.0, b: 0.8, ease: 'none' }, 0) // Turns neon cyan
-            .to(material, { opacity: 0.5, ease: 'none' }, 0)
-            .to(particlesMaterial.color, { r: 0.0, g: 1.0, b: 0.8, ease: 'none' }, 0)
+    }); // end onAllLoaded
 
-        // Section 2 -> Section 3 (Deployments Array)
-            .to(shapeGroup.position, { x: -3, y: 1, z: 0, ease: 'none' }, 1)
-            .to(shapeGroup.scale, { x: 2.2, y: 2.2, z: 2.2, ease: 'none' }, 1)
-            .to(material.color, { r: 1.0, g: 0.0, b: 0.2, ease: 'none' }, 1) // Turns red
-            .to(particlesMaterial.color, { r: 1.0, g: 0.0, b: 0.2, ease: 'none' }, 1)
-
-        // Section 3 -> Section 4 (Outro)
-            .to(shapeGroup.position, { x: 0, y: 0, z: -3, ease: 'none' }, 2)
-            .to(shapeGroup.scale, { x: 3, y: 3, z: 3, ease: 'none' }, 2)
-            .to(material, { opacity: 0.05, ease: 'none' }, 2)
-            .to(material.color, { r: 1.0, g: 1.0, b: 1.0, ease: 'none' }, 2)
-            .to(particlesMaterial, { size: 0.08, ease: 'none' }, 2);
-
-    </script>
+  </script>
 </body>
 </html>
