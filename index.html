@@ -3,218 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivansh | The Vedic Architect</title>
-    <!-- Tailwind via CDN is extremely stable, but the core engine relies on local libraries -->
+    <title>Shivansh | Engineering Portfolio</title>
+    <!-- Tailwind CSS (CDN is extremely stable for CSS) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;500;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#000000',
+                        ink: '#111111',
+                        slate: '#333333',
+                        accent: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['"Geist"', 'Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { margin: 0; background-color: #050201; color: #ede2d3; overflow-x: hidden; font-family: 'Inter', sans-serif; }
-        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+        body { margin: 0; background-color: #000; color: #fff; overflow-x: hidden; }
         
-        .section { min-height: 100vh; padding: 8rem 5%; position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; }
+        /* Subtle WebGL Canvas */
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
         
-        /* Ancient India / Deep Tech Typography */
-        .primary-heading { font-family: 'Cinzel', serif; font-weight: 900; color: #d4af37; text-transform: uppercase; letter-spacing: 0.1em; line-height: 0.9; }
-        .tech-text { font-family: 'Space Mono', monospace; color: #00ffcc; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; }
-        .sanskrit-motif { font-family: 'Cinzel', serif; color: rgba(212, 175, 55, 0.15); font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; position: absolute; z-index: -1; top: -10%; left: -5%; pointer-events: none; }
+        .section { min-height: 100vh; padding: 6rem 5%; position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; }
+        
+        .max-w-base { max-width: 1200px; margin: 0 auto; width: 100%; }
 
-        /* The Vedic Component System */
-        .vedic-box {
-            background: linear-gradient(145deg, rgba(20, 10, 5, 0.95), rgba(5, 2, 0, 0.98));
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-top: 2px solid rgba(212, 175, 55, 0.8);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-            padding: 3rem;
+        /* Typography */
+        .text-glow { text-shadow: 0 0 30px rgba(255, 255, 255, 0.4); }
+        .heading-huge { font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.9; }
+
+        /* Vercel / Linear Bento Box Style */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .tilt-card {
+            background: linear-gradient(180deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 2.5rem;
             position: relative;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        /* Intricate Corner Ornamentation */
-        .vedic-box::before, .vedic-box::after {
-            content: ''; position: absolute; width: 25px; height: 25px; border: 1px solid rgba(212, 175, 55, 0.6); transition: transform 0.6s ease, border-color 0.6s ease;
-        }
-        .vedic-box::before { top: 8px; left: 8px; border-right: none; border-bottom: none; }
-        .vedic-box::after { bottom: 8px; right: 8px; border-left: none; border-top: none; }
-        
-        .vedic-box:hover::before { transform: translate(-4px, -4px); border-color: #00ffcc; }
-        .vedic-box:hover::after { transform: translate(4px, 4px); border-color: #00ffcc; }
-        .vedic-box:hover {
-            box-shadow: 0 15px 50px rgba(212, 175, 55, 0.1), inset 0 0 20px rgba(212, 175, 55, 0.05);
-            border-color: rgba(212, 175, 55, 0.6);
-            transform: translateY(-5px);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+            cursor: pointer;
         }
 
-        .gold-glow { text-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
-        .nexus-line { width: 1px; height: 100px; background: linear-gradient(to bottom, #d4af37, transparent); margin: 2rem auto; }
-        .horizontal-line { height: 1px; width: 150px; background: linear-gradient(to right, #d4af37, transparent); margin: 2rem 0; }
+        /* 3D Inner Content tracking */
+        .tilt-card-content {
+            transform: translateZ(30px);
+            transition: transform 0.2s ease-out;
+            pointer-events: none;
+        }
 
-        .reveal-node { opacity: 0; transform: translateY(30px); }
+        /* Ambient Glow on hover */
+        .tilt-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 12px;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.4s; pointer-events: none;
+        }
+        
+        .tilt-card:hover::before { opacity: 1; }
+        .tilt-card:hover { border-color: rgba(255,255,255,0.3); box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05); }
+
+        .line-divider { width: 100%; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); margin: 3rem 0; }
+        
+        /* Monospace accents */
+        .tag-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; }
+        
+        .reveal-up { opacity: 0; transform: translateY(40px); }
     </style>
 </head>
-<body>
+<body class="selection:bg-white selection:text-black">
 
-    <!-- 3D Engine renders here via purely local libraries -->
     <div id="canvas-container"></div>
 
     <main id="scroll-container">
         
-        <!-- INITIALIZATION -->
-        <section class="section text-center items-center" id="genesis">
-            <div class="tech-text mb-8 reveal-node animate-pulse">[ SYSTEM INIT : BRAHMA ]</div>
-            <h1 class="primary-heading text-6xl md:text-[8rem] gold-glow reveal-node">SHIVANSH</h1>
-            <h2 class="tech-text mt-4 text-xl tracking-[0.5em] text-white/70 reveal-node">THE ARCHITECT</h2>
-            
-            <div class="nexus-line reveal-node"></div>
-            
-            <p class="text-2xl md:text-4xl font-light mt-8 max-w-4xl text-[#ede2d3] leading-relaxed reveal-node italic">
-                "I create things to fulfill my curiosity of knowing... <br>
-                <span class="font-bold text-[#d4af37] not-italic">Is this even possible to make?</span>"
-            </p>
+        <!-- HERO -->
+        <section class="section" id="hero">
+            <div class="max-w-base flex flex-col justify-center h-full">
+                <div class="tag-mono mb-6 reveal-up">> INIT / SYSTEM_ONLINE</div>
+                <h1 class="heading-huge text-glow reveal-up scrambler" data-text="SHIVANSH BANSAL">SHIVANSH BANSAL</h1>
+                <div class="line-divider reveal-up" style="max-w: 200px; background: rgba(255,255,255,0.3);"></div>
+                <p class="text-2xl md:text-5xl font-light text-gray-400 max-w-4xl reveal-up leading-tight mt-6 italic">
+                    I create things to fulfill my curiosity of knowing that <br>
+                    <span class="text-white font-medium not-italic">"is this even possible to make?"</span>
+                </p>
+            </div>
         </section>
 
-        <!-- THE FIVE ELEMENTS (PANCHA MAHABHUTA) -->
-        <section class="section" id="philosophy">
-            <div class="max-w-7xl mx-auto w-full relative">
-                <div class="sanskrit-motif">महाभूत</div>
-                <h2 class="primary-heading text-4xl md:text-6xl mb-16 reveal-node border-b-2 border-[#d4af37]/30 pb-4 inline-block">THE FIVE ELEMENTS</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    
-                    <div class="vedic-box reveal-node group">
-                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">अग्नि</div>
-                        <div class="tech-text text-[#d4af37]">TEJAS // FIRE</div>
-                        <h3 class="text-3xl font-bold mt-4 mb-3">Relentless Execution</h3>
-                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
-                            The drive to solve the impossible. Forged in competitive chess strategy, my computing logic is designed for the end-game and extreme technical combat.
-                        </p>
+        <!-- THE SANDBOX PROBLEM (PROVING GROUND) -->
+        <section class="section bg-ink/30 border-y border-white/5 py-32" id="crucible">
+            <div class="max-w-base">
+                <div class="flex flex-col md:flex-row gap-16">
+                    <div class="md:w-1/2 reveal-up">
+                        <div class="tag-mono mb-4 text-white">THE IMPOSSIBLE CONSTRAINT</div>
+                        <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight tracking-tight">THE SANDBOX<br>DILEMMA</h2>
+                        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:bg-gray-200 transition-colors">
+                            View Genetix AI <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z" fill="currentColor"></path></svg>
+                        </a>
                     </div>
-
-                    <div class="vedic-box reveal-node group">
-                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">वायु</div>
-                        <div class="tech-text text-[#d4af37]">VAYU // AIR</div>
-                        <h3 class="text-3xl font-bold mt-4 mb-3">Infinite Curiosity</h3>
-                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
-                            Rapid velocity across diverse domains. Intersecting Psychology, Finance, Economics, and AI to synthesize completely novel software architectures.
+                    <div class="md:w-1/2 reveal-up">
+                        <p class="text-lg text-gray-400 font-light leading-relaxed mb-6">
+                            Building <strong class="text-white">Genetix AI</strong> (an autonomous website generator) presented a colossal architectural barrier: <span class="text-white">Sandboxing LLM Execution.</span>
                         </p>
-                    </div>
-
-                    <div class="vedic-box reveal-node group">
-                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">पृथ्वी</div>
-                        <div class="tech-text text-[#d4af37]">PRITHVI // EARTH</div>
-                        <h3 class="text-3xl font-bold mt-4 mb-3">Deep Foundation</h3>
-                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
-                            The bedrock of data. Built upon the rigorous empirical science of IIT Madras (BS Data Science) and extensive native Computer Science grounding.
-                        </p>
-                    </div>
-
-                    <div class="vedic-box reveal-node group">
-                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#d4af37] transition-transform group-hover:scale-110">जल</div>
-                        <div class="tech-text text-[#d4af37]">JALA // WATER</div>
-                        <h3 class="text-3xl font-bold mt-4 mb-3">Human Synthesis</h3>
-                        <p class="text-[#ede2d3]/70 leading-relaxed font-light">
-                            Adaptability and high emotional intelligence. Merging empathy with system design to build products that resonate at a human, psychological level.
-                        </p>
-                    </div>
-
-                    <div class="vedic-box reveal-node group md:col-span-2 lg:col-span-2 border-l-4 border-[#00ffcc]">
-                        <div class="absolute top-4 right-6 text-6xl opacity-10 font-serif font-black text-[#00ffcc] transition-transform group-hover:scale-110">आकाश</div>
-                        <div class="tech-text text-[#00ffcc] tracking-widest">AKASHA // SPACE</div>
-                        <h3 class="text-4xl font-black mt-4 mb-3 text-white">The Omnipresent System</h3>
-                        <p class="text-[#ede2d3] text-lg leading-relaxed font-light max-w-3xl">
-                            The space that connects all elements. I do not just know code—I know how to utilize every resource available to synthesize and architect high-value, impossible infrastructure.
-                        </p>
+                        <ul class="space-y-4 font-mono text-sm text-gray-500">
+                            <li class="flex gap-3"><span class="text-white">></span> <span>Isolating wildly dynamic generated code across thousands of concurrent client sessions.</span></li>
+                            <li class="flex gap-3"><span class="text-white">></span> <span>Bypassing context limitations while rendering raw deterministic outputs.</span></li>
+                            <li class="flex gap-3"><span class="text-white">></span> <span>Securing the infrastructure against infinitely recursive, self-executing LLM hallucinations.</span></li>
+                        </ul>
+                        <p class="text-xl font-bold text-white mt-8 border-l-2 border-white pl-4">Eventually... I did it.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- THE CRUCIBLE (The Hardest Problem) -->
-        <section class="section bg-black/50 border-y border-[#d4af37]/20" id="crucible">
-            <div class="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-16 items-center">
-                <div class="w-full md:w-1/2 reveal-node relative">
-                    <div class="sanskrit-motif" style="top: -20%; right:-10%;">तपस्</div>
-                    <div class="tech-text text-blood animate-pulse mb-6">[ CRITICAL FAILURE BYPASSED ]</div>
-                    <h2 class="primary-heading text-5xl md:text-7xl mb-8 leading-tight">THE CRUCIBLE</h2>
-                    <p class="text-xl leading-relaxed text-[#ede2d3]/90 font-light mb-6 border-l-2 border-blood pl-6">
-                        Out of an empire of architectures built, the hardest battle was the <strong class="text-white">Genetix AI Website Builder</strong>.
-                    </p>
-                    <p class="text-lg leading-relaxed text-[#ede2d3]/70 font-mono mb-8">
-                        The challenge of dynamic, autonomous sandboxing pushed the system to the edge. Ensuring absolute isolation while empowering the LLM to execute raw, generative code directly against the client's architecture was an "impossible" technical barrier. 
-                    </p>
-                    <p class="text-2xl font-bold text-[#d4af37] italic">
-                        Eventually... I did it.
-                    </p>
-                </div>
-                <div class="w-full md:w-1/2 reveal-node">
-                    <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="block relative group">
-                        <div class="absolute inset-0 bg-[#d4af37]/20 blur-xl group-hover:bg-neon/30 transition-all duration-500"></div>
-                        <div class="vedic-box border-[#d4af37] relative z-10 text-center py-20 bg-black/80">
-                            <h3 class="text-4xl font-black font-serif text-white group-hover:text-[#00ffcc] transition-colors">INITIATE GENETIX.AI &rarr;</h3>
+        <!-- THE ARSENAL (BENTO BOX GRID) -->
+        <section class="section py-32" id="grid">
+            <div class="max-w-base w-full">
+                <h2 class="text-5xl font-black mb-16 reveal-up tracking-tight">ENGINEERING PIPELINES</h2>
+                
+                <div class="bento-grid" id="bento-container">
+                    
+                    <a href="https://vkindustrieskuk.web.app/" target="_blank" class="tilt-card reveal-up" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                        <div class="tilt-card-content h-full flex flex-col justify-between">
+                            <div>
+                                <div class="tag-mono mb-4 text-white">01 // CLIENT STACK</div>
+                                <h3 class="text-3xl font-bold text-white mb-2">VK Industries KUK</h3>
+                                <p class="text-sm font-light text-gray-400">Production-grade enterprise deployment structured strictly around corporate operational scale.</p>
+                            </div>
+                            <div class="mt-8 flex justify-end text-white/50"><svg width="20" height="20" viewBox="0 0 15 15" fill="none"><path d="M3.646 11.354c-.195-.195-.195-.512 0-.707L10.293 4H6c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5.5c.133 0 .26.053.354.146.094.094.146.221.146.354V9c0 .276-.224.5-.5.5s-.5-.224-.5-.5V4.707L4.354 11.354c-.195.195-.512.195-.708 0z" fill="currentColor"></path></svg></div>
                         </div>
                     </a>
+
+                    <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="tilt-card reveal-up" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                        <div class="tilt-card-content h-full flex flex-col justify-between">
+                            <div>
+                                <div class="tag-mono mb-4 text-white">02 // CLOUD INFRASTRUCTURE</div>
+                                <h3 class="text-3xl font-bold text-white mb-2">Campus Vault</h3>
+                                <p class="text-sm font-light text-gray-400">Academic storage repository handling large-scale data retention and extremely rapid edge fetching.</p>
+                            </div>
+                            <div class="mt-8 flex justify-end text-white/50"><svg width="20" height="20" viewBox="0 0 15 15" fill="none"><path d="M3.646 11.354c-.195-.195-.195-.512 0-.707L10.293 4H6c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5.5c.133 0 .26.053.354.146.094.094.146.221.146.354V9c0 .276-.224.5-.5.5s-.5-.224-.5-.5V4.707L4.354 11.354c-.195.195-.512.195-.708 0z" fill="currentColor"></path></svg></div>
+                        </div>
+                    </a>
+
+                    <a href="https://mind-space-seven.vercel.app/" target="_blank" class="tilt-card reveal-up" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                        <div class="tilt-card-content h-full flex flex-col justify-between">
+                            <div>
+                                <div class="tag-mono mb-4 text-white">03 // CONSUMER SAAS & UX</div>
+                                <h3 class="text-3xl font-bold text-white mb-2">Mind Space</h3>
+                                <p class="text-sm font-light text-gray-400">Minimalist mental wellness application. Designed for zero-friction user engagement and high-EQ interface response.</p>
+                            </div>
+                            <div class="mt-8 flex justify-end text-white/50"><svg width="20" height="20" viewBox="0 0 15 15" fill="none"><path d="M3.646 11.354c-.195-.195-.195-.512 0-.707L10.293 4H6c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5.5c.133 0 .26.053.354.146.094.094.146.221.146.354V9c0 .276-.224.5-.5.5s-.5-.224-.5-.5V4.707L4.354 11.354c-.195.195-.512.195-.708 0z" fill="currentColor"></path></svg></div>
+                        </div>
+                    </a>
+
+                    <a href="https://qr-main-ten.vercel.app/" target="_blank" class="tilt-card reveal-up" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                        <div class="tilt-card-content h-full flex flex-col justify-between">
+                            <div>
+                                <div class="tag-mono mb-4 text-white">04 // MICROSERVICE</div>
+                                <h3 class="text-3xl font-bold text-white mb-2">QR Main Ten</h3>
+                                <p class="text-sm font-light text-gray-400">High-speed edge utility built for instantaneous QR string processing and distribution.</p>
+                            </div>
+                            <div class="mt-8 flex justify-end text-white/50"><svg width="20" height="20" viewBox="0 0 15 15" fill="none"><path d="M3.646 11.354c-.195-.195-.195-.512 0-.707L10.293 4H6c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5.5c.133 0 .26.053.354.146.094.094.146.221.146.354V9c0 .276-.224.5-.5.5s-.5-.224-.5-.5V4.707L4.354 11.354c-.195.195-.512.195-.708 0z" fill="currentColor"></path></svg></div>
+                        </div>
+                    </a>
+
+                    <a href="https://pdf4me.vercel.app/" target="_blank" class="tilt-card reveal-up md:col-span-2" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                        <div class="tilt-card-content h-full flex flex-col justify-between">
+                            <div>
+                                <div class="tag-mono mb-4 text-white">05 // COMPUTE CLUSTER</div>
+                                <h3 class="text-4xl font-black text-white mb-2">PDF4Me</h3>
+                                <p class="text-lg font-light text-gray-400 max-w-xl">Heavy-duty ecosystem designed for automated document extraction, rendering, and lossless compression running natively on serverless edge functions.</p>
+                            </div>
+                            <div class="mt-8 flex justify-end text-white/50"><svg width="20" height="20" viewBox="0 0 15 15" fill="none"><path d="M3.646 11.354c-.195-.195-.195-.512 0-.707L10.293 4H6c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5.5c.133 0 .26.053.354.146.094.094.146.221.146.354V9c0 .276-.224.5-.5.5s-.5-.224-.5-.5V4.707L4.354 11.354c-.195.195-.512.195-.708 0z" fill="currentColor"></path></svg></div>
+                        </div>
+                    </a>
+
                 </div>
             </div>
         </section>
 
-        <!-- THE ARSENAL -->
-        <section class="section" id="arsenal">
-            <div class="max-w-7xl mx-auto w-full relative">
-                <h2 class="primary-heading text-4xl md:text-6xl mb-16 text-center reveal-node">LIVE DEPLOYMENTS</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Client Work -->
-                    <a href="https://vkindustrieskuk.web.app/" target="_blank" class="vedic-box reveal-node group border-[#00ffcc]/30 hover:border-[#00ffcc]">
-                        <div class="tech-text text-[#00ffcc] mb-4">CLIENT ARCHITECTURE</div>
-                        <h3 class="text-3xl font-serif font-black text-white mb-2">VK Industries KUK</h3>
-                        <p class="text-sm font-mono text-gray-400">Production-grade enterprise deployment constructed explicitly for client operational scale.</p>
-                    </a>
-
-                    <!-- The Copilot -->
-                    <a href="https://talking-bi.vercel.app/" target="_blank" class="vedic-box reveal-node group">
-                        <div class="tech-text text-[#d4af37] mb-4">AI ANALYTICS</div>
-                        <h3 class="text-3xl font-serif font-black text-white mb-2">Talking BI</h3>
-                        <p class="text-sm font-mono text-gray-400">Interactive data infrastructure transforming complex KPI metrics simultaneously.</p>
-                    </a>
-
-                    <!-- Mind Space -->
-                    <a href="https://mind-space-seven.vercel.app/" target="_blank" class="vedic-box reveal-node group">
-                        <div class="tech-text text-[#d4af37] mb-4">PSYCHOLOGY UX</div>
-                        <h3 class="text-3xl font-serif font-black text-white mb-2">Mind Space</h3>
-                        <p class="text-sm font-mono text-gray-400">Synthesizing human empathy and mental wellness through pristine interface design.</p>
-                    </a>
-
-                    <!-- Tooling -->
-                    <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="vedic-box reveal-node group">
-                        <div class="tech-text text-[#d4af37] mb-4">STORAGE INFRA</div>
-                        <h3 class="text-3xl font-serif font-black text-white mb-2">Campus Vault</h3>
-                        <p class="text-sm font-mono text-gray-400">High-capacity academic logic architecture and scalable edge repository.</p>
-                    </a>
-
-                    <a href="https://qr-main-ten.vercel.app/" target="_blank" class="vedic-box reveal-node group">
-                        <div class="tech-text text-[#d4af37] mb-4">EDGE UTILITY</div>
-                        <h3 class="text-3xl font-serif font-black text-white mb-2">QR Main Ten</h3>
-                        <p class="text-sm font-mono text-gray-400">Lightning-fast QR infrastructure deployed with strict mathematical precision.</p>
-                    </a>
-
-                    <a href="https://pdf4me.vercel.app/" target="_blank" class="vedic-box reveal-node group">
-                        <div class="tech-text text-[#d4af37] mb-4">DOC PIPELINE</div>
-                        <h3 class="text-3xl font-serif font-black text-white mb-2">PDF4Me</h3>
-                        <p class="text-sm font-mono text-gray-400">A heavy ecosystem for automated document extraction, rendering, and compression.</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- TERMINAL CONTACT -->
-        <section class="section text-center py-32 border-t border-[#d4af37]/20" id="contact">
-            <h2 class="primary-heading text-5xl md:text-7xl mb-12 gold-glow reveal-node">THE NETWORK AWAITS</h2>
-            <div class="flex flex-col md:flex-row justify-center gap-8 reveal-node">
-                <a href="https://github.com/TattvaAI" target="_blank" class="vedic-box text-center group cursor-pointer" style="padding: 1.5rem 4rem;">
-                    <span class="tech-text text-xl group-hover:text-white transition-colors">ACCESS GITHUB (TattvaAI)</span>
+        <!-- NETWORK CONNECT (FOOTER) -->
+        <section class="section items-center text-center py-32 border-t border-white/5 bg-ink/10" id="network">
+            <h2 class="text-4xl md:text-6xl font-black mb-12 tracking-tight reveal-up">ESTABLISH CONNECTION</h2>
+            <div class="flex flex-col md:flex-row gap-6 reveal-up">
+                <a href="https://github.com/TattvaAI" target="_blank" class="px-8 py-4 bg-white text-black font-bold rounded-lg text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                    GitHub / TattvaAI
                 </a>
-                <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" class="vedic-box text-center group cursor-pointer border-[#00ffcc]/30" style="padding: 1.5rem 4rem;">
-                    <span class="tech-text text-xl text-[#00ffcc] group-hover:text-white transition-colors">COMMAND LINKEDIN</span>
+                <a href="https://www.linkedin.com/in/whyshivanshbansal" target="_blank" class="px-8 py-4 bg-transparent border border-white/20 text-white font-bold rounded-lg text-sm uppercase tracking-widest hover:bg-white/10 transition-colors">
+                    LinkedIn Network
                 </a>
             </div>
         </section>
@@ -222,9 +220,8 @@
     </main>
 
     <!-- 
-       CRITICAL SYSTEM FIX:
-       Relying strictly on local copies to bypass all Corporate Proxy / Outbound Network restrictions. 
-       These dependencies were securely downloaded to ./lib/
+       Zero Dependency External CDN Blocks.
+       These libraries are loaded directly from the local file system. 
     -->
     <script src="./lib/three.min.js"></script>
     <script src="./lib/gsap.min.js"></script>
@@ -232,139 +229,100 @@
 
     <script>
         /* =========================================================================
-           THE VEDIC MANDALA ENGINE (WebGL Three.js)
+           1. 3D BENTO BOX HOVER (Vanilla JS Tilt + Glow)
+           ========================================================================= */
+        function handleTilt(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;
+
+            // Set variables for the pseudo-element glow
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+
+            // Calculate rotation for 3D tilt
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -5; // Subtle tilt degree
+            const rotateY = ((x - centerX) / centerX) * 5;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+
+        function resetTilt(card) {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            card.style.setProperty('--mouse-x', `-1000px`); // hide glow
+            card.style.setProperty('--mouse-y', `-1000px`);
+        }
+
+        // Initialize glow off screen
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            resetTilt(card);
+        });
+
+        /* =========================================================================
+           2. VERCEL-STYLE WEBGL PARTICLE MESH
            ========================================================================= */
         const scene = new THREE.Scene();
-        // Deep copper/black fog for ancient mystery
-        scene.fog = new THREE.FogExp2(0x050201, 0.035);
+        scene.fog = new THREE.FogExp2('#000000', 0.05);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Core Mandala Group
-        const mandalaGroup = new THREE.Group();
-        scene.add(mandalaGroup);
+        // Subtly drifting point cloud (Vercel aesthetic)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 800; // Minimal density
+        const posArray = new Float32Array(particlesCount * 3);
 
-        // 1. Center Yantra Core (Glowing Octahedron)
-        const coreGeo = new THREE.OctahedronGeometry(1.5, 0);
-        const coreMat = new THREE.MeshStandardMaterial({
-            color: 0xd4af37, // Gold
-            emissive: 0x332200,
-            wireframe: true,
-            wireframeLinewidth: 2,
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.01,
+            color: 0x888888,
             transparent: true,
-            opacity: 0.8
-        });
-        const yantraCore = new THREE.Mesh(coreGeo, coreMat);
-        mandalaGroup.add(yantraCore);
-
-        // 2. Interlocking Outer Rings (Torus)
-        const ringMat = new THREE.MeshStandardMaterial({
-            color: 0xd4af37,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending
         });
 
-        for(let i = 1; i <= 3; i++) {
-            const ringGeo = new THREE.TorusGeometry(2 + (i * 0.8), 0.02, 16, 100);
-            const ring = new THREE.Mesh(ringGeo, ringMat);
-            // Angle them to intersect mathematically
-            ring.rotation.x = Math.PI / (i + 1);
-            ring.rotation.y = Math.PI / (i * 2);
-            // We will rotate these in the render cycle
-            ring.userData = { speedX: (Math.random() - 0.5) * 0.01, speedY: (Math.random() - 0.5) * 0.01 };
-            mandalaGroup.add(ring);
-        }
+        const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleMesh);
 
-        // 3. Mathematical Vertex Nodes (Cosmic Dust)
-        const dustGeo = new THREE.BufferGeometry();
-        const dustCount = 1500;
-        const dustArray = new Float32Array(dustCount * 3);
-        const colorArray = new Float32Array(dustCount * 3);
-        
-        for(let i = 0; i < dustCount * 3; i+=3) {
-            // Distribute in a vast cosmic sphere
-            const radius = 10 + Math.random() * 20;
-            const theta = Math.random() * 2 * Math.PI;
-            const phi = Math.acos((Math.random() * 2) - 1);
-            
-            dustArray[i] = radius * Math.sin(phi) * Math.cos(theta);     // x
-            dustArray[i+1] = radius * Math.sin(phi) * Math.sin(theta);   // y
-            dustArray[i+2] = radius * Math.cos(phi);                     // z
-
-            // Gold/Red/Cyan particle tinting
-            const type = Math.random();
-            if(type > 0.8) {
-                colorArray[i] = 0.0; colorArray[i+1] = 1.0; colorArray[i+2] = 0.8; // Neon Cyan
-            } else if (type > 0.6) {
-                colorArray[i] = 1.0; colorArray[i+1] = 0.0; colorArray[i+2] = 0.2; // Blood Red
-            } else {
-                colorArray[i] = 0.83; colorArray[i+1] = 0.68; colorArray[i+2] = 0.21; // Gold
-            }
-        }
-        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustArray, 3));
-        dustGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-        
-        const dustMat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.4 });
-        const cosmicDust = new THREE.Points(dustGeo, dustMat);
-        scene.add(cosmicDust);
-
-        // Lighting System
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const pointLight1 = new THREE.PointLight(0xd4af37, 3, 20); // Gold core light
-        pointLight1.position.set(0, 0, 2);
-        scene.add(pointLight1);
-        const pointLight2 = new THREE.PointLight(0x00ffcc, 1, 30); // Neon edge light
-        pointLight2.position.set(-5, 5, -5);
-        scene.add(pointLight2);
-
-        camera.position.z = 8;
-        camera.position.y = 1;
-
-        /* =========================================================================
-           RENDER LOOP (Majestic Continuous Rotation)
-           ========================================================================= */
+        /* Render Loop & Scroll interaction */
         let mouseX = 0; let mouseY = 0;
         let targetX = 0; let targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        let scrollY = window.scrollY;
 
         document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
+            mouseX = (event.clientX - window.innerWidth / 2);
+            mouseY = (event.clientY - window.innerHeight / 2);
+        });
+
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
         });
 
         function animate() {
             requestAnimationFrame(animate);
 
-            // Core Rotation
-            yantraCore.rotation.x += 0.002;
-            yantraCore.rotation.y += 0.005;
+            // Base rotation
+            particleMesh.rotation.x -= 0.0005;
+            particleMesh.rotation.y += 0.0002;
 
-            // Intersecting Rings Rotation
-            mandalaGroup.children.forEach((child, index) => {
-                if(index > 0) { // skip core
-                    child.rotation.x += child.userData.speedX;
-                    child.rotation.y += child.userData.speedY;
-                }
-            });
-
-            // Cosmic Dust slow spin
-            cosmicDust.rotation.y -= 0.0002;
-            cosmicDust.rotation.z -= 0.0001;
-
-            // Mouse parallax depth effect
-            targetX = mouseX * 0.0005;
-            targetY = mouseY * 0.0005;
+            // Parallax based on mouse
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+            
+            // Camera position is influenced by scroll and mouse
             camera.position.x += (targetX - camera.position.x) * 0.02;
-            camera.position.y += (-targetY - camera.position.y + 1) * 0.02;
-            camera.lookAt(scene.position);
+            camera.position.y += (-targetY - (scrollY * 0.002) - camera.position.y) * 0.05;
 
             renderer.render(scene, camera);
         }
@@ -377,48 +335,52 @@
         });
 
         /* =========================================================================
-           DETERMINISTIC GSAP SCROLL-TIMELINES
+           3. GSAP SCROLL REVEALS
            ========================================================================= */
         gsap.registerPlugin(ScrollTrigger);
 
-        // UI Reveal Nodes
-        gsap.utils.toArray('.reveal-node').forEach((el, i) => {
+        gsap.utils.toArray('.reveal-up').forEach((el, index) => {
             gsap.to(el, {
                 scrollTrigger: {
                     trigger: el,
                     start: 'top 85%',
+                    toggleActions: 'play none none reverse'
                 },
-                opacity: 1, y: 0, duration: 1, ease: "power2.out", delay: (i % 3) * 0.1
+                opacity: 1, 
+                y: 0, 
+                duration: 0.8, 
+                ease: "power2.out",
+                delay: (index % 4) * 0.1 // Stagger siblings grouped together
             });
         });
 
-        // The Grand Mandala Scroll Timeline (Reversible)
-        const mandalaTimeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: "#scroll-container",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1
-            }
-        });
-
-        mandalaTimeline
-            // Intro -> 5 Elements
-            .to(mandalaGroup.position, { x: 4, y: -2, z: -2, ease: 'none' }, 0)
-            .to(mandalaGroup.scale, { x: 1.5, y: 1.5, z: 1.5, ease: 'none' }, 0)
-            .to(coreMat.color, { r: 0.0, g: 1.0, b: 0.8, ease: 'none' }, 0) // Shift Core to Neon Cyan
+        /* =========================================================================
+           4. TEXT SCRAMBLER ACCENT
+           ========================================================================= */
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        const scrambler = document.querySelector('.scrambler');
+        
+        if (scrambler) {
+            let interval = null;
+            const text = scrambler.dataset.text;
             
-            // 5 Elements -> Crucible (Genetix Sandbox Problem)
-            .to(mandalaGroup.position, { x: -4, y: 2, z: 1, ease: 'none' }, 1)
-            .to(mandalaGroup.scale, { x: 2.5, y: 2.5, z: 2.5, ease: 'none' }, 1)
-            .to(coreMat.color, { r: 1.0, g: 0.0, b: 0.2, ease: 'none' }, 1) // Shift Core to Blood Red
-            .to(coreMat, { wireframeLinewidth: 3, opacity: 1, ease: 'none' }, 1) // Heavy line thickness for "Sandbox Battle"
-
-            // Crucible -> Arsenal
-            .to(mandalaGroup.position, { x: 0, y: -1, z: -5, ease: 'none' }, 2)
-            .to(mandalaGroup.scale, { x: 4, y: 4, z: 4, ease: 'none' }, 2)
-            .to(coreMat.color, { r: 0.83, g: 0.68, b: 0.21, ease: 'none' }, 2) // Return to Gold
-            .to(coreMat, { wireframeLinewidth: 1, opacity: 0.2, ease: 'none' }, 2);
+            setTimeout(() => {
+                let iteration = 0;
+                clearInterval(interval);
+                interval = setInterval(() => {
+                    scrambler.innerText = text
+                        .split("")
+                        .map((letter, index) => {
+                            if(index < iteration) return text[index];
+                            return letters[Math.floor(Math.random() * 26)];
+                        })
+                        .join("");
+                    
+                    if (iteration >= text.length) clearInterval(interval);
+                    iteration += 1 / 2;
+                }, 30);
+            }, 500); // 0.5s delay on load
+        }
 
     </script>
 </body>
