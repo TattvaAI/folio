@@ -116,7 +116,6 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       margin-bottom: 2rem;
-      opacity: 0; /* GSAP will animate this in */
     }
     .hero-name {
       /* Bug #10 fixed: single <h1> */
@@ -125,7 +124,6 @@
       line-height: 0.95;
       letter-spacing: -0.04em;
       color: var(--text);
-      opacity: 0;
     }
     .hero-name-accent {
       display: block;
@@ -139,7 +137,6 @@
       color: var(--muted);
       max-width: 560px;
       line-height: 1.6;
-      opacity: 0;
     }
     .hero-tagline strong {
       color: var(--text);
@@ -155,7 +152,6 @@
       color: var(--muted);
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      opacity: 0;
     }
     .scroll-cue-line {
       width: 40px;
@@ -768,21 +764,17 @@
        ║  LOCAL LIBRARIES — Zero CDN dependency, bulletproof offline  ║
        ╚══════════════════════════════════════════════════════════════╝ -->
   <!-- Bug #1 fixed: Using ./lib/* instead of broken cdnjs CDN -->
-  <script src="./lib/three.min.js" defer></script>
-  <script src="./lib/gsap.min.js" defer></script>
-  <script src="./lib/ScrollTrigger.min.js" defer></script>
+  <!-- No defer: sync load guarantees GSAP/Three available before inline script fires -->
+  <script src="./lib/three.min.js"></script>
+  <script src="./lib/gsap.min.js"></script>
+  <script src="./lib/ScrollTrigger.min.js"></script>
 
   <script>
     /* ═══════════════════════════════════════════════════════════════
        UTILITY: wait for deferred scripts to load
     ═══════════════════════════════════════════════════════════════ */
-    function onAllLoaded(cb) {
-      if (typeof THREE !== 'undefined' && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        cb();
-      } else {
-        setTimeout(() => onAllLoaded(cb), 50);
-      }
-    }
+    // Scripts are synchronously loaded — no polling needed
+    function onAllLoaded(cb) { cb(); }
 
     /* ═══════════════════════════════════════════════════════════════
        1. BENTO CARD 3D TILT + AMBIENT GLOW
