@@ -21,12 +21,12 @@
        DESIGN TOKENS
     ═══════════════════════════════════════ */
     :root {
-      --bg:      #050505;
-      --surface: #0d0d0d;
-      --text:    #ffffff;
-      --muted:   #6b6b6b;
-      --silver:  #eaeaeb;
-      --blue:    #0047ff;
+      --bg:      #1c1917;
+      --surface: #292524;
+      --text:    #fafaf9;
+      --muted:   #a8a29e;
+      --silver:  #d6d3d1;
+      --blue:    #ea580c;
       --border:  rgba(255,255,255,0.08);
       --font-display: 'Syne', sans-serif;
       --font-body:    'Inter', sans-serif;
@@ -117,10 +117,10 @@
       inset: 0;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.1;
+      opacity: 0.03;
       background-image:
-        linear-gradient(to right, #fff 1px, transparent 1px),
-        linear-gradient(to bottom, #fff 1px, transparent 1px);
+        linear-gradient(to right, #ffffff 1px, transparent 1px),
+        linear-gradient(to bottom, #ffffff 1px, transparent 1px);
       background-size: 100px 100px;
     }
 
@@ -136,10 +136,10 @@
       align-items: center;
       padding: 22px 4vw;
       /* Subtle fade so text stays readable on any bg */
-      background: linear-gradient(to bottom, rgba(5,5,5,0.6) 0%, transparent 100%);
+      background: linear-gradient(to bottom, rgba(28,25,23,0.85) 0%, transparent 100%);
     }
     .nav-logo {
-      color: #fff;
+      color: var(--text);
       font-family: var(--font-mono);
       font-weight: 700;
       font-size: 12px;
@@ -149,7 +149,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #fff;
+      color: var(--text);
       font-family: var(--font-mono);
       font-size: 11px;
       letter-spacing: 0.12em;
@@ -192,7 +192,7 @@
     .hero-title .line  { display: block; }
     .hero-title .outline {
       color: transparent;
-      -webkit-text-stroke: 1px rgba(255,255,255,0.22);
+      -webkit-text-stroke: 1px rgba(255,255,255,0.15);
     }
 
     .hero-sub {
@@ -200,7 +200,7 @@
       max-width: 460px;
       font-size: clamp(15px, 1.3vw, 21px);
       line-height: 1.65;
-      color: rgba(234,234,235,0.65);
+      color: var(--muted);
     }
 
     /* Stats strip */
@@ -251,7 +251,7 @@
       font-family: var(--font-display);
       font-size: clamp(60px, 10vw, 170px);
       color: var(--bg);
-      -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+      -webkit-text-stroke: 1px rgba(255,255,255,0.06);
       text-transform: uppercase;
       padding-right: 3vw;
       white-space: nowrap;
@@ -424,7 +424,7 @@
       font-size: 36vh;
       line-height: 1;
       color: transparent;
-      -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+      -webkit-text-stroke: 1px rgba(255,255,255,0.03);
       pointer-events: none;
       user-select: none;
       z-index: 0;
