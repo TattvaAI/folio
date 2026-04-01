@@ -14,27 +14,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
+    /* ═══════════════════════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════════════════════ */
     :root {
-      --bg:      #050505;
+      --bg: #050505;
       --surface: #0a0a0a;
-      --text:    #ffffff;
-      --muted:   #6b6b6b;
-      --silver:  #eaeaeb;
-      --blue:    #0047ff;
-      --border:  rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --muted: #6b6b6b;
+      --silver: #eaeaeb;
+      --blue: #0047ff;
+      --border: rgba(255, 255, 255, 0.08);
       --font-display: 'Syne', sans-serif;
-      --font-body:    'Inter', sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
       --ease-brutal: cubic-bezier(0.85, 0, 0.15, 1);
+      --ease-snap: cubic-bezier(1, 0, 0, 1);
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* overflow-x: clip — does NOT create a scroll context (unlike hidden).
-       Eliminates the iOS Safari phantom horizontal scroll bug. */
-    html { overflow-x: clip; background: var(--bg); }
-
-    body {
+    html, body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
@@ -45,217 +48,572 @@
 
     ::selection { background: var(--blue); color: #fff; }
 
+    /* ═══════════════════════════════════════════════════════════════
+       GRID OVERLAY
+    ═══════════════════════════════════════════════════════════════ */
     .grid-overlay {
-      position: fixed; top: 0; left: 0;
+      position: fixed;
+      top: 0; left: 0;
       width: 100vw; height: 100vh;
-      pointer-events: none; z-index: 1; opacity: 0.15;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.15;
       background-image:
         linear-gradient(to right, #fff 1px, transparent 1px),
         linear-gradient(to bottom, #fff 1px, transparent 1px);
       background-size: 100px 100px;
     }
 
-    /* ── CURSOR ─────────────────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       CUSTOM CURSOR (desktop only)
+    ═══════════════════════════════════════════════════════════════ */
     .cursor-crosshair {
-      position: fixed; top: 0; left: 0;
+      position: fixed;
+      top: 0; left: 0;
       width: 24px; height: 24px;
-      pointer-events: none; z-index: 9999;
+      pointer-events: none;
+      z-index: 9999;
       transform: translate(-50%, -50%);
       transition: width 0.3s var(--ease-brutal), height 0.3s var(--ease-brutal);
     }
     .cursor-crosshair::before,
-    .cursor-crosshair::after { content: ''; position: absolute; background: var(--text); }
+    .cursor-crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--text);
+    }
     .cursor-crosshair::before { top: 50%; left: 0; width: 100%; height: 1px; }
     .cursor-crosshair::after  { top: 0; left: 50%; width: 1px; height: 100%; }
+
     .cursor-coords {
-      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
-      font-family: var(--font-mono); font-size: 10px; color: var(--blue);
-      text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--blue);
+      padding: 10px 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
     }
+
     a, button { cursor: none; }
+    a:hover ~ .cursor-crosshair { width: 40px; height: 40px; opacity: 0.5; }
 
-    /* ── TYPE ───────────────────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       GLOBAL TYPOGRAPHY
+    ═══════════════════════════════════════════════════════════════ */
     h1, h2, h3 { font-family: var(--font-display); line-height: 0.9; text-transform: uppercase; }
-    .mono-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-
-    /* ── NAV ────────────────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 2vw; mix-blend-mode: difference;
+    .mono-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
-    .nav-sys { color: #fff; font-family: var(--font-mono); font-weight: 700; font-size: 12px; }
-    .nav-status { display: flex; align-items: center; gap: 8px; }
-    .nav-status .dot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; animation: pulse 2s infinite; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2vw;
+      mix-blend-mode: difference;
+    }
+    .nav-sys {
+      color: #fff;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-status .dot {
+      width: 6px; height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-    /* ── HERO ───────────────────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════════════════ */
     #hero {
-      height: 100vh; height: 100dvh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 0 4vw; position: relative; z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 4vw;
+      position: relative;
+      z-index: 10;
     }
+
     .hero-content { will-change: transform; }
 
-    /* clamp() prevents title overflow on any screen width */
-    h1.hero-title { font-size: clamp(44px, 11vw, 14vw); letter-spacing: -0.06em; margin-left: -0.5vw; color: var(--silver); }
-    .hero-title span { display: block; }
-    .hero-title .outline { color: transparent; -webkit-text-stroke: 1px var(--muted); }
-    .hero-sub { margin-top: 4vh; max-width: 450px; font-size: clamp(14px, 1.5vw, 24px); line-height: 1.5; color: var(--silver); }
+    h1.hero-title {
+      font-size: clamp(60px, 12vw, 220px); 
+      letter-spacing: -0.04em;
+      margin-left: -0.5vw;
+      color: var(--silver);
+      line-height: 0.95;
+      width: 100%;
+    }
+    .hero-title span { 
+      display: block; 
+      white-space: nowrap;
+    }
+    .hero-title .outline {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
+    }
 
-    .hero-marquee { position: absolute; bottom: 10vh; left: 0; width: 100%; overflow: hidden; white-space: nowrap; mix-blend-mode: exclusion; pointer-events: none; z-index: -1; }
-    .marquee-track { display: inline-block; animation: scroll-left 30s linear infinite; }
-    .marquee-text { font-family: var(--font-display); font-size: 12vw; color: var(--bg); -webkit-text-stroke: 1px var(--border); text-transform: uppercase; margin-right: 5vw; }
-    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .hero-sub {
+      margin-top: 4vh;
+      max-width: 450px;
+      font-size: clamp(16px, 1.5vw, 24px);
+      line-height: 1.5;
+      color: var(--silver);
+    }
 
-    /* ── ABOUT ──────────────────────────────────────────────────── */
-    #about { position: relative; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; z-index: 10; }
-    .about-left { width: 50vw; padding: 10vw 4vw; border-right: 1px solid var(--border); }
-    .about-right { width: 50vw; padding: 10vw 4vw; }
-    .about-statement { font-size: clamp(24px, 3vw, 42px); line-height: 1.3; letter-spacing: -0.02em; }
+    /* Marquee */
+    .hero-marquee {
+      position: absolute;
+      bottom: 10vh; left: 0;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      mix-blend-mode: exclusion;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: scroll-left 30s linear infinite;
+    }
+    .marquee-text {
+      font-family: var(--font-display);
+      font-size: 12vw;
+      color: var(--bg);
+      -webkit-text-stroke: 1px var(--border);
+      text-transform: uppercase;
+      margin-right: 5vw;
+    }
+    @keyframes scroll-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ABOUT
+    ═══════════════════════════════════════════════════════════════ */
+    #about {
+      position: relative;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      z-index: 10;
+    }
+
+    .about-left {
+      width: 50vw;
+      padding: 10vw 4vw;
+      border-right: 1px solid var(--border);
+    }
+    .about-right {
+      width: 50vw;
+      padding: 10vw 4vw;
+    }
+
+    .about-statement {
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
     .h-line { height: 1px; background: var(--border); margin: 4vw 0; }
+
     .signal { margin-bottom: 4vw; }
-    .signal-num { font-family: var(--font-mono); color: var(--blue); font-size: 14px; margin-bottom: 8px; }
+    .signal-num {
+      font-family: var(--font-mono);
+      color: var(--blue);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
     .signal h3 { font-size: clamp(20px, 2vw, 28px); margin-bottom: 12px; }
     .signal p  { font-size: 16px; color: var(--muted); line-height: 1.6; max-width: 80%; }
 
-    /* ── WORK — HORIZONTAL SCROLL ───────────────────────────────── */
-    /* Desktop: 50vw intro + 70vw panels (partial next panel visible)
-       Mobile:  100vw intro + 100vw panels (full screen each)
-       GSAP pins and translates on BOTH via normalizeScroll. */
+    /* ═══════════════════════════════════════════════════════════════
+       WORK — HORIZONTAL SCROLL (desktop)
+    ═══════════════════════════════════════════════════════════════ */
     .horizontal-wrapper {
-      width: 100vw; height: 100vh; height: 100dvh;
-      display: flex; flex-wrap: nowrap;
-      overflow: hidden; /* intentional — masks offscreen panels */
-      background: var(--bg); position: relative; z-index: 20;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+      z-index: 20;
     }
+
     .work-intro {
-      flex: 0 0 50vw; height: 100vh; height: 100dvh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 4vw; border-right: 1px solid var(--border);
+      flex: 0 0 50vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4vw;
+      border-right: 1px solid var(--border);
     }
+
     .work-panel {
-      flex: 0 0 70vw; height: 100vh; height: 100dvh;
-      display: flex; align-items: center;
-      padding: 0 5vw; border-right: 1px solid var(--border); position: relative;
+      flex: 0 0 70vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 5vw;
+      border-right: 1px solid var(--border);
+      position: relative;
     }
+
     .project-card {
-      width: 100%; height: 70vh;
-      background: var(--surface); border: 1px solid var(--border);
-      display: flex; flex-direction: column; justify-content: space-between;
-      padding: 3vw; position: relative; overflow: hidden;
-      text-decoration: none; color: var(--text);
+      width: 100%;
+      height: 70vh;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3vw;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--text);
       transition: border-color 0.4s var(--ease-brutal), transform 0.4s var(--ease-brutal);
     }
     .project-card:hover { border-color: var(--blue); transform: scale(0.98); }
+
     .project-bg-num {
-      position: absolute; top: -5%; right: 2%;
-      font-family: var(--font-display); font-size: 40vh; line-height: 1;
-      color: var(--bg); -webkit-text-stroke: 1px rgba(255,255,255,0.05);
-      z-index: 0; pointer-events: none;
+      position: absolute;
+      top: -5%; right: 2%;
+      font-family: var(--font-display);
+      font-size: 40vh;
+      line-height: 1;
+      color: var(--bg);
+      -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+      z-index: 0;
+      pointer-events: none;
     }
+
     .project-content { position: relative; z-index: 2; }
+
     .project-title { font-size: clamp(40px, 5vw, 80px); margin-bottom: 20px; }
     .project-desc  { font-size: 18px; color: var(--muted); max-width: 400px; line-height: 1.5; }
-    .project-meta  { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; }
+
+    .project-meta {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
     .project-link-btn {
-      width: 60px; height: 60px; border-radius: 50%;
-      background: var(--text); color: var(--bg);
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--text);
+      color: var(--bg);
       display: flex; justify-content: center; align-items: center;
       font-family: var(--font-mono); font-size: 24px;
       transition: background 0.3s, transform 0.3s;
     }
     .project-card:hover .project-link-btn { background: var(--blue); color: #fff; transform: rotate(45deg); }
 
-    /* ── PROGRESS DOTS (mobile) ─────────────────────────────────── */
-    .scroll-progress {
-      display: none; /* flex on mobile via media query */
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      z-index: 200; gap: 8px; pointer-events: none;
+    /* ═══════════════════════════════════════════════════════════════
+       CONNECT
+    ═══════════════════════════════════════════════════════════════ */
+    #connect {
+      padding: 15vw 4vw;
+      background: var(--blue);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 30;
     }
-    .scroll-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); transition: background 0.3s, transform 0.3s; }
-    .scroll-dot.active { background: var(--blue); transform: scale(1.5); }
 
-    /* ── CONNECT ────────────────────────────────────────────────── */
-    #connect { padding: 15vw 4vw; background: var(--blue); color: #fff; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 30; }
     .connect-title { font-size: 12vw; color: #fff; }
     .connect-title:hover { color: var(--bg); }
+
     .connect-links { display: flex; gap: 2vw; margin-top: 5vw; }
-    .connect-link { font-family: var(--font-mono); font-size: 16px; padding: 20px 40px; border: 1px solid #fff; text-transform: uppercase; text-decoration: none; color: #fff; transition: background 0.3s var(--ease-brutal), color 0.3s var(--ease-brutal); }
+
+    .connect-link {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      padding: 20px 40px;
+      border: 1px solid #fff;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #fff;
+      transition: background 0.3s var(--ease-brutal), color 0.3s var(--ease-brutal);
+    }
     .connect-link:hover { background: #fff; color: var(--blue); }
 
-    footer { background: var(--bg); padding: 4vw; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
-
-    /* ════════════════════════════════════════════════════════════════
-       MOBILE  ≤ 900px
-       ──────────────────────────────────────────────────────────────
-       NO scroll-snap here. GSAP + normalizeScroll handles everything.
-       CSS only adjusts sizes so panels fill the screen correctly.
-    ════════════════════════════════════════════════════════════════ */
-    @media (max-width: 900px) {
-      body { cursor: auto; }
-      .cursor-crosshair, .cursor-coords { display: none; }
-      a, button { cursor: pointer; }
-
-      nav { padding: 5vw 6vw; }
-
-      #hero { padding: 0 6vw; }
-      h1.hero-title { font-size: clamp(44px, 14vw, 72px); letter-spacing: -0.04em; margin-left: 0; line-height: 0.95; }
-      .hero-sub { font-size: clamp(15px, 4vw, 20px); max-width: 100%; margin-top: 3vh; }
-      .marquee-text { font-size: 20vw; }
-      .marquee-track { animation-duration: 15s; }
-
-      /* About — single column, no GSAP pin (desktop-only) */
-      #about { flex-direction: column; }
-      .about-left { width: 100%; padding: 14vw 6vw 8vw; border-right: none; border-bottom: 1px solid var(--border); }
-      .about-right { width: 100%; padding: 8vw 6vw 14vw; }
-      .signal p { max-width: 100%; }
-      .h-line { margin: 8vw 0; }
-
-      /* Work panels — full screen width on mobile.
-         GSAP still pins and drives the horizontal translation.
-         normalizeScroll makes vertical touch scroll move it. */
-      .work-intro {
-        flex: 0 0 100vw; height: 100dvh;
-        padding: 10vw 6vw; justify-content: center;
-      }
-      .work-panel {
-        flex: 0 0 100vw; height: 100dvh;
-        padding: 6vw; align-items: center;
-      }
-      .project-card { height: 72dvh; padding: 6vw 5vw; }
-      .project-title { font-size: clamp(32px, 9vw, 52px); }
-      .project-desc  { font-size: 15px; max-width: 100%; }
-      .project-bg-num { font-size: 35vw; -webkit-text-stroke: 1px rgba(255,255,255,0.06); top: 0; right: 0; }
-      .project-link-btn { width: 48px; height: 48px; font-size: 20px; }
-
-      /* Show progress dots */
-      .scroll-progress { display: flex; }
-
-      #connect { padding: 20vw 6vw; }
-      .connect-title { font-size: 16vw; line-height: 1; }
-      .connect-links { flex-direction: column; gap: 4vw; width: 100%; margin-top: 8vw; }
-      .connect-link  { width: 100%; text-align: center; padding: 18px 20px; font-size: 14px; }
-
-      footer { flex-direction: column; gap: 2vw; padding: 8vw 6vw; }
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════════ */
+    footer {
+      background: var(--bg);
+      padding: 4vw;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .marquee-track { animation: none; }
-      .project-card  { transition: none; }
+    /* ═══════════════════════════════════════════════════════════════
+       MOBILE — max-width: 900px
+    ═══════════════════════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+
+      /* ── 1. CURSOR ── */
+      html, body { cursor: auto; }
+      .cursor-crosshair,
+      .cursor-coords { display: none; }
+      a, button { cursor: pointer; }
+
+      /* ── 2. NAV ── */
+      nav {
+        mix-blend-mode: normal;
+        background: rgba(5, 5, 5, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      nav .mono-label { color: var(--silver); }
+      nav .nav-sys    { color: var(--silver); }
+
+      /* ── 3. HERO ── */
+      #hero {
+        height: auto;
+        min-height: 100svh;
+        padding: 90px 20px 48px;
+        justify-content: center;
+      }
+
+      h1.hero-title {
+        font-size: 11.5vw; 
+        letter-spacing: -0.02em;
+        margin-left: 0;
+        line-height: 1.0;
+        width: 100%;
+      }
+      
+      h1.hero-title span {
+        display: block;
+        white-space: nowrap; 
+      }
+
+      .hero-sub {
+        font-size: 15px;
+        line-height: 1.65;
+        max-width: 100%;
+        margin-top: 20px;
+        color: var(--silver);
+      }
+
+      .hero-marquee { display: none; }
+
+      /* ── 4. ABOUT ── */
+      #about { flex-direction: column; }
+
+      .about-left {
+        width: 100%;
+        padding: 48px 20px 32px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .about-right {
+        width: 100%;
+        padding: 32px 20px 48px;
+      }
+
+      .about-statement {
+        font-size: clamp(18px, 5vw, 28px);
+        line-height: 1.4;
+      }
+
+      .signal { margin-bottom: 24px; }
+      .signal h3 { font-size: clamp(18px, 5vw, 26px); }
+      .signal p  { font-size: 15px; max-width: 100%; line-height: 1.65; }
+      .h-line    { margin: 20px 0; }
+
+      /* ── 5. WORK PANELS ── */
+      #work-container {
+        position: static !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .horizontal-wrapper {
+        height: auto !important;
+        flex-direction: column !important;
+        overflow: visible !important;
+        transform: none !important;
+        width: 100% !important;
+      }
+
+      .work-intro {
+        flex: none !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: unset !important;
+        padding: 48px 20px 32px !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border) !important;
+        transform: none !important;
+        justify-content: flex-start;
+      }
+      .work-intro .mono-label { margin-bottom: 12px !important; }
+
+      .work-panel {
+        flex: none !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: unset !important;
+        padding: 24px 20px 32px !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border) !important;
+        transform: none !important;
+        position: static !important;
+        align-items: stretch !important;
+      }
+
+      .work-panel[style] {
+        padding-right: 20px !important;
+      }
+
+      .work-panel .mono-label[style] {
+        margin-bottom: 10px !important;
+      }
+
+      .project-card {
+        height: auto !important;
+        min-height: unset !important;
+        overflow: visible !important;
+        padding: 24px 20px 20px !important;
+      }
+
+      .project-bg-num {
+        font-size: 35vw;
+        opacity: 0.6;
+      }
+
+      .project-title {
+        font-size: 22px !important;
+        line-height: 1.0 !important;
+        margin-bottom: 12px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow: visible !important;
+        width: 100% !important;
+      }
+
+      .project-desc {
+        font-size: 13px !important;
+        max-width: 100% !important;
+        line-height: 1.6 !important;
+      }
+
+      .project-meta { margin-top: 20px !important; align-items: center !important; }
+
+      .project-link-btn {
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        font-size: 18px !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* ── 6. CONNECT ── */
+      #connect { padding: 64px 20px 56px; }
+
+      .connect-title {
+        font-size: clamp(40px, 14vw, 80px);
+        line-height: 1.0;
+      }
+
+      #connect > p[style] {
+        max-width: 100% !important;
+        margin-top: 20px !important;
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      .connect-links {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 32px;
+        width: 100%;
+      }
+
+      .connect-link {
+        width: 100%;
+        text-align: center;
+        padding: 16px 20px;
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+      }
+
+      /* ── 7. FOOTER ── */
+      footer {
+        padding: 24px 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+      }
+    }
+
+    /* ── Extra small phones: 320px – 375px ── */
+    @media (max-width: 375px) {
+      h1.hero-title  { font-size: 11vw; } 
+      .project-title { font-size: 19px !important; }
+      .connect-title { font-size: 38px; }
     }
   </style>
 </head>
 <body>
 
   <div class="grid-overlay"></div>
+
   <div class="cursor-crosshair" id="cursor"></div>
-  <div class="cursor-coords"    id="coords">X: 000 Y: 000</div>
-  <div class="scroll-progress"  id="scrollProgress"></div>
+  <div class="cursor-coords" id="coords">X: 0000 Y: 0000</div>
 
   <nav>
     <div class="mono-label">> sys.portfolio</div>
-    <div class="nav-status mono-label"><div class="dot"></div> ONLINE</div>
+    <div class="nav-status mono-label">
+      <div class="dot"></div> ONLINE
+    </div>
   </nav>
 
   <section id="hero">
@@ -265,8 +623,11 @@
         <span>SHIVANSH</span>
         <span class="outline">BANSAL</span>
       </h1>
-      <p class="hero-sub">I see what's broken. I build what fixes it. Full-stack engineering.</p>
+      <p class="hero-sub">
+        I see what's broken. I build what fixes it. Full-stack engineering.
+      </p>
     </div>
+
     <div class="hero-marquee">
       <div class="marquee-track">
         <span class="marquee-text">Next.js — Tailwind — GSAP — Node — React — Figma — Typescript — Three.js — LLMs — REST — </span>
@@ -284,6 +645,7 @@
         before I write a single line of code.
       </div>
     </div>
+
     <div class="about-right">
       <div class="signal">
         <div class="signal-num">01 / Foundation</div>
@@ -291,12 +653,14 @@
         <p>Rigorous mathematical theory (DS) merged with raw computer science fundamentals. The unshakeable bedrock.</p>
       </div>
       <div class="h-line"></div>
+
       <div class="signal">
         <div class="signal-num">02 / Strategy</div>
         <h3>Competitive Chess</h3>
         <p>Every architectural decision is an end-game calculation. The ability to evaluate 12 moves ahead and sacrifice for position.</p>
       </div>
       <div class="h-line"></div>
+
       <div class="signal">
         <div class="signal-num">03 / Synthesis</div>
         <h3>Cross-Domain Range</h3>
@@ -311,87 +675,11 @@
       <div class="work-intro panel">
         <p class="mono-label" style="margin-bottom: 2vw;">// DEPLOYMENTS</p>
         <h2 style="font-size: clamp(40px, 8vw, 100px); color: var(--silver);">THE<br>WORK</h2>
-        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Scroll to explore.</p>
+        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Scroll horizontally.</p>
       </div>
 
       <div class="work-panel panel">
         <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="project-card">
           <div class="project-bg-num">01</div>
           <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">AI GENERATOR</p>
-            <h3 class="project-title">Genetix AI</h3>
-            <p class="project-desc">Wanted to see if an LLM could build actual live websites. It can. The sandbox isolation was the true engineering challenge.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="project-link-btn">↗</div></div>
-        </a>
-      </div>
-
-      <div class="work-panel panel">
-        <a href="https://vkindustrieskuk.web.app/" target="_blank" class="project-card">
-          <div class="project-bg-num">02</div>
-          <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">ENTERPRISE</p>
-            <h3 class="project-title">VK Industries</h3>
-            <p class="project-desc">A client needed an immediate, high-performance online presence. Shipped a clean, indexable corporate site.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="project-link-btn">↗</div></div>
-        </a>
-      </div>
-
-      <div class="work-panel panel">
-        <a href="https://mind-space-seven.vercel.app/" target="_blank" class="project-card">
-          <div class="project-bg-num">03</div>
-          <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">CONSUMER UX</p>
-            <h3 class="project-title">MindSpace</h3>
-            <p class="project-desc">Built a mental wellness application because I wanted to see if software UI could tangibly lower user anxiety.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="project-link-btn">↗</div></div>
-        </a>
-      </div>
-
-      <div class="work-panel panel">
-        <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="project-card">
-          <div class="project-bg-num">04</div>
-          <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">INFRASTRUCTURE</p>
-            <h3 class="project-title">Campus Vault</h3>
-            <p class="project-desc">Academic storage system with ultra-fast edge delivery. Boring name, but a brutally effective tool.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="project-link-btn">↗</div></div>
-        </a>
-      </div>
-
-      <div class="work-panel panel">
-        <a href="https://qr-main-ten.vercel.app/" target="_blank" class="project-card">
-          <div class="project-bg-num">05</div>
-          <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">UTILITY</p>
-            <h3 class="project-title">GatePass</h3>
-            <p class="project-desc">High-speed edge utility for deterministic QR generation. Built for pure speed and zero friction.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="project-link-btn">↗</div></div>
-        </a>
-      </div>
-
-      <div class="work-panel panel">
-        <a href="https://pdf4me.vercel.app/" target="_blank" class="project-card">
-          <div class="project-bg-num">06</div>
-          <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">AUTOMATION</p>
-            <h3 class="project-title">PDF4Me</h3>
-            <p class="project-desc">Document processing pipeline. Extract, manipulate, compress. Pure functional backend logic exposed via a clean UI.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="project-link-btn">↗</div></div>
-        </a>
-      </div>
-
-      <div class="work-panel panel" style="padding-right: 15vw;">
-        <a href="https://hw-ashiesh.vercel.app" target="_blank" class="project-card">
-          <div class="project-bg-num">07</div>
-          <div class="project-content">
-            <p class="mono-label" style="margin-bottom: 2vw;">CLIENT · WELLNESS</p>
-            <h3 class="project-title">HealMind</h3>
-            <p class="project-desc">A digital sanctuary for mental clarity. Synthesizing ancient healing arts with modern, minimalist digital architecture.</p>
-          </div>
-          <div class="project-meta"><span class="mono-label">LIVE SITE</span><div class="
+            <
