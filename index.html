@@ -244,8 +244,7 @@
       transition: border-color 0.4s var(--ease-brutal), transform 0.4s var(--ease-brutal);
     }
     
-    /* Dual states for Desktop Hover & Mobile Scroll-Active */
-    .project-card:hover, .project-card.is-active { 
+    .project-card:hover { 
       border-color: var(--blue); 
       transform: scale(0.98); 
     }
@@ -283,8 +282,7 @@
       transition: background 0.3s, transform 0.3s;
     }
     
-    .project-card:hover .project-link-btn, 
-    .project-card.is-active .project-link-btn { 
+    .project-card:hover .project-link-btn { 
       background: var(--blue); color: #fff; transform: rotate(45deg); 
     }
 
@@ -328,50 +326,44 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       MOBILE OPTIMIZATION
+       MOBILE OVERRIDES
     ═══════════════════════════════════════════════════════════════ */
     @media (max-width: 900px) {
       body { cursor: auto; }
-      .cursor-crosshair { display: none; } /* Hide crosshair on mobile */
+      .cursor-crosshair { display: none; }
       a, button { cursor: pointer; }
 
-      /* Typography adjustments */
-      h1.hero-title { font-size: 20vw; line-height: 0.85; }
-      .marquee-text { font-size: 25vw; }
-      .marquee-track { animation: scroll-left 15s linear infinite; } /* Faster on mobile */
+      /* Force Coords out of the top left corner immediately on mobile */
+      .cursor-coords {
+        top: auto !important;
+        bottom: 4vw !important;
+        left: 4vw !important;
+        transform: none !important;
+      }
+
+      /* Typography Fixed for Fit */
+      h1.hero-title { font-size: 11vw; margin-left: 0; line-height: 1; }
+      .marquee-text { font-size: 15vw; }
+      .marquee-track { animation: scroll-left 15s linear infinite; }
+      
+      /* Make bg numbers fit mobile containers */
+      .project-bg-num {
+        font-size: 30vw;
+        top: 5%; right: 0%;
+        opacity: 0.15;
+      }
 
       .about-left, .about-right { width: 100vw; padding: 10vw 5vw; }
       #about { flex-direction: column; }
       .about-left { border-right: none; border-bottom: 1px solid var(--border); }
       .signal p { max-width: 100%; }
 
-      /* Transform Horizontal GSAP Scroll into Native Horizontal Scroll Snapping */
-      .horizontal-wrapper {
-        flex-direction: row; 
-        overflow-x: auto; 
-        overflow-y: hidden;
-        scroll-snap-type: x mandatory; 
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
-      }
-      .horizontal-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
+      /* Horizontal Scroll adjustments */
       .work-intro, .work-panel {
         flex: 0 0 100vw;
         padding: 10vw 5vw; 
-        border-right: none; 
-        scroll-snap-align: center;
       }
-      
-      .project-card { height: auto; min-height: 60dvh; }
-      .project-title { font-size: 40px; }
-      
-      /* Make bg numbers fit mobile containers */
-      .project-bg-num {
-        font-size: 35vw;
-        top: 2%; right: -2%;
-        opacity: 0.3;
-      }
+      .project-card { height: 65dvh; }
       
       .connect-title { font-size: 15vw; }
       .connect-links { flex-direction: column; gap: 4vw; width: 100%; }
@@ -452,7 +444,7 @@
       <div class="work-intro panel">
         <p class="mono-label" style="margin-bottom: 2vw;">// DEPLOYMENTS</p>
         <h2 style="font-size: clamp(40px, 8vw, 100px); color: var(--silver);">THE<br>WORK</h2>
-        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Swipe through.</p>
+        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Keep scrolling down.</p>
       </div>
 
       <div class="work-panel panel">
@@ -545,7 +537,7 @@
         </a>
       </div>
 
-      <div class="work-panel panel" style="padding-right: 15vw;"> 
+      <div class="work-panel panel" style="padding-right: 5vw;"> 
         <a href="https://hw-ashiesh.vercel.app" target="_blank" class="project-card">
           <div class="project-bg-num">07</div>
           <div class="project-content">
@@ -585,4 +577,18 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // Gl
+    // Global Hero Entry
+    gsap.from('.hero-content', { opacity: 0, scale: 0.95, duration: 1, ease: 'expo.out' });
+    ScrollTrigger.create({
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate: self => {
+        gsap.set('.hero-content', { 
+          y: self.progress * 150,
+          scale: 1 - (self.progress * 0.05)
+        });
+      }
+    });
+
+    // ═════════════════════════════════════════════════════════════
