@@ -244,7 +244,7 @@
       transition: border-color 0.4s var(--ease-brutal), transform 0.4s var(--ease-brutal);
     }
     
-    .project-card:hover { 
+    .project-card:hover, .project-card.is-active { 
       border-color: var(--blue); 
       transform: scale(0.98); 
     }
@@ -282,7 +282,8 @@
       transition: background 0.3s, transform 0.3s;
     }
     
-    .project-card:hover .project-link-btn { 
+    .project-card:hover .project-link-btn, 
+    .project-card.is-active .project-link-btn { 
       background: var(--blue); color: #fff; transform: rotate(45deg); 
     }
 
@@ -358,12 +359,15 @@
       .about-left { border-right: none; border-bottom: 1px solid var(--border); }
       .signal p { max-width: 100%; }
 
-      /* Horizontal Scroll adjustments */
+      /* Let GSAP handle horizontal scrolling entirely */
       .work-intro, .work-panel {
         flex: 0 0 100vw;
         padding: 10vw 5vw; 
+        border-right: none;
       }
+      
       .project-card { height: 65dvh; }
+      .project-title { font-size: 40px; }
       
       .connect-title { font-size: 15vw; }
       .connect-links { flex-direction: column; gap: 4vw; width: 100%; }
@@ -585,10 +589,4 @@
       end: 'bottom top',
       onUpdate: self => {
         gsap.set('.hero-content', { 
-          y: self.progress * 150,
-          scale: 1 - (self.progress * 0.05)
-        });
-      }
-    });
-
-    // ═════════════════════════════════════════════════════════════
+         
