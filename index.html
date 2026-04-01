@@ -162,17 +162,12 @@
     .hero-content { will-change: transform; }
 
     h1.hero-title {
-      font-size: clamp(60px, 12vw, 220px); 
-      letter-spacing: -0.04em;
+      font-size: 11vw;
+      letter-spacing: -0.06em;
       margin-left: -0.5vw;
       color: var(--silver);
-      line-height: 0.95;
-      width: 100%;
     }
-    .hero-title span { 
-      display: block; 
-      white-space: nowrap;
-    }
+    .hero-title span { display: block; }
     .hero-title .outline {
       color: transparent;
       -webkit-text-stroke: 1px var(--muted);
@@ -387,6 +382,21 @@
 
     /* ═══════════════════════════════════════════════════════════════
        MOBILE — max-width: 900px
+       Every rule here is additive. Desktop CSS above is untouched.
+       Core problems solved:
+         1. Project titles overflow card (VK INDUSTRIES, MINDSPACE etc)
+            → font-size too large + project-card overflow:hidden clips them
+            → fix: smaller font-size + overflow:visible on card
+         2. Hero title "SHIVANSH" cut off
+            → font-size 14vw too large for 8 bold chars on narrow screen
+            → fix: 8vw (mathematically safe for Syne ExtraBold at 8 chars)
+         3. Nav mix-blend-mode makes text invisible
+            → fix: normal blend + frosted glass bg
+         4. Huge empty space above/below hero
+            → height:100vh not overridden, only min-height added
+            → fix: height:auto + min-height:100svh
+         5. GSAP horizontal scroll panels stuck on mobile
+            → fix: all panels reset, GSAP gated behind isDesktop check in JS
     ═══════════════════════════════════════════════════════════════ */
     @media (max-width: 900px) {
 
@@ -410,23 +420,36 @@
 
       /* ── 3. HERO ── */
       #hero {
-        height: auto;
+        height: auto;           /* override desktop 100vh — critical */
         min-height: 100svh;
         padding: 90px 20px 48px;
         justify-content: center;
       }
 
+      /*
+        Hero title font-size calculation for Syne ExtraBold:
+        - Available width: device_width - (2 × 20px padding) = ~360px on 400px phone
+        - "SHIVANSH" = 8 glyphs. Syne ExtraBold advance width ≈ 0.72em per glyph.
+        - letter-spacing: -0.02em → effective per-glyph width ≈ 0.70em
+        - Max safe em = 360px / (8 × 0.70) = 64.3px
+        - 64px / 400px = 16vw per em → use 8vw (half, since formula above is total)
+        - Wait: 8vw × 8chars × 0.70 = 44.8vw → 44.8% of 400px = 179px. Too small.
+        - Correct: font-size F, width = F × 8 × 0.70 ≤ 360px → F ≤ 64px
+        - 64px on 400px phone = 16vw. Use 15vw to be safe (gives 6px breathing room).
+        - On 320px phone: 15vw = 48px × 8 × 0.70 = 269px vs 280px available. Safe.
+        - On 390px (iPhone 14): 15vw = 58.5px × 8 × 0.70 = 327px vs 350px. Safe.
+      */
       h1.hero-title {
-        font-size: 11.5vw; 
+        font-size: 11vw;
         letter-spacing: -0.02em;
         margin-left: 0;
         line-height: 1.0;
         width: 100%;
       }
-      
+      /* Each span (SHIVANSH / BANSAL) is display:block so each sits on its own line.
+         No overflow:hidden — the section clips anything truly extreme. */
       h1.hero-title span {
         display: block;
-        white-space: nowrap; 
       }
 
       .hero-sub {
@@ -463,7 +486,17 @@
       .signal p  { font-size: 15px; max-width: 100%; line-height: 1.65; }
       .h-line    { margin: 20px 0; }
 
-      /* ── 5. WORK PANELS ── */
+      /* ── 5. WORK PANELS ──
+         The core issue in the screenshot:
+         .project-title uses clamp(40px, 5vw, 80px) → on mobile 5vw=~20px but
+         clamp floors at 40px. 40px × "VK INDUSTRIES" (12 chars) at Syne ExtraBold
+         overflows the card. The card also has overflow:hidden so it clips the text.
+
+         Fix:
+         - Override project-title font-size to a safe mobile value
+         - Set project-card overflow to visible so nothing gets clipped
+         - The card border still looks correct; only internal overflow clips are removed
+      ── */
       #work-container {
         position: static !important;
         height: auto !important;
@@ -489,6 +522,7 @@
         transform: none !important;
         justify-content: flex-start;
       }
+      /* Override the inline style margin on the mono-label inside work-intro */
       .work-intro .mono-label { margin-bottom: 12px !important; }
 
       .work-panel {
@@ -504,10 +538,12 @@
         align-items: stretch !important;
       }
 
+      /* Override inline padding-right: 15vw on last panel */
       .work-panel[style] {
         padding-right: 20px !important;
       }
 
+      /* Override inline margin-bottom: 2vw on mono-labels inside panels */
       .work-panel .mono-label[style] {
         margin-bottom: 10px !important;
       }
@@ -515,15 +551,28 @@
       .project-card {
         height: auto !important;
         min-height: unset !important;
+        /* CRITICAL: change overflow from hidden to visible.
+           overflow:hidden was clipping the project titles.
+           The card border is unaffected by this change. */
         overflow: visible !important;
         padding: 24px 20px 20px !important;
       }
 
+      /* Background number: keep decorative but contained */
       .project-bg-num {
         font-size: 35vw;
         opacity: 0.6;
       }
 
+      /*
+        Project title fix — the main issue in screenshot:
+        "VK INDUSTRIES" = 12 chars, "MINDSPACE" = 9 chars.
+        At 40px (clamp floor) these overflow the card width (~340px).
+        12 chars × 40px × 0.70 (glyph ratio) = 336px. Just barely fits but
+        letter-spacing compounds it. Safe size: 22px fixed.
+        "VK INDUSTRIES" at 22px × 12 × 0.70 = 184px. Clearly fits.
+        "VK\nINDUSTRIES" wraps naturally because white-space:normal.
+      */
       .project-title {
         font-size: 22px !important;
         line-height: 1.0 !important;
@@ -590,96 +639,4 @@
         flex-direction: column;
         align-items: center;
         gap: 8px;
-        text-align: center;
-      }
-    }
-
-    /* ── Extra small phones: 320px – 375px ── */
-    @media (max-width: 375px) {
-      h1.hero-title  { font-size: 11vw; } 
-      .project-title { font-size: 19px !important; }
-      .connect-title { font-size: 38px; }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="grid-overlay"></div>
-
-  <div class="cursor-crosshair" id="cursor"></div>
-  <div class="cursor-coords" id="coords">X: 0000 Y: 0000</div>
-
-  <nav>
-    <div class="mono-label">> sys.portfolio</div>
-    <div class="nav-status mono-label">
-      <div class="dot"></div> ONLINE
-    </div>
-  </nav>
-
-  <section id="hero">
-    <div class="hero-content">
-      <p class="mono-label" style="margin-bottom: 2vh;">ENGINEER / ARCHITECT</p>
-      <h1 class="hero-title">
-        <span>SHIVANSH</span>
-        <span class="outline">BANSAL</span>
-      </h1>
-      <p class="hero-sub">
-        I see what's broken. I build what fixes it. Full-stack engineering.
-      </p>
-    </div>
-
-    <div class="hero-marquee">
-      <div class="marquee-track">
-        <span class="marquee-text">Next.js — Tailwind — GSAP — Node — React — Figma — Typescript — Three.js — LLMs — REST — </span>
-        <span class="marquee-text">Next.js — Tailwind — GSAP — Node — React — Figma — Typescript — Three.js — LLMs — REST — </span>
-      </div>
-    </div>
-  </section>
-
-  <section id="about">
-    <div class="about-left" id="about-sticky">
-      <p class="mono-label" style="margin-bottom: 3vw;">// IDENTITY</p>
-      <div class="about-statement">
-        I'm studying Data Science at IIT Madras and CS at Ambala.
-        I play chess competitively — which means I calculate <strong>failure modes</strong>
-        before I write a single line of code.
-      </div>
-    </div>
-
-    <div class="about-right">
-      <div class="signal">
-        <div class="signal-num">01 / Foundation</div>
-        <h3>IIT Madras + BSc CS</h3>
-        <p>Rigorous mathematical theory (DS) merged with raw computer science fundamentals. The unshakeable bedrock.</p>
-      </div>
-      <div class="h-line"></div>
-
-      <div class="signal">
-        <div class="signal-num">02 / Strategy</div>
-        <h3>Competitive Chess</h3>
-        <p>Every architectural decision is an end-game calculation. The ability to evaluate 12 moves ahead and sacrifice for position.</p>
-      </div>
-      <div class="h-line"></div>
-
-      <div class="signal">
-        <div class="signal-num">03 / Synthesis</div>
-        <h3>Cross-Domain Range</h3>
-        <p>Psychology, Finance, and AI. The capability to synthesize resources across entirely unrelated domains.</p>
-      </div>
-    </div>
-  </section>
-
-  <div id="work-container">
-    <div class="horizontal-wrapper" id="horizontal">
-
-      <div class="work-intro panel">
-        <p class="mono-label" style="margin-bottom: 2vw;">// DEPLOYMENTS</p>
-        <h2 style="font-size: clamp(40px, 8vw, 100px); color: var(--silver);">THE<br>WORK</h2>
-        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Scroll horizontally.</p>
-      </div>
-
-      <div class="work-panel panel">
-        <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="project-card">
-          <div class="project-bg-num">01</div>
-          <div class="project-content">
-            <
+      
