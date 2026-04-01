@@ -9,29 +9,18 @@
   <meta name="theme-color" content="#050505" />
   <title>Shivansh Bansal</title>
 
-  <!-- 
-    TYPOGRAPHY: 
-    Syne ExtraBold (Massive structure, geometric)
-    Inter (Utility text)
-    JetBrains Mono (Data/Coordinates)
-  -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ═══════════════════════════════════════════════════════════════
-       v6: THE KINETIC ENGINE — Design Tokens
-       True Awwwards-style brutalism. No soft shadows. No safe padding.
-    ═══════════════════════════════════════════════════════════════ */
     :root {
-      /* Palette: Phantom Black, Silver, Ultramarine */
       --bg: #050505;
       --surface: #0a0a0a;
       --text: #ffffff;
       --muted: #6b6b6b;
       --silver: #eaeaeb;
-      --blue: #0047ff; /* The core highlight */
+      --blue: #0047ff;
       --border: rgba(255, 255, 255, 0.08);
 
       --font-display: 'Syne', sans-serif;
@@ -39,12 +28,8 @@
       --font-mono: 'JetBrains Mono', monospace;
       
       --ease-brutal: cubic-bezier(0.85, 0, 0.15, 1);
-      --ease-snap: cubic-bezier(1, 0, 0, 1);
     }
 
-    /* ═══════════════════════════════════════════════════════════════
-       GLOBAL RESET & CUSTOM CURSOR
-    ═══════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     
     html, body {
@@ -52,19 +37,16 @@
       color: var(--text);
       font-family: var(--font-body);
       overflow-x: hidden;
-      /* Hide default cursor on desktop */
       cursor: none; 
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Keep native selection styling raw/brutalist */
     ::selection { background: var(--blue); color: #fff; }
 
-    /* The SVG Grid Texture */
     .grid-overlay {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100vw; height: 100vh; height: 100dvh;
       pointer-events: none;
       z-index: 1;
       opacity: 0.15;
@@ -74,7 +56,6 @@
       background-size: 100px 100px;
     }
 
-    /* Custom Instrument Cursor */
     .cursor-crosshair {
       position: fixed;
       top: 0; left: 0;
@@ -107,11 +88,9 @@
       white-space: nowrap;
     }
 
-    /* Standard links revert cursor */
     a, button { cursor: none; }
     a:hover ~ .cursor-crosshair { width: 40px; height: 40px; opacity: 0.5; }
 
-    /* Global Typography Utils */
     h1, h2, h3 { font-family: var(--font-display); line-height: 0.9; text-transform: uppercase; }
     .mono-label {
       font-family: var(--font-mono);
@@ -121,9 +100,6 @@
       color: var(--muted);
     }
 
-    /* ═══════════════════════════════════════════════════════════════
-       NAV: Functional Dashboard Style
-    ═══════════════════════════════════════════════════════════════ */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -132,19 +108,10 @@
       justify-content: space-between;
       align-items: center;
       padding: 2vw;
-      mix-blend-mode: difference; /* Highly legible on any background */
+      mix-blend-mode: difference;
     }
-    .nav-sys {
-      color: #fff;
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 12px;
-    }
-    .nav-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .nav-sys { color: #fff; font-family: var(--font-mono); font-weight: 700; font-size: 12px; }
+    .nav-status { display: flex; align-items: center; gap: 8px; }
     .nav-status .dot {
       width: 6px; height: 6px;
       background: var(--blue);
@@ -153,11 +120,8 @@
     }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
 
-    /* ═══════════════════════════════════════════════════════════════
-       HERO: Brutalist Typography
-    ═══════════════════════════════════════════════════════════════ */
     #hero {
-      height: 100vh;
+      height: 100vh; height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -166,21 +130,16 @@
       z-index: 10;
     }
     
-    .hero-content {
-      will-change: transform;
-    }
+    .hero-content { will-change: transform; }
 
     h1.hero-title {
       font-size: 14vw;
       letter-spacing: -0.06em;
-      margin-left: -0.5vw; /* Push past padding */
+      margin-left: -0.5vw;
       color: var(--silver);
     }
     .hero-title span { display: block; }
-    .hero-title .outline {
-      color: transparent;
-      -webkit-text-stroke: 1px var(--muted);
-    }
+    .hero-title .outline { color: transparent; -webkit-text-stroke: 1px var(--muted); }
 
     .hero-sub {
       margin-top: 4vh;
@@ -190,7 +149,6 @@
       color: var(--silver);
     }
 
-    /* Tech Marquee running infinitely behind » pure SVG/CSS */
     .hero-marquee {
       position: absolute;
       bottom: 10vh; left: 0;
@@ -208,25 +166,19 @@
     .marquee-text {
       font-family: var(--font-display);
       font-size: 12vw;
-      color: var(--bg); /* Invisible on bg, relies on text-stroke */
+      color: var(--bg);
       -webkit-text-stroke: 1px var(--border);
       text-transform: uppercase;
       margin-right: 5vw;
     }
-    @keyframes scroll-left {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
+    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* ═══════════════════════════════════════════════════════════════
-       ABOUT: Split Screen Parallax
-    ═══════════════════════════════════════════════════════════════ */
     #about {
       position: relative;
       background: var(--surface);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      display: flex; /* Side by side on desktop */
+      display: flex;
       z-index: 10;
     }
     
@@ -234,48 +186,20 @@
       width: 50vw;
       padding: 10vw 4vw;
       border-right: 1px solid var(--border);
-      /* Pinned by GSAP later */
     }
-    .about-right {
-      width: 50vw;
-      padding: 10vw 4vw;
-    }
-
-    .about-statement {
-      font-size: clamp(24px, 3vw, 42px);
-      line-height: 1.3;
-      letter-spacing: -0.02em;
-    }
+    .about-right { width: 50vw; padding: 10vw 4vw; }
+    .about-statement { font-size: clamp(24px, 3vw, 42px); line-height: 1.3; letter-spacing: -0.02em; }
     .h-line { height: 1px; background: var(--border); margin: 4vw 0; }
 
-    /* Signal Data points */
-    .signal {
-      margin-bottom: 4vw;
-    }
-    .signal-num {
-      font-family: var(--font-mono);
-      color: var(--blue);
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-    .signal h3 {
-      font-size: clamp(20px, 2vw, 28px);
-      margin-bottom: 12px;
-    }
-    .signal p {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 80%;
-    }
+    .signal { margin-bottom: 4vw; }
+    .signal-num { font-family: var(--font-mono); color: var(--blue); font-size: 14px; margin-bottom: 8px; }
+    .signal h3 { font-size: clamp(20px, 2vw, 28px); margin-bottom: 12px; }
+    .signal p { font-size: 16px; color: var(--muted); line-height: 1.6; max-width: 80%; }
 
-    /* ═══════════════════════════════════════════════════════════════
-       WORK: Horizontal Scroll Awwwards Layout
-    ═══════════════════════════════════════════════════════════════ */
-    /* Container that GSAP will pin and translate horizontally */
+    /* WORK SECTION */
     .horizontal-wrapper {
       width: 100vw;
-      height: 100vh;
+      height: 100vh; height: 100dvh;
       display: flex;
       flex-wrap: nowrap;
       overflow: hidden;
@@ -286,7 +210,7 @@
 
     .work-intro {
       flex: 0 0 50vw;
-      height: 100vh;
+      height: 100vh; height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -294,10 +218,9 @@
       border-right: 1px solid var(--border);
     }
 
-    /* The individual projects */
     .work-panel {
-      flex: 0 0 70vw; /* Massive panels */
-      height: 100vh;
+      flex: 0 0 70vw;
+      height: 100vh; height: 100dvh;
       display: flex;
       align-items: center;
       padding: 0 5vw;
@@ -321,10 +244,12 @@
       transition: border-color 0.4s var(--ease-brutal), transform 0.4s var(--ease-brutal);
     }
     
-    /* Project Hover Effects (Brutalist scaling) */
-    .project-card:hover { border-color: var(--blue); transform: scale(0.98); }
+    /* Dual states for Desktop Hover & Mobile Scroll-Active */
+    .project-card:hover, .project-card.is-active { 
+      border-color: var(--blue); 
+      transform: scale(0.98); 
+    }
     
-    /* Giant background numbers */
     .project-bg-num {
       position: absolute;
       top: -5%; right: 2%;
@@ -338,7 +263,6 @@
     }
 
     .project-content { position: relative; z-index: 2; }
-    
     .project-title { font-size: clamp(40px, 5vw, 80px); margin-bottom: 20px; }
     .project-desc { font-size: 18px; color: var(--muted); max-width: 400px; line-height: 1.5; }
     
@@ -358,11 +282,12 @@
       font-family: var(--font-mono); font-size: 24px;
       transition: background 0.3s, transform 0.3s;
     }
-    .project-card:hover .project-link-btn { background: var(--blue); color: #fff; transform: rotate(45deg); }
+    
+    .project-card:hover .project-link-btn, 
+    .project-card.is-active .project-link-btn { 
+      background: var(--blue); color: #fff; transform: rotate(45deg); 
+    }
 
-    /* ═══════════════════════════════════════════════════════════════
-       CONNECT: Full Screen Aggressive CTA
-    ═══════════════════════════════════════════════════════════════ */
     #connect {
       padding: 15vw 4vw;
       background: var(--blue);
@@ -375,17 +300,10 @@
       z-index: 30;
     }
     
-    .connect-title {
-      font-size: 12vw;
-      color: #fff;
-    }
+    .connect-title { font-size: 12vw; color: #fff; }
     .connect-title:hover { color: var(--bg); }
     
-    .connect-links {
-      display: flex;
-      gap: 2vw;
-      margin-top: 5vw;
-    }
+    .connect-links { display: flex; gap: 2vw; margin-top: 5vw; }
     .connect-link {
       font-family: var(--font-mono);
       font-size: 16px;
@@ -396,10 +314,7 @@
       color: #fff;
       transition: background 0.3s var(--ease-brutal), color 0.3s var(--ease-brutal);
     }
-    .connect-link:hover {
-      background: #fff;
-      color: var(--blue);
-    }
+    .connect-link:hover { background: #fff; color: var(--blue); }
 
     footer {
       background: var(--bg);
@@ -413,27 +328,50 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════
-       MOBILE REVERT: Kill custom cursors and horizontal scroll
+       MOBILE OPTIMIZATION
     ═══════════════════════════════════════════════════════════════ */
     @media (max-width: 900px) {
       body { cursor: auto; }
-      .cursor-crosshair, .cursor-coords { display: none; }
+      .cursor-crosshair { display: none; } /* Hide crosshair on mobile */
       a, button { cursor: pointer; }
+
+      /* Typography adjustments */
+      h1.hero-title { font-size: 20vw; line-height: 0.85; }
+      .marquee-text { font-size: 25vw; }
+      .marquee-track { animation: scroll-left 15s linear infinite; } /* Faster on mobile */
 
       .about-left, .about-right { width: 100vw; padding: 10vw 5vw; }
       #about { flex-direction: column; }
       .about-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .signal p { max-width: 100%; }
 
-      /* Horizontal reverts to vertical stack */
+      /* Transform Horizontal GSAP Scroll into Native Horizontal Scroll Snapping */
       .horizontal-wrapper {
-        height: auto; flex-direction: column; overflow: visible;
+        flex-direction: row; 
+        overflow-x: auto; 
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory; 
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
       }
+      .horizontal-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
       .work-intro, .work-panel {
-        flex: none; width: 100vw; height: auto;
-        padding: 10vw 5vw; border-right: none; border-bottom: 1px solid var(--border);
+        flex: 0 0 100vw;
+        padding: 10vw 5vw; 
+        border-right: none; 
+        scroll-snap-align: center;
       }
-      .project-card { height: auto; min-height: 50vh; }
+      
+      .project-card { height: auto; min-height: 60dvh; }
       .project-title { font-size: 40px; }
+      
+      /* Make bg numbers fit mobile containers */
+      .project-bg-num {
+        font-size: 35vw;
+        top: 2%; right: -2%;
+        opacity: 0.3;
+      }
       
       .connect-title { font-size: 15vw; }
       .connect-links { flex-direction: column; gap: 4vw; width: 100%; }
@@ -443,10 +381,8 @@
 </head>
 <body>
 
-  <!-- BACKGROUND: Technical coordinates grid -->
   <div class="grid-overlay"></div>
 
-  <!-- CUSTOM CURSOR SYSTEM -->
   <div class="cursor-crosshair" id="cursor"></div>
   <div class="cursor-coords" id="coords">X: 000 Y: 000</div>
 
@@ -457,7 +393,6 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <section id="hero">
     <div class="hero-content">
       <p class="mono-label" style="margin-bottom: 2vh;">ENGINEER / ARCHITECT</p>
@@ -470,7 +405,6 @@
       </p>
     </div>
 
-    <!-- Infinite purely CSS tech marquee -->
     <div class="hero-marquee">
       <div class="marquee-track">
         <span class="marquee-text">Next.js — Tailwind — GSAP — Node — React — Figma — Typescript — Three.js — LLMs — REST — </span>
@@ -479,7 +413,6 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section id="about">
     <div class="about-left" id="about-sticky">
       <p class="mono-label" style="margin-bottom: 3vw;">// IDENTITY</p>
@@ -513,18 +446,15 @@
     </div>
   </section>
 
-  <!-- WORK: Horizontal Scroll Area -->
   <div id="work-container">
     <div class="horizontal-wrapper" id="horizontal">
       
-      <!-- Panel 0: Intro -->
       <div class="work-intro panel">
         <p class="mono-label" style="margin-bottom: 2vw;">// DEPLOYMENTS</p>
         <h2 style="font-size: clamp(40px, 8vw, 100px); color: var(--silver);">THE<br>WORK</h2>
-        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Scroll horizontally.</p>
+        <p style="margin-top: 2vw; font-size: 18px; color: var(--muted);">07 live applications. Swipe through.</p>
       </div>
 
-      <!-- Panel 1 -->
       <div class="work-panel panel">
         <a href="https://genetix-ai-website-builder.vercel.app/" target="_blank" class="project-card">
           <div class="project-bg-num">01</div>
@@ -540,7 +470,6 @@
         </a>
       </div>
 
-      <!-- Panel 2 -->
       <div class="work-panel panel">
         <a href="https://vkindustrieskuk.web.app/" target="_blank" class="project-card">
           <div class="project-bg-num">02</div>
@@ -556,7 +485,6 @@
         </a>
       </div>
 
-      <!-- Panel 3 -->
       <div class="work-panel panel">
         <a href="https://mind-space-seven.vercel.app/" target="_blank" class="project-card">
           <div class="project-bg-num">03</div>
@@ -572,7 +500,6 @@
         </a>
       </div>
 
-      <!-- Panel 4 -->
       <div class="work-panel panel">
         <a href="https://campus-vault-rose.vercel.app/" target="_blank" class="project-card">
           <div class="project-bg-num">04</div>
@@ -588,7 +515,6 @@
         </a>
       </div>
 
-      <!-- Panel 5 -->
       <div class="work-panel panel">
         <a href="https://qr-main-ten.vercel.app/" target="_blank" class="project-card">
           <div class="project-bg-num">05</div>
@@ -604,7 +530,6 @@
         </a>
       </div>
 
-      <!-- Panel 6 -->
       <div class="work-panel panel">
         <a href="https://pdf4me.vercel.app/" target="_blank" class="project-card">
           <div class="project-bg-num">06</div>
@@ -620,8 +545,7 @@
         </a>
       </div>
 
-      <!-- Panel 7 -->
-      <div class="work-panel panel" style="padding-right: 15vw;"> <!-- Last panel padding -->
+      <div class="work-panel panel" style="padding-right: 15vw;"> 
         <a href="https://hw-ashiesh.vercel.app" target="_blank" class="project-card">
           <div class="project-bg-num">07</div>
           <div class="project-content">
@@ -639,7 +563,6 @@
     </div>
   </div>
 
-  <!-- CONNECT -->
   <section id="connect">
     <h2 class="connect-title">READY TO<br>BUILD.</h2>
     <p class="mono-label" style="color: #fff; margin-top: 4vw; max-width: 400px; line-height: 1.6;">
@@ -656,94 +579,10 @@
     <div>SHIVANSH BANSAL © 2026</div>
   </footer>
 
-  <!-- SCRIPTS -->
   <script src="./lib/gsap.min.js"></script>
   <script src="./lib/ScrollTrigger.min.js"></script>
 
   <script>
-    /* ═══════════════════════════════════════════════════════════════
-       JS CORE: Awwwards Level Interaction
-    ═══════════════════════════════════════════════════════════════ */
-
-    // 1. Custom Cursor Coordinator
-    const cursor = document.getElementById('cursor');
-    const coords = document.getElementById('coords');
-    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-    let targetX = mouseX, targetY = mouseY;
-
-    if (window.innerWidth > 900) {
-      window.addEventListener('mousemove', e => {
-        targetX = e.clientX;
-        targetY = e.clientY;
-        // Update raw coordinates text immediately
-        coords.innerText = `X: ${e.clientX.toString().padStart(4, '0')} Y: ${e.clientY.toString().padStart(4, '0')}`;
-        // Position coords slightly offset from cursor
-        coords.style.transform = `translate(${e.clientX + 15}px, ${e.clientY + 15}px)`;
-      });
-
-      // Smooth interp logic for the crosshair
-      function renderCursor() {
-        mouseX += (targetX - mouseX) * 0.2; // Fast interpolation for snap
-        mouseY += (targetY - mouseY) * 0.2;
-        cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-        requestAnimationFrame(renderCursor);
-      }
-      requestAnimationFrame(renderCursor);
-    }
-
-    // 2. GSAP Registrations
     gsap.registerPlugin(ScrollTrigger);
-    
-    // Smooth initial load (Brutalist fast-fade)
-    gsap.from('.hero-content', { opacity: 0, scale: 0.95, duration: 1, ease: 'expo.out' });
 
-    // 3. Kinetic Typography on Scroll
-    // Squishes the text slightly based on scroll depth giving an elastic/heavy feel
-    ScrollTrigger.create({
-      trigger: '#hero',
-      start: 'top top',
-      end: 'bottom top',
-      onUpdate: self => {
-        gsap.set('.hero-content', { 
-          y: self.progress * 150, // Parallax down
-          scale: 1 - (self.progress * 0.05) // Slight shrink
-        });
-      }
-    });
-
-    // 4. Parallax "About" Section Pinning
-    // Holds the left statement while reading the right data points
-    if (window.innerWidth > 900) {
-      ScrollTrigger.create({
-        trigger: '#about',
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: '#about-sticky',
-      });
-    }
-
-    // 5. THE CORE: Horizontal Scroll Hijack
-    if (window.innerWidth > 900) {
-      const horizontalContainer = document.getElementById('horizontal');
-      const panels = gsap.utils.toArray('.panel');
-      
-      // Calculate total width of all panels combined minus the viewport width
-      const totalWidth = horizontalContainer.scrollWidth - window.innerWidth;
-
-      gsap.to(panels, {
-        x: () => -totalWidth, // Move container to the left
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#work-container',
-          pin: true,           // Pin the section
-          scrub: 1,            // Smooth scrubbing taking 1s to catch up
-          snap: 1 / (panels.length - 1), // Snap to closest panel
-          end: () => "+=" + totalWidth // End scroll after scrolling the width
-        }
-      });
-    }
-
-  </script>
-
-</body>
-</html>
+    // Gl
