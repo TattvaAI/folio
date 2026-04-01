@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Shivansh Bansal — Engineering Resume" />
+    <title>Shivansh Bansal — Engineer / Architect</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg: #FAFAFA;
+            --surface: #FFFFFF;
+            --text: #111111;
+            --muted: #555555;
+            --border: #DDDDDD;
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --max-w: 800px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            padding: 40px 20px;
+        }
+
+        .resume-container {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            background: var(--surface);
+            padding: 60px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Web Nav */
+        .web-nav {
+            max-width: var(--max-w);
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-link, .print-btn {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .back-link:hover, .print-btn:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
+        /* Typography */
+        h1 {
+            font-family: var(--font-display);
+            font-size: 40px;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        h2 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--text);
+            padding-bottom: 6px;
+            margin-top: 30px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        h2 span { 
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        /* Header Layout */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 24px;
+        }
+        .contact-info {
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+        .contact-info a {
+            color: var(--text);
+            text-decoration: none;
+        }
+        .contact-info a:hover { text-decoration: underline; }
+
+        /* Sections */
+        .summary-text {
+            font-size: 14.5px;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* Matrix / Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 12px 24px;
+            margin-bottom: 10px;
+        }
+        .skill-category {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            padding-top: 3px;
+        }
+        .skill-list {
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+
+        /* Experience / Projects */
+        .project-item {
+            margin-bottom: 24px;
+            page-break-inside: avoid;
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+        .project-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .project-link {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+        }
+        .project-role {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .project-bullets {
+            list-style: none;
+            font-size: 13.5px;
+            margin-top: 6px;
+        }
+        .project-bullets li {
+            position: relative;
+            padding-left: 14px;
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+        .project-bullets li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-weight: bold;
+        }
+
+        /* Education */
+        .edu-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+        .edu-left strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .edu-left span {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            color: var(--muted);
+            display: block;
+            margin-top: 1px;
+        }
+        .edu-right {
+           text-align: right;
+           font-family: var(--font-mono);
+           font-size: 10.5px;
+           color: var(--muted);
+        }
+
+        /* Print CSS for perfect PDF rendering */
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background: #fff; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .web-nav { display: none; }
+            .resume-container {
+                box-shadow: none; border: none; max-width: 100%; width: 100%;
+                padding: 15mm 20mm;
+            }
+        }
+
+        @media screen and (max-width: 700px) {
+            .resume-container { padding: 30px 20px; border-left: none; border-right: none; }
+            header { flex-direction: column; align-items: flex-start; gap: 20px; padding-bottom: 20px; }
+            .contact-info { text-align: left; }
+            .skills-grid { grid-template-columns: 1fr; gap: 4px; margin-bottom: 24px; }
+            .project-header { flex-direction: column; gap: 2px; margin-bottom: 6px; }
+            .edu-item { flex-direction: column; gap: 2px; }
+            .edu-right { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="web-nav" aria-label="Web Navigation">
+        <a href="index.html" class="back-link">← Return to Portfolio</a>
+        <button onclick="window.print()" class="print-btn">Print / Save PDF</button>
+    </div>
+
+    <div class="resume-container" role="main">
+        <header>
+            <div class="header-left">
+                <h1>SHIVANSH<br>BANSAL</h1>
+                <div class="subtitle">Full-Stack Engineer // AI Systems Architect</div>
+            </div>
+            <div class="contact-info">
+                Ambala, Haryana, India<br>
+                <a href="mailto:shivanshbansal@myself.com">shivanshbansal@myself.com</a><br>
+                <a href="https://github.com/TattvaAI" target="_blank">github.com/TattvaAI</a><br>
+                <a href="https://linkedin.com/in/whyshivanshbansal" target="_blank">linkedin.com/in/whyshivanshbansal</a>
+            </div>
+        </header>
+
+        <p class="summary-text" aria-label="Executive Summary">
+            A systems engineer specializing in bridging GPU-accelerated frontend experiences (WebGL/R3F) with deterministic AI pipelines. With a foundation in competitive strategy (District Chess Champion) and mathematical theory at IIT Madras, I serialize complex client requirements—from raw LangGraph orchestration to 60fps custom GLSL shaders—into brutally effective, production-ready software.
+        </p>
+
+        <h2><span>01</span> The Arsenal</h2>
+        <div class="skills-grid">
+            <div class="skill-category">Frameworks & Core</div>
+            <div class="skill-list">Next.js 15 (App Router), Node.js (LTS), TypeScript 5.6+, pnpm</div>
+            
+            <div class="skill-category">Creative & GPU Compute</div>
+            <div class="skill-list">React Three Fiber, GLSL Shaders, GSAP, Rapier (WASM), Lenis, Meshoptimizer</div>
+
+            <div class="skill-category">Intelligence pipelines</div>
+            <div class="skill-list">Python, FastAPI, WebSockets, LangGraph, Vercel AI SDK</div>
+            
+            <div class="skill-category">Data Architecture</div>
+            <div class="skill-list">PostgreSQL (Supabase), Drizzle ORM, TanStack Query v5, Zustand, Zod</div>
+
+            <div class="skill-category">Infra & Operations</div>
+            <div class="skill-list">Vercel Pro (Edge), Railway Container, Tailwind CSS v4, Playwright, PostHog</div>
+        </div>
+
+        <h2><span>02</span> Work Experience</h2>
+        
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title">Independent Consultant <a href="https://vkindustrieskuk.web.app/" class="project-link" target="_blank">VK Industries</a></div>
+                <div class="project-role">Freelance Full-Stack Engineer | Live In Production</div>
+            </div>
+            <ul class="project-bullets">
+                <li>Shipped a zero-friction, highly optimized enterprise corporate platform for VK Industries over Firebase to maximize organic search engine indexing.</li>
+                <li>Architected scalable document stores utilizing robust state management and strictly typed data fetching schemas.</li>
+            </ul>
+        </div>
+
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title">Independent Consultant <a href="https://hw-ashiesh.vercel.app/" class="project-link" target="_blank">HealMind</a></div>
+                <div class="project-role">Freelance Technical Architect | Live In Production</div>
+            </div>
+            <ul class="project-bullets">
+                <li>Developed and deployed a custom wellness client platform featuring extremely performant, minimalist digital architecture utilizing React ecosystems.</li>
+            </ul>
+        </div>
+
+        <h2><span>03</span> Architectural Deployments</h2>
+
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title">Genetix AI <a href="https://genetix-ai-website-builder.vercel.app/" class="project-link" target="_blank">Live App</a></div>
+                <div class="project-role">AI Systems Architect</div>
+            </div>
+            <ul class="project-bullets">
+                <li>Orchestrated a deterministic AI website generation pipeline leveraging LangGraph and FastAPI, streaming UI states directly to the client via Vercel AI SDK and WebSockets.</li>
+                <li>Solved critical server-side isolation challenges to safely compile, render, and execute dynamically AI-generated functional React components in real-time.</li>
+            </ul>
+        </div>
+
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title">MindSpace <a href="https://mind-space-seven.vercel.app/" class="project-link" target="_blank">Live App</a></div>
+                <div class="project-role">Frontend Engineering Lead</div>
+            </div>
+            <ul class="project-bullets">
+                <li>Built a GPU-accelerated interface executing at a stable 60fps utilizing React Three Fiber, custom GLSL shaders, and Rapier WASM physics integration.</li>
+                <li>Engineered fluid UI choreography utilizing GreenSock (GSAP) and Lenis smooth-scroll to systematically reduce user friction and anxiety through state manipulation.</li>
+            </ul>
+        </div>
+
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title">Campus Vault & GatePass</div>
+                <div class="project-role">Systems Engineer</div>
+            </div>
+            <ul class="project-bullets">
+                <li><strong>Campus Vault:</strong> Architected heavily edge-cached pipelines for instant academic document retrieval utilizing Drizzle ORM and Supabase over Next.js 15.</li>
+                <li><strong>GatePass:</strong> Wrote high-speed edge functions for deterministic QR generation with instantaneous response latency across all mobile viewports.</li>
+            </ul>
+        </div>
+
+        <h2><span>04</span> Education & Achievements</h2>
+        
+        <div class="edu-item">
+            <div class="edu-left">
+                <strong>District Chess Champion (1st Place)</strong>
+                <span>District Level Chess Tournament — 2023</span>
+            </div>
+            <div class="edu-right">
+                Strategic Calculation & Edge Case Anticipation
+            </div>
+        </div>
+        <div class="edu-item">
+            <div class="edu-left">
+                <strong>State Science Finalist (2nd Place)</strong>
+                <span>State Level Science Exhibition</span>
+            </div>
+            <div class="edu-right">
+                Empirical Research Execution
+            </div>
+        </div>
+        
+        <br>
+
+        <div class="edu-item">
+            <div class="edu-left">
+                <strong>Indian Institute of Technology (IIT) Madras</strong>
+                <span>Data Science — Mathematics & AI Theory Focus</span>
+            </div>
+            <div class="edu-right">
+                Present
+            </div>
+        </div>
+        <div class="edu-item">
+            <div class="edu-left">
+                <strong>Ambala — BSc Computer Science</strong>
+                <span>Programming & Systems Fundamentals</span>
+            </div>
+            <div class="edu-right">
+                Present
+            </div>
+        </div>
+        <div class="edu-item">
+            <div class="edu-left">
+                <strong>S.A. Jain Senior Model School</strong>
+                <span>Ambala City</span>
+            </div>
+            <div class="edu-right">
+                Class 12th: 80%<br>Class 10th: 83%
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
